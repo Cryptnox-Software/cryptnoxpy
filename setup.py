@@ -7,28 +7,15 @@ import sys
 from setuptools import setup
 
 PYSCARD = "pyscard"
+if sys.platform.startswith("win"):
+    PYSCARD += "==2.0.1"
 
 dependencies = [
     "aiohttp",
     "cryptography",
     "pbr",
+    PYSCARD
 ]
-
-print('os.environ.get("build")', os.environ.get("build"))
-
-if os.environ.get("build") == "readthedocs":
-    dependencies += [
-        "autoapi",
-        "sphinx",
-        "sphinx-autoapi"
-    ]
-else:
-    if sys.platform.startswith("win"):
-        PYSCARD += "==2.0.1"
-
-    dependencies += [
-        PYSCARD
-    ]
 
 setup(pbr=True,
       setup_requires=['pbr'],
