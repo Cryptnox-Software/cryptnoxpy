@@ -1,7 +1,6 @@
 """
 Configuration for setting up CryptnoxPy as external library
 """
-import os
 import sys
 
 from setuptools import setup
