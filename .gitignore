@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# build folders
+build
+dist
+
+# pycharm ide
+.idea
+
+/docs/

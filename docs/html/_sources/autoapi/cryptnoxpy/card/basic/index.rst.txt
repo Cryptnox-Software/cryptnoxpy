@@ -1,0 +1,159 @@
+:py:mod:`cryptnoxpy.card.basic`
+===============================
+
+.. py:module:: cryptnoxpy.card.basic
+
+.. autoapi-nested-parse::
+
+   Module containing common functionality for basic cards.
+   Don't use it by itself.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.card.basic.Basic
+
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.card.basic._BASIC_PAIRING_SECRET
+
+
+.. py:data:: _BASIC_PAIRING_SECRET
+   :annotation: = b'Cryptnox Basic CommonPairingData'
+
+   
+
+.. py:class:: Basic(connection: cryptnoxpy.connection.Connection, data: List[int] = None, debug: bool = False)
+
+   Bases: :py:obj:`cryptnoxpy.card.base.Base`
+
+   Class for basic cards containing common functionalities.
+
+   .. py:attribute:: type
+      
+
+      
+
+   .. py:attribute:: pin_rule
+      :annotation: = 4-9 digits
+
+      
+
+   .. py:method:: change_pin(self, new_pin: str) -> None
+
+      Change the current pin code of the card to a new pin code.
+
+      The method will set the given pin code as the pin code of the card.
+      For it to work the card first must be opened with the current pin code.
+
+      :requires:
+          - PIN code or challenge-response validated
+
+      :param str new_pin: The desired PIN code to be set for the card
+                          (4-9 digits).
+
+
+   .. py:method:: change_puk(self, current_puk: str, new_puk: str) -> None
+
+      Change the current pin code of the card to a new pin code.
+
+      The method will set the given pin code as the pin code of the card.
+      For it to work the card first must be opened with the current pin code.
+
+      :param str current_puk: The current PUK code of the card
+      :param str new_puk: The desired PUK code to be set for the card
+
+
+   .. py:method:: generate_mnemonic(self, checksum: int) -> bytes
+
+      Generate BIP39 specified mnemonic.
+
+      :param int checksum: Checksum of the mnemonic. (4-8)
+
+      :return: 16 byte integers used in wordlist to get the mnemonic (0-2047)
+      :rtype: bytes
+
+      :raises DataValidationException: checksum is not a number between 4 and 8
+
+
+   .. py:method:: init(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes = _BASIC_PAIRING_SECRET) -> bytes
+
+      Initialize the Cryptnox card.
+
+      Initialize the Cryptnox card with the owners name and email address.
+      Set the PIN and PUK codes for authenticating with the card to be able
+      to use it.
+
+      :param str name: Name of the card owner
+      :param str email: Email of the card owner
+      :param str pin: PIN code that will be used to open the card
+      :param str puk: PUK code that will be used to open the card
+      :param bytes pairing_secret: Pairing secret to use with the card
+
+      :return: Pairing secret
+      :rtype: bytes
+
+      :raises InitializationException: There was an issue with initialization
+
+
+   .. py:method:: unblock_pin(self, puk: str, new_pin: str) -> None
+
+      Verifies the user using the PUK code and sets a new PIN code on the card.
+
+      Method should be used when the user has forgotten this/hers PIN code.
+      By entering the PUK code the user verifies his/hers identity and can
+      set the new PIN code on the card.
+      Can be used only if the card is locked.
+
+      :requires:
+          - User PIN must be locked
+          - PIN code authentication must be enabled
+
+      :param str puk: PUK code for verification of the user, before changing
+                      the PIN code.
+      :param str new_pin: The desired PIN code to be set for the card (4-9 digits).
+
+      :raises PukException: PUK code not valid
+      :raises CardNotBlocked: Card is not blocked, operation can't be done
+
+
+   .. py:method:: valid_pin(pin: str, pin_name: str = 'pin') -> str
+      :staticmethod:
+
+      Check if provided pin is valid
+
+      :param str pin: The pin to check if valid
+      :param str pin_name: Value used in DataValidationException for pin name
+      :return str: Provided pin in str format if valid
+
+      :raise DataValidationException: Provided pin is not valid
+
+
+   .. py:method:: _change_secret(self, select_pin_puk: int, value: str)
+
+      Change secret, PIN or PUK code, of the card
+
+      :param int select_pin_puk: Change the PIN or PUK code:
+                                 0 - PIN
+                                 1 - PUK
+      :param str value: Value of the new secret
+
+
+   .. py:method:: _get_coded_value(value)
+      :staticmethod:
+
+
+

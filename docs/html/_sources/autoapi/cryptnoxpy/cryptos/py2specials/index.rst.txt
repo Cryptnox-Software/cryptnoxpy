@@ -1,0 +1,14 @@
+:py:mod:`cryptnoxpy.cryptos.py2specials`
+========================================
+
+.. py:module:: cryptnoxpy.cryptos.py2specials
+
+
+Module Contents
+---------------
+
+.. py:data:: string_types
+   
+
+   
+

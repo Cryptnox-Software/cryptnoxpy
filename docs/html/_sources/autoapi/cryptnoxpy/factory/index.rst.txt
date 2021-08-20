@@ -1,0 +1,50 @@
+:py:mod:`cryptnoxpy.factory`
+============================
+
+.. py:module:: cryptnoxpy.factory
+
+.. autoapi-nested-parse::
+
+   Module for getting Cryptnox cards information and getting instance of card from
+   connection
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.factory.get_card
+   cryptnoxpy.factory._all_subclasses
+   cryptnoxpy.factory._select
+   cryptnoxpy.factory._serial_number
+
+
+
+.. py:function:: get_card(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> cryptnoxpy.card.Base
+
+   Get card instance that is using given connection.
+
+   :param Connection connection: Connection to use for operation
+   :param bool debug: Prints information about communication
+
+   :return: Instance of card
+   :rtype: Base
+
+   :raise CardException: Card with given serial number not found
+
+
+.. py:function:: _all_subclasses(cls)
+
+
+.. py:function:: _select(connection, apdu, card_type, debug: bool = False) -> Tuple[Any, Any]
+
+
+.. py:function:: _serial_number(connection, debug: bool = False)
+
+

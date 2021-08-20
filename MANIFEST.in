@@ -1,0 +1,2 @@
+include README.md LICENSE.md
+exclude = docs tests index.rst dist

@@ -1,0 +1,327 @@
+:py:mod:`cryptnoxpy.cryptos.main`
+=================================
+
+.. py:module:: cryptnoxpy.cryptos.main
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.cryptos.main.change_curve
+   cryptnoxpy.cryptos.main.getG
+   cryptnoxpy.cryptos.main.inv
+   cryptnoxpy.cryptos.main.access
+   cryptnoxpy.cryptos.main.multiaccess
+   cryptnoxpy.cryptos.main.slice
+   cryptnoxpy.cryptos.main.count
+   cryptnoxpy.cryptos.main.sum
+   cryptnoxpy.cryptos.main.isinf
+   cryptnoxpy.cryptos.main.to_jacobian
+   cryptnoxpy.cryptos.main.jacobian_double
+   cryptnoxpy.cryptos.main.jacobian_add
+   cryptnoxpy.cryptos.main.fast_add
+   cryptnoxpy.cryptos.main.get_pubkey_format
+   cryptnoxpy.cryptos.main.encode_pubkey
+   cryptnoxpy.cryptos.main.decode_pubkey
+   cryptnoxpy.cryptos.main.get_privkey_format
+   cryptnoxpy.cryptos.main.encode_privkey
+   cryptnoxpy.cryptos.main.decode_privkey
+   cryptnoxpy.cryptos.main.add_pubkeys
+   cryptnoxpy.cryptos.main.add_privkeys
+   cryptnoxpy.cryptos.main.divide
+   cryptnoxpy.cryptos.main.compress
+   cryptnoxpy.cryptos.main.decompress
+   cryptnoxpy.cryptos.main.neg_pubkey
+   cryptnoxpy.cryptos.main.neg_privkey
+   cryptnoxpy.cryptos.main.subtract_pubkeys
+   cryptnoxpy.cryptos.main.subtract_privkeys
+   cryptnoxpy.cryptos.main.bin_hash160
+   cryptnoxpy.cryptos.main.hash160
+   cryptnoxpy.cryptos.main.hex_to_hash160
+   cryptnoxpy.cryptos.main.bin_sha256
+   cryptnoxpy.cryptos.main.sha256
+   cryptnoxpy.cryptos.main.bin_ripemd160
+   cryptnoxpy.cryptos.main.ripemd160
+   cryptnoxpy.cryptos.main.bin_dbl_sha256
+   cryptnoxpy.cryptos.main.dbl_sha256
+   cryptnoxpy.cryptos.main.bin_slowsha
+   cryptnoxpy.cryptos.main.slowsha
+   cryptnoxpy.cryptos.main.hash_to_int
+   cryptnoxpy.cryptos.main.num_to_var_int
+   cryptnoxpy.cryptos.main.electrum_sig_hash
+   cryptnoxpy.cryptos.main.b58check_to_bin
+   cryptnoxpy.cryptos.main.get_version_byte
+   cryptnoxpy.cryptos.main.hex_to_b58check
+   cryptnoxpy.cryptos.main.b58check_to_hex
+   cryptnoxpy.cryptos.main.pubkey_to_hash
+   cryptnoxpy.cryptos.main.pubkey_to_hash_hex
+   cryptnoxpy.cryptos.main.pubkey_to_address
+   cryptnoxpy.cryptos.main.is_privkey
+   cryptnoxpy.cryptos.main.is_pubkey
+   cryptnoxpy.cryptos.main.encode_sig
+   cryptnoxpy.cryptos.main.decode_sig
+   cryptnoxpy.cryptos.main.deterministic_generate_k
+   cryptnoxpy.cryptos.main.ecdsa_verify_addr
+   cryptnoxpy.cryptos.main.ecdsa_verify
+   cryptnoxpy.cryptos.main.add
+   cryptnoxpy.cryptos.main.subtract
+   cryptnoxpy.cryptos.main.magicbyte_to_prefix
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.cryptos.main.P
+   cryptnoxpy.cryptos.main.N
+   cryptnoxpy.cryptos.main.A
+   cryptnoxpy.cryptos.main.B
+   cryptnoxpy.cryptos.main.Gx
+   cryptnoxpy.cryptos.main.Gy
+   cryptnoxpy.cryptos.main.G
+   cryptnoxpy.cryptos.main._sum
+   cryptnoxpy.cryptos.main.pubtoaddr
+   cryptnoxpy.cryptos.main.hash160Low
+   cryptnoxpy.cryptos.main.hash160High
+
+
+.. py:data:: P
+   
+
+   
+
+.. py:data:: N
+   :annotation: = 115792089237316195423570985008687907852837564279074904382605163141518161494337
+
+   
+
+.. py:data:: A
+   :annotation: = 0
+
+   
+
+.. py:data:: B
+   :annotation: = 7
+
+   
+
+.. py:data:: Gx
+   :annotation: = 55066263022277343669578718895168534326250603453777594175500187360389116729240
+
+   
+
+.. py:data:: Gy
+   :annotation: = 32670510020758816978083085130507043184471273380659243275938904335757337482424
+
+   
+
+.. py:data:: G
+   
+
+   
+
+.. py:function:: change_curve(p, n, a, b, gx, gy)
+
+
+.. py:function:: getG()
+
+
+.. py:function:: inv(a, n)
+
+
+.. py:function:: access(obj, prop)
+
+
+.. py:function:: multiaccess(obj, prop)
+
+
+.. py:function:: slice(obj, start=0, end=2**200)
+
+
+.. py:function:: count(obj)
+
+
+.. py:data:: _sum
+   
+
+   
+
+.. py:function:: sum(obj)
+
+
+.. py:function:: isinf(p)
+
+
+.. py:function:: to_jacobian(p)
+
+
+.. py:function:: jacobian_double(p)
+
+
+.. py:function:: jacobian_add(p, q)
+
+
+.. py:function:: fast_add(a, b)
+
+
+.. py:function:: get_pubkey_format(pub)
+
+
+.. py:function:: encode_pubkey(pub, formt)
+
+
+.. py:function:: decode_pubkey(pub, formt=None)
+
+
+.. py:function:: get_privkey_format(priv)
+
+
+.. py:function:: encode_privkey(priv, formt, vbyte=128)
+
+
+.. py:function:: decode_privkey(priv, formt=None)
+
+
+.. py:function:: add_pubkeys(p1, p2)
+
+
+.. py:function:: add_privkeys(p1, p2)
+
+
+.. py:function:: divide(pubkey, privkey)
+
+
+.. py:function:: compress(pubkey)
+
+
+.. py:function:: decompress(pubkey)
+
+
+.. py:function:: neg_pubkey(pubkey)
+
+
+.. py:function:: neg_privkey(privkey)
+
+
+.. py:function:: subtract_pubkeys(p1, p2)
+
+
+.. py:function:: subtract_privkeys(p1, p2)
+
+
+.. py:function:: bin_hash160(string)
+
+
+.. py:function:: hash160(string)
+
+
+.. py:function:: hex_to_hash160(s_hex)
+
+
+.. py:function:: bin_sha256(string)
+
+
+.. py:function:: sha256(string)
+
+
+.. py:function:: bin_ripemd160(string)
+
+
+.. py:function:: ripemd160(string)
+
+
+.. py:function:: bin_dbl_sha256(s)
+
+
+.. py:function:: dbl_sha256(string)
+
+
+.. py:function:: bin_slowsha(string)
+
+
+.. py:function:: slowsha(string)
+
+
+.. py:function:: hash_to_int(x)
+
+
+.. py:function:: num_to_var_int(x)
+
+
+.. py:function:: electrum_sig_hash(message)
+
+
+.. py:function:: b58check_to_bin(inp)
+
+
+.. py:function:: get_version_byte(inp)
+
+
+.. py:function:: hex_to_b58check(inp, magicbyte=0)
+
+
+.. py:function:: b58check_to_hex(inp)
+
+
+.. py:function:: pubkey_to_hash(pubkey)
+
+
+.. py:function:: pubkey_to_hash_hex(pubkey)
+
+
+.. py:function:: pubkey_to_address(pubkey, magicbyte=0)
+
+
+.. py:data:: pubtoaddr
+   
+
+   
+
+.. py:function:: is_privkey(priv)
+
+
+.. py:function:: is_pubkey(pubkey)
+
+
+.. py:function:: encode_sig(v, r, s)
+
+
+.. py:function:: decode_sig(sig)
+
+
+.. py:function:: deterministic_generate_k(msghash, priv)
+
+
+.. py:function:: ecdsa_verify_addr(msg, sig, addr, coin)
+
+
+.. py:function:: ecdsa_verify(msg, sig, pub, coin)
+
+
+.. py:function:: add(p1, p2)
+
+
+.. py:function:: subtract(p1, p2)
+
+
+.. py:data:: hash160Low
+   :annotation: = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+
+   
+
+.. py:data:: hash160High
+   :annotation: = b'\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff'
+
+   
+
+.. py:function:: magicbyte_to_prefix(magicbyte)
+
+

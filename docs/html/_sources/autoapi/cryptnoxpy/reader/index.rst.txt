@@ -1,0 +1,179 @@
+:py:mod:`cryptnoxpy.reader`
+===========================
+
+.. py:module:: cryptnoxpy.reader
+
+.. autoapi-nested-parse::
+
+   Module that handles different card reader types and their drivers.
+
+
+
+Module Contents
+---------------
+
+Classes
+~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.reader.Reader
+   cryptnoxpy.reader.NfcReader
+   cryptnoxpy.reader.SmartCard
+
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.reader.get
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.reader.NFC_AVAILABLE
+   cryptnoxpy.reader.NFC_AVAILABLE
+
+
+.. py:data:: NFC_AVAILABLE
+   :annotation: = True
+
+   
+
+.. py:data:: NFC_AVAILABLE
+   :annotation: = False
+
+   
+
+.. py:exception:: ReaderException
+
+   Bases: :py:obj:`Exception`
+
+   Reader hasn't been found or other reader related issues
+
+
+.. py:exception:: CardException
+
+   Bases: :py:obj:`Exception`
+
+   The reader is present but there is an issue in connecting to the card
+
+
+.. py:exception:: ConnectionException
+
+   Bases: :py:obj:`Exception`
+
+   An issue has occurred in the communication with the card.
+
+
+.. py:class:: Reader
+
+   Abstract class describing methods to be implemented. Holds the connection.
+
+   .. py:method:: __del__(self)
+
+
+   .. py:method:: connect(self) -> None
+      :abstractmethod:
+
+      Connect to the card found in the selected reader.
+
+      :return: None
+
+
+   .. py:method:: send(self, apdu: List[int]) -> Tuple[List[str], int, int]
+      :abstractmethod:
+
+      Send APDU to the reader and card and retrieve the result with status
+      codes.
+
+      :param List[int] apdu: Command to be sent
+      :return: Return the result of the query and two status codes
+      :rtype: Tuple[List[str], int, int]
+
+
+   .. py:method:: bool(self) -> bool
+
+      Is there an active connection
+
+      :rtype: Is there an active connection
+      :return: bool
+
+
+   .. py:method:: __subclasshook__(cls, c)
+      :classmethod:
+
+      Abstract classes can override this to customize issubclass().
+
+      This is invoked early on by abc.ABCMeta.__subclasscheck__().
+      It should return True, False or NotImplemented.  If it returns
+      NotImplemented, the normal algorithm is used.  Otherwise, it
+      overrides the normal algorithm (and the outcome is cached).
+
+
+
+.. py:class:: NfcReader
+
+   Bases: :py:obj:`Reader`
+
+   Specialized reader using xantares/nfc-binding
+
+   .. py:method:: connect(self)
+
+      Connect to the card found in the selected reader.
+
+      :return: None
+
+
+   .. py:method:: send(self, apdu: List[int]) -> Tuple[List[str], int, int]
+
+      Send APDU to the reader and card and retrieve the result with status
+      codes.
+
+      :param List[int] apdu: Command to be sent
+      :return: Return the result of the query and two status codes
+      :rtype: Tuple[List[str], int, int]
+
+
+
+.. py:class:: SmartCard(index: int = 0)
+
+   Bases: :py:obj:`Reader`
+
+   Generic smart card reader class
+
+   :param int index: Index of the reader to initialize.
+
+   .. py:method:: connect(self) -> None
+
+      Connect to the card found in the selected reader.
+
+      :return: None
+
+
+   .. py:method:: send(self, apdu: List[int]) -> Tuple[List[str], int, int]
+
+      Send APDU to the reader and card and retrieve the result with status
+      codes.
+
+      :param List[int] apdu: Command to be sent
+      :return: Return the result of the query and two status codes
+      :rtype: Tuple[List[str], int, int]
+
+
+
+.. py:function:: get(index: int = 0) -> Reader
+
+   Get the reader that can be found on the given position.
+
+   :param int index: Index of reader to be initialized and used
+   :return: Reader object that can be used.
+   :rtype: Reader
+
+

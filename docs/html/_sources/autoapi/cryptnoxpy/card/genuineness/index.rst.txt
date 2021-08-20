@@ -1,0 +1,106 @@
+:py:mod:`cryptnoxpy.card.genuineness`
+=====================================
+
+.. py:module:: cryptnoxpy.card.genuineness
+
+.. autoapi-nested-parse::
+
+   Module containing check for verification of genuineness of a card
+
+
+
+Module Contents
+---------------
+
+
+Functions
+~~~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.card.genuineness.check
+   cryptnoxpy.card.genuineness.manufacturer_certificate
+   cryptnoxpy.card.genuineness._manufacturer_public_keys
+   cryptnoxpy.card.genuineness._check_manufacturer_certificate
+   cryptnoxpy.card.genuineness._check_signature
+   cryptnoxpy.card.genuineness._certificate_parts
+   cryptnoxpy.card.genuineness._public_key
+   cryptnoxpy.card.genuineness._manufacturer_certificate_data
+   cryptnoxpy.card.genuineness._get_card_certificate
+   cryptnoxpy.card.genuineness._manufacturer_signature
+
+
+
+Attributes
+~~~~~~~~~~
+
+.. autoapisummary::
+
+   cryptnoxpy.card.genuineness._ECDSA_SHA256
+   cryptnoxpy.card.genuineness._MANUFACTURER_CERTIFICATE_URL
+   cryptnoxpy.card.genuineness._PUBLIC_K1_OID
+
+
+.. py:data:: _ECDSA_SHA256
+   
+
+   
+
+.. py:data:: _MANUFACTURER_CERTIFICATE_URL
+   :annotation: = https://verify.cryptnox.tech/certificates/
+
+   
+
+.. py:data:: _PUBLIC_K1_OID
+   :annotation: = 2a8648ce3d030107034200
+
+   
+
+.. py:function:: check(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> str
+
+   Check if the card in the reader is genuine Cryptnox product
+
+   :param Connection connection: Connection to use for operation
+   :param bool debug: Prints information about communication
+
+   :return: Session public key to use opening secure channel
+   :rtype: str
+
+   :raise GenuineCheckException: The card is not genuine
+
+
+.. py:function:: manufacturer_certificate(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> str
+
+   Get the manufacturer certificate from the card in connection.
+
+   :param Connection connection: Connection to use for operation
+   :param bool debug: Prints information about communication
+
+   :return: Manufacturer certificate read from the card
+   :rtype: str
+
+
+.. py:function:: _manufacturer_public_keys()
+
+
+.. py:function:: _check_manufacturer_certificate(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> None
+
+
+.. py:function:: _check_signature(message: bytes, public_key: cryptography.hazmat.primitives.asymmetric.ec.EllipticCurvePublicKey, signature_hex: str) -> bool
+
+
+.. py:function:: _certificate_parts(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> List[str]
+
+
+.. py:function:: _public_key(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> str
+
+
+.. py:function:: _manufacturer_certificate_data(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> bytes
+
+
+.. py:function:: _get_card_certificate(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> str
+
+
+.. py:function:: _manufacturer_signature(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> str
+
+
