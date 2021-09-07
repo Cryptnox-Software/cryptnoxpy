@@ -115,14 +115,14 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="#cryptnoxpy.VERSION" title="cryptnoxpy.VERSION"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VERSION</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#cryptnoxpy.__version__" title="cryptnoxpy.__version__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__version__</span></code></a></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
 </table>
 <dl class="py class">
 <dt class="sig sig-object py" id="cryptnoxpy.Card">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.</span></span><span class="sig-name descname"><span class="pre">Card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="connection/index.html#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><span class="pre">cryptnoxpy.connection.Connection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.Card" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.</span></span><span class="sig-name descname"><span class="pre">Card</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../../index.html#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><span class="pre">cryptnoxpy.connection.Connection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.Card" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object that contains information about the card that is in the reader.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -860,7 +860,7 @@ the PIN code.</p></li>
 <dd><p>Get 32 bytes random value from the card that is used to open the card with a user key</p>
 <p>Take nonce value from the card. Sign it with a third party application, like TPM.
 Send the signature back into the card using
-<a class="reference internal" href="card/base/index.html#cryptnoxpy.card.base.Base.user_key_challenge_response_open" title="cryptnoxpy.card.base.Base.user_key_challenge_response_open"><code class="xref py py-func docutils literal notranslate"><span class="pre">user_key_challenge_response_open()</span></code></a></p>
+<a class="reference internal" href="../../index.html#cryptnoxpy.card.base.Base.user_key_challenge_response_open" title="cryptnoxpy.card.base.Base.user_key_challenge_response_open"><code class="xref py py-func docutils literal notranslate"><span class="pre">user_key_challenge_response_open()</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>32 bytes random value used as nonce</p>
@@ -1452,8 +1452,8 @@ before the card is locked.</p></li>
 </dd></dl>
 
 <dl class="py data">
-<dt class="sig sig-object py" id="cryptnoxpy.VERSION">
-<span class="sig-prename descclassname"><span class="pre">cryptnoxpy.</span></span><span class="sig-name descname"><span class="pre">VERSION</span></span><em class="property"> <span class="pre">=</span> <span class="pre">[1,</span> <span class="pre">0,</span> <span class="pre">0]</span></em><a class="headerlink" href="#cryptnoxpy.VERSION" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="cryptnoxpy.__version__">
+<span class="sig-prename descclassname"><span class="pre">cryptnoxpy.</span></span><span class="sig-name descname"><span class="pre">__version__</span></span><em class="property"> <span class="pre">=</span> <span class="pre">1.0.2</span></em><a class="headerlink" href="#cryptnoxpy.__version__" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>

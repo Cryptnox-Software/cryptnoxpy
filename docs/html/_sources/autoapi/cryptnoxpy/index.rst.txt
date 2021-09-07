@@ -61,7 +61,7 @@ Attributes
 
 .. autoapisummary::
 
-   cryptnoxpy.VERSION
+   cryptnoxpy.__version__
 
 
 .. py:class:: Card(connection: cryptnoxpy.connection.Connection, data: List[int] = None, debug: bool = False)
@@ -1041,8 +1041,8 @@ Attributes
    Trying to unlock unblocked card
 
 
-.. py:data:: VERSION
-   :annotation: = [1, 0, 0]
+.. py:data:: __version__
+   :annotation: = 1.0.2
 
    
 

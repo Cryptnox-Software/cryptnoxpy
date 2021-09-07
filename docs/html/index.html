@@ -34,8 +34,6 @@
             
   <section id="cryptnox-python-communication-library">
 <h1>Cryptnox Python Communication Library<a class="headerlink" href="#cryptnox-python-communication-library" title="Permalink to this headline">¶</a></h1>
-<section id="cryptnoxpy">
-<h2>CryptnoxPy<a class="headerlink" href="#cryptnoxpy" title="Permalink to this headline">¶</a></h2>
 <p><strong>Warning: This is a beta release of the software.
 It is released for development purposes.
 Use at your own risk.</strong></p>
@@ -46,7 +44,6 @@ establish a channel of communication that can be used to initialize a card insta
 factory method.</p>
 <p>To buy NFC enabled cards that are supported by this library go to:
 <a class="reference external" href="https://www.cryptnox.com/">https://www.cryptnox.com/</a></p>
-</section>
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
 <p>The library is available under dual licensing. You can use the library under the
@@ -65,88 +62,95 @@ It is generated using Sphynx from the code and can be generated in other formats
 <li><p>Python 3.6-3.9</p></li>
 <li><p>PCSCd on Linux</p></li>
 </ul>
-<p>Ubuntu / Debian<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">(sudo)</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">python3-pip</span> <span class="pre">python3-setuptools</span> <span class="pre">pcscd</span></code></p>
-<p>Fedora / CentOS / RHEL<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">yum</span> <span class="pre">install</span> <span class="pre">python3-pip</span> <span class="pre">python3-setuptools</span> <span class="pre">pcsc-lite-ccid</span></code></p>
+<p>Ubuntu / Debian</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>sudo<span class="o">)</span> apt-get install python3-pip python3-setuptools pcscd<span class="sb">``</span>
+</pre></div>
+</div>
+<p>Fedora / CentOS / RHEL</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>yum install python3-pip python3-setuptools pcsc-lite-ccid
+</pre></div>
+</div>
 <p>On some Linux, starts PCSCd service</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">(</span><span class="n">sudo</span><span class="p">)</span> <span class="n">systemctl</span> <span class="n">start</span> <span class="n">pcscd</span>
-<span class="p">(</span><span class="n">sudo</span><span class="p">)</span> <span class="n">systemctl</span> <span class="n">enable</span> <span class="n">pcscd</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>sudo<span class="o">)</span> systemctl start pcscd
+<span class="o">(</span>sudo<span class="o">)</span> systemctl <span class="nb">enable</span> pcscd
 </pre></div>
 </div>
 <section id="installation-of-this-library">
 <h3>Installation of this library<a class="headerlink" href="#installation-of-this-library" title="Permalink to this headline">¶</a></h3>
 <p>Make sure that you installed the required packages for your system.
 See the “Requires” section above.</p>
-<p>Install with pip:<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">cryptnoxpy</span></code></p>
+<p>Install with pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install cryptnoxpy
+</pre></div>
+</div>
 <p>Install from source:</p>
-<p>Download and run in its directory :<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code><span class="raw-html-m2r"><br></span>
-or<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">git+ssh://git&#64;github.com/Cryptnox-Software/cryptnoxpy.git</span></code></p>
+<p>Download and run in its directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install .
+</pre></div>
+</div>
+<p>or:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install git+ssh://git@github.com/Cryptnox-Software/cryptnoxpy.git
+</pre></div>
+</div>
 <p>This might require <em>sudo</em> on some systems.</p>
-<p>Remove :<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">cryptnoxpy</span></code></p>
+<p>Remove:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip uninstall cryptnoxpy
+</pre></div>
+</div>
 </section>
 <section id="installation-issues">
 <h3>Installation issues<a class="headerlink" href="#installation-issues" title="Permalink to this headline">¶</a></h3>
 <p>If the <strong>Linux system doesn't have Python 3.6, 3.7, 3.8 nor 3.9</strong>, install
 Python 3.7 with the following recipe (Debian like):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">make</span> <span class="n">build</span><span class="o">-</span><span class="n">essential</span> <span class="n">libssl</span><span class="o">-</span><span class="n">dev</span> <span class="n">zlib1g</span><span class="o">-</span><span class="n">dev</span> <span class="n">swig</span> <span class="n">libpcsclite</span><span class="o">-</span><span class="n">dev</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">libbz2</span><span class="o">-</span><span class="n">dev</span> <span class="n">libreadline</span><span class="o">-</span><span class="n">dev</span> <span class="n">libsqlite3</span><span class="o">-</span><span class="n">dev</span> <span class="n">wget</span> <span class="n">curl</span> <span class="n">llvm</span> <span class="n">git</span>
-<span class="n">sudo</span> <span class="n">apt</span><span class="o">-</span><span class="n">get</span> <span class="n">install</span> <span class="o">-</span><span class="n">y</span> <span class="n">libncurses5</span><span class="o">-</span><span class="n">dev</span> <span class="n">libncursesw5</span><span class="o">-</span><span class="n">dev</span> <span class="n">xz</span><span class="o">-</span><span class="n">utils</span> <span class="n">tk</span><span class="o">-</span><span class="n">dev</span> <span class="n">pcscd</span> <span class="n">opensc</span>
-<span class="n">wget</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">python</span><span class="o">.</span><span class="n">org</span><span class="o">/</span><span class="n">ftp</span><span class="o">/</span><span class="n">python</span><span class="o">/</span><span class="mf">3.7.8</span><span class="o">/</span><span class="n">Python</span><span class="o">-</span><span class="mf">3.7.8</span><span class="o">.</span><span class="n">tgz</span>
-<span class="n">tar</span> <span class="n">xf</span> <span class="n">Python</span><span class="o">-</span><span class="mf">3.7.8</span><span class="o">.</span><span class="n">tgz</span>
-<span class="n">cd</span> <span class="n">Python</span><span class="o">-</span><span class="mf">3.7.8</span>
-<span class="o">./</span><span class="n">configure</span> <span class="o">--</span><span class="n">enable</span><span class="o">-</span><span class="n">optimizations</span>
-<span class="n">make</span> <span class="o">-</span><span class="n">j8</span> <span class="n">build_all</span>
-<span class="n">sudo</span> <span class="n">make</span> <span class="o">-</span><span class="n">j8</span> <span class="n">altinstall</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install -y make build-essential libssl-dev zlib1g-dev swig libpcsclite-dev
+sudo apt-get install -y libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm git
+sudo apt-get install -y libncurses5-dev libncursesw5-dev xz-utils tk-dev pcscd opensc
+wget https://www.python.org/ftp/python/3.7.8/Python-3.7.8.tgz
+tar xf Python-3.7.8.tgz
+<span class="nb">cd</span> Python-3.7.8
+./configure --enable-optimizations
+make -j8 build_all
+sudo make -j8 altinstall
 
-<span class="n">sudo</span> <span class="n">pip3</span><span class="mf">.7</span> <span class="n">install</span> <span class="n">git</span><span class="o">+</span><span class="n">ssh</span><span class="p">:</span><span class="o">//</span><span class="n">git</span><span class="nd">@gitlab</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">cryptnox</span><span class="o">-</span><span class="n">phase2</span><span class="o">/</span><span class="n">cryptnoxpy</span><span class="o">.</span><span class="n">git</span>
+sudo pip3.7 install git+ssh://git@gitlab.com/cryptnox-phase2/cryptnoxpy.git
 
 <span class="c1"># or (if issue about agent forwarding with sudo) :</span>
 
-<span class="n">cd</span> <span class="o">~</span>
-<span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@gitlab</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">cryptnox</span><span class="o">-</span><span class="n">phase2</span><span class="o">/</span><span class="n">cryptnoxpy</span><span class="o">.</span><span class="n">git</span>
-<span class="n">cd</span> <span class="n">cryptnoxpy</span>
-<span class="n">sudo</span> <span class="n">pip3</span><span class="mf">.7</span> <span class="n">install</span> <span class="o">.</span>
+<span class="nb">cd</span> ~
+git clone git@gitlab.com:cryptnox-phase2/cryptnoxpy.git
+<span class="nb">cd</span> cryptnoxpy
+sudo pip3.7 install .
 </pre></div>
 </div>
-<p>In case of <strong>pyscard can't be installed</strong> automatically with pip :<span class="raw-html-m2r"><br></span>
-1) Try to pip3 install with sudo or root :<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code><span class="raw-html-m2r"><br></span>
-2) If still a failure, install the following packages :<span class="raw-html-m2r"><br></span>
-Needed if pyscard can't be installed from package manager
-<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3-dev</span> <span class="pre">swig</span> <span class="pre">libpcsclite-dev</span></code><span class="raw-html-m2r"><br></span>
-then retry <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code>.</p>
+<p>In case of <strong>pyscard can't be installed</strong> automatically with pip:</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Try to pip3 install with sudo or root: <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code></p></li>
+<li><p>If still a failure, install the following packages: Needed if pyscard can't be installed from package manager <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt</span> <span class="pre">install</span> <span class="pre">python3-dev</span> <span class="pre">swig</span> <span class="pre">libpcsclite-dev</span></code> then retry <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code>.</p></li>
+</ol>
+</div></blockquote>
 <p>If you use <strong>contactless readers</strong> on Linux, the RFID modules need to be disabled :</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">rmmod</span> <span class="n">pn533_usb</span>
-<span class="n">sudo</span> <span class="n">rmmod</span> <span class="n">pn533</span>
-<span class="n">sudo</span> <span class="n">rm</span> <span class="o">-</span><span class="n">r</span> <span class="o">/</span><span class="n">lib</span><span class="o">/</span><span class="n">modules</span><span class="o">/*/</span><span class="n">kernel</span><span class="o">/</span><span class="n">drivers</span><span class="o">/</span><span class="n">nfc</span><span class="o">/</span><span class="n">pn533</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo rmmod pn533_usb
+sudo rmmod pn533
+sudo rm -r /lib/modules/*/kernel/drivers/nfc/pn533
 </pre></div>
 </div>
 </section>
 <section id="update-issues">
 <h3>Update issues<a class="headerlink" href="#update-issues" title="Permalink to this headline">¶</a></h3>
-<p>In case you just want to update the package, with old pip version on some Linux,
-it is better to remove and reinstall the package :<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">uninstall</span> <span class="pre">cryptnoxpy</span></code><span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">.</span></code></p>
+<p>In case you just want to update the package, with old pip version on some Linux, it is better to remove and reinstall the package:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo pip uninstall cryptnoxpy
+sudo pip install .
+</pre></div>
+</div>
 </section>
 </section>
-<section id="lifecycle-management-and-library-use">
-<h2>Lifecycle Management and library use<a class="headerlink" href="#lifecycle-management-and-library-use" title="Permalink to this headline">¶</a></h2>
-<section id="import-the-library">
-<h3>import the library<a class="headerlink" href="#import-the-library" title="Permalink to this headline">¶</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">cryptnoxpy</span></code></p>
-</section>
-<section id="get-card-object">
-<h3>Get card object<a class="headerlink" href="#get-card-object" title="Permalink to this headline">¶</a></h3>
+<section id="library-use">
+<h2>Library use<a class="headerlink" href="#library-use" title="Permalink to this headline">¶</a></h2>
 <p>To get the card a connection has to be established with the reader’s index. The connection can
 then be passed to the factory that will initialize an object for the card in the reader from the
 correct class for the card type and version.</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cryptnoxpy</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cryptnoxpy</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="n">connection</span> <span class="o">=</span> <span class="n">cryptnoxpy</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -176,7 +180,6 @@ correct class for the card type and version.</p>
 <li><p>card.serial_number : Integer : Card/applet instance Unique ID</p></li>
 <li><p>card.applet_version : 3 integers list : Applet version (ex. 1.2.2)</p></li>
 </ul>
-</section>
 <section id="initialization-and-pairing">
 <h3>Initialization and pairing<a class="headerlink" href="#initialization-and-pairing" title="Permalink to this headline">¶</a></h3>
 <p>Right after the installation, the applet is not initialized, and the user needs
@@ -195,7 +198,9 @@ common secret is done during the init phase.</p>
 <li><p>PUK (15 digits string)</p></li>
 <li><p>optional : the first Paring Secret (32 bytes bytearray)</p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">pairing_key</span> <span class="pre">=</span> <span class="pre">card.init(name,</span> <span class="pre">email,</span> <span class="pre">pin,</span> <span class="pre">puk,</span> <span class="pre">pairing_secret)</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pairing_key</span> <span class="o">=</span> <span class="n">card</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">email</span><span class="p">,</span> <span class="n">pin</span><span class="p">,</span> <span class="n">puk</span><span class="p">,</span> <span class="n">pairing_secret</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>The returned data is the first PairingKey (32 bytes byte-array) and its index (0) :
 <code class="docutils literal notranslate"><span class="pre">0x00</span> <span class="pre">+</span> <span class="pre">ParingKeySlot0</span></code></p>
 <p>During the initialization phase, until the user public key for authentication
@@ -218,8 +223,10 @@ a secure channel.</p>
 <h3>PIN<a class="headerlink" href="#pin" title="Permalink to this headline">¶</a></h3>
 <p>The PIN chosen during the initialization needs to be provided after each card
 reset, and a secure channel is opened.</p>
-<p>To test a PIN string, simply use :<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">card.verify_pin(pin)</span></code></p>
+<p>To test a PIN string, simply use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">card</span><span class="o">.</span><span class="n">verify_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="seed-administration">
 <h3>Seed administration<a class="headerlink" href="#seed-administration" title="Permalink to this headline">¶</a></h3>
@@ -232,8 +239,10 @@ this seed using BIP32 derivation scheme.</p>
 <p>The seed can be generated in the card using the random number generator in the
 java chip system (AIS 20 class DRG.3). Doing this way, the seed secret never
 escapes the card protection.</p>
-<p>The method to generate a new seed key is :<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">card.generate_seed(pin)</span></code></p>
+<p>The method to generate a new seed key is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">card</span><span class="o">.</span><span class="n">generate_seed</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>The card can also randomly generate BIP39 mnemonics words list. But in this
 case, the query answer is only output and not used internally by the card.
 It is administrator responsibility to get a mnemonic using the GENERATE MNEMONIC
@@ -245,9 +254,11 @@ clear and full in the user’s system.</p>
 <section id="recovery">
 <h4>Recovery<a class="headerlink" href="#recovery" title="Permalink to this headline">¶</a></h4>
 <p>The Cryptnox applet can load binary seed.</p>
-<p>The seed is loaded in the card using this method :<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">card.load_seed(seed,</span> <span class="pre">pin)</span></code><span class="raw-html-m2r"><br></span>
-Seed is 32 bytes.</p>
+<p>The seed is loaded in the card using this method:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">card</span><span class="o">.</span><span class="n">load_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">pin</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Seed is 32 bytes.</p>
 <p>Once this seed is loaded in the card using the load_seed method, this card now
 behaves like were (or the one) it was backup. Be aware that key derivation
 paths are not backup, and must be identical to retrieve the same key pairs.
@@ -289,26 +300,25 @@ parameters. Most of the blockchain system used SHA2-256 to hash the message,
 but this card applet is agnostic from this point, since the signature is performed on
 a hash provided by the user. Note that this hash needs to be confirmed by the
 users beforehand, when they provide their EC384 signature of this hash.</p>
-<p>The code to sign with the EC current key node is :<span class="raw-html-m2r"><br></span>
-<code class="docutils literal notranslate"><span class="pre">signature</span> <span class="pre">=</span> <span class="pre">card.sign(data_hash,</span> <span class="pre">cryptnoxpy.Derivation.CURRENT_KEY)</span></code><span class="raw-html-m2r"><br></span>
-data_hash is a byte-array containing the EC hash to sign using ECDSA ecp256k1<span class="raw-html-m2r"><br></span>
-The signature a byte array, encoded as an ASN1 DER sequence of two INTEGER values, r and s.</p>
+<p>The code to sign with the EC current key node is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">signature</span> <span class="o">=</span> <span class="n">card</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">data_hash</span><span class="p">,</span> <span class="n">cryptnoxpy</span><span class="o">.</span><span class="n">Derivation</span><span class="o">.</span><span class="n">CURRENT_KEY</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>data_hash is a byte-array containing the EC hash to sign using ECDSA ecp256k1:</p>
+<p>The signature a byte array, encoded as an ASN1 DER sequence of two INTEGER values, r and s.</p>
 <p>See the sign method in the API documentation for more information.</p>
 </section>
 </section>
-</section>
-<section id="api-reference">
-<h1>API Reference<a class="headerlink" href="#api-reference" title="Permalink to this headline">¶</a></h1>
 <section id="card">
 <h2>Card<a class="headerlink" href="#card" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base">
-<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.card.base.</span></span><span class="sig-name descname"><span class="pre">Base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/connection/index.html#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><span class="pre">cryptnoxpy.connection.Connection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.base.Base" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.card.base.</span></span><span class="sig-name descname"><span class="pre">Base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><span class="pre">cryptnoxpy.connection.Connection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.base.Base" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object that contains information about the card that is in the reader.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/connection/index.html#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><em>Connection</em></a>) – Connection to use for card initialization</p></li>
+<li><p><strong>connection</strong> (<a class="reference internal" href="#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><em>Connection</em></a>) – Connection to use for card initialization</p></li>
 <li><p><strong>debug</strong> (<em>bool</em>) – Show debug information to the user.</p></li>
 </ul>
 </dd>
@@ -975,7 +985,7 @@ the PIN code.</p></li>
 <dd><p>Get 32 bytes random value from the card that is used to open the card with a user key</p>
 <p>Take nonce value from the card. Sign it with a third party application, like TPM.
 Send the signature back into the card using
-<a class="reference internal" href="autoapi/cryptnoxpy/card/base/index.html#cryptnoxpy.card.base.Base.user_key_challenge_response_open" title="cryptnoxpy.card.base.Base.user_key_challenge_response_open"><code class="xref py py-func docutils literal notranslate"><span class="pre">user_key_challenge_response_open()</span></code></a></p>
+<a class="reference internal" href="#cryptnoxpy.card.base.Base.user_key_challenge_response_open" title="cryptnoxpy.card.base.Base.user_key_challenge_response_open"><code class="xref py py-func docutils literal notranslate"><span class="pre">user_key_challenge_response_open()</span></code></a></p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
 <dd class="field-odd"><p>32 bytes random value used as nonce</p>

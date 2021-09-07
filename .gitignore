@@ -5,6 +5,9 @@ __pycache__/
 # build folders
 build
 dist
+.eggs
+_build
+*egg-info
 
 # pycharm ide
 .idea

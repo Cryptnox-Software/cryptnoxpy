@@ -38,7 +38,9 @@ Attributes
 .. autoapisummary::
 
    cryptnoxpy.reader.NFC_AVAILABLE
+   cryptnoxpy.reader.SMARTCARD_AVAILABLE
    cryptnoxpy.reader.NFC_AVAILABLE
+   cryptnoxpy.reader.SMARTCARD_AVAILABLE
 
 
 .. py:data:: NFC_AVAILABLE
@@ -46,7 +48,17 @@ Attributes
 
    
 
+.. py:data:: SMARTCARD_AVAILABLE
+   :annotation: = True
+
+   
+
 .. py:data:: NFC_AVAILABLE
+   :annotation: = False
+
+   
+
+.. py:data:: SMARTCARD_AVAILABLE
    :annotation: = False
 
    

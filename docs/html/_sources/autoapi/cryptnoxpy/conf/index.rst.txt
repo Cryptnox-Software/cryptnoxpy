@@ -23,7 +23,7 @@ Module Contents
    
 
 .. py:data:: extensions
-   :annotation: = ['myst_parser', 'sphinx.ext.autodoc', 'sphinx.ext.inheritance_diagram', 'autoapi.extension']
+   :annotation: = ['sphinx.ext.autodoc', 'sphinx.ext.inheritance_diagram', 'autoapi.extension']
 
    
 
