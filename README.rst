@@ -41,7 +41,7 @@ Ubuntu / Debian
 
 .. code-block:: bash
 
-    (sudo) apt-get install python3-pip python3-setuptools pcscd``
+    (sudo) apt-get install python3-pip python3-setuptools pcscd
 
 Fedora / CentOS / RHEL
 
