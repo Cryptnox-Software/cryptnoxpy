@@ -18,10 +18,10 @@ Functions
 
 .. autoapisummary::
 
-   cryptnoxpy.card.genuineness.check
+   cryptnoxpy.card.genuineness.origin
+   cryptnoxpy.card.genuineness.session_public_key
    cryptnoxpy.card.genuineness.manufacturer_certificate
    cryptnoxpy.card.genuineness._manufacturer_public_keys
-   cryptnoxpy.card.genuineness._check_manufacturer_certificate
    cryptnoxpy.card.genuineness._check_signature
    cryptnoxpy.card.genuineness._certificate_parts
    cryptnoxpy.card.genuineness._public_key
@@ -56,7 +56,10 @@ Attributes
 
    
 
-.. py:function:: check(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> str
+.. py:function:: origin(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> cryptnoxpy.enums.Origin
+
+
+.. py:function:: session_public_key(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> str
 
    Check if the card in the reader is genuine Cryptnox product
 
@@ -83,16 +86,13 @@ Attributes
 .. py:function:: _manufacturer_public_keys()
 
 
-.. py:function:: _check_manufacturer_certificate(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> None
-
-
 .. py:function:: _check_signature(message: bytes, public_key: cryptography.hazmat.primitives.asymmetric.ec.EllipticCurvePublicKey, signature_hex: str) -> bool
 
 
 .. py:function:: _certificate_parts(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> List[str]
 
 
-.. py:function:: _public_key(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> str
+.. py:function:: _public_key(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> bytes
 
 
 .. py:function:: _manufacturer_certificate_data(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> bytes

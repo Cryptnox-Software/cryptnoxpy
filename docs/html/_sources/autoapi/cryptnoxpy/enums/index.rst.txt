@@ -17,12 +17,38 @@ Classes
 
 .. autoapisummary::
 
+   cryptnoxpy.enums.AuthType
    cryptnoxpy.enums.Derivation
    cryptnoxpy.enums.KeyType
+   cryptnoxpy.enums.Origin
    cryptnoxpy.enums.SlotIndex
-   cryptnoxpy.enums.AuthType
    cryptnoxpy.enums.SeedSource
 
+
+
+
+.. py:class:: AuthType
+
+   Bases: :py:obj:`enum.Enum`
+
+   Predefined values for authentication type.
+
+   .. py:attribute:: NO_AUTH
+      :annotation: = 0
+
+      
+
+   .. py:attribute:: PIN
+      :annotation: = 1
+
+      
+
+   .. py:attribute:: USER_KEY
+      :annotation: = 2
+
+      
+
+   .. py:method:: __bool__(self)
 
 
 
@@ -70,6 +96,28 @@ Classes
       
 
 
+.. py:class:: Origin
+
+   Bases: :py:obj:`enum.Enum`
+
+   Predefined values for keeping the origin of the card
+
+   .. py:attribute:: UNKNOWN
+      :annotation: = 0
+
+      
+
+   .. py:attribute:: ORIGINAL
+      :annotation: = 1
+
+      
+
+   .. py:attribute:: FAKE
+      :annotation: = 2
+
+      
+
+
 .. py:class:: SlotIndex
 
    Bases: :py:obj:`enum.IntEnum`
@@ -90,31 +138,6 @@ Classes
       :annotation: = 3
 
       
-
-
-.. py:class:: AuthType
-
-   Bases: :py:obj:`enum.Enum`
-
-   Predefined values for authentication type.
-
-   .. py:attribute:: NO_AUTH
-      :annotation: = 0
-
-      
-
-   .. py:attribute:: PIN
-      :annotation: = 1
-
-      
-
-   .. py:attribute:: USER_KEY
-      :annotation: = 2
-
-      
-
-   .. py:method:: __bool__(self)
-
 
 
 .. py:class:: SeedSource

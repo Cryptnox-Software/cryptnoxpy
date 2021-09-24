@@ -16,13 +16,28 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from ..binary_utils import list_to_hexadecimal, hexadecimal_to_list
 from ..connection import Connection
 from ..exceptions import GenuineCheckException
+from ..enums import Origin
 
 _ECDSA_SHA256 = "06082a8648ce3d040302" + "03"
 _MANUFACTURER_CERTIFICATE_URL = "https://verify.cryptnox.tech/certificates/"
 _PUBLIC_K1_OID = "2a8648ce3d030107034200"
 
 
-def check(connection: Connection, debug: bool = False) -> str:
+def origin(connection: Connection, debug: bool = False) -> Origin:
+    manufacturer_certificate_data = _manufacturer_certificate_data(connection, debug)
+    signature = _manufacturer_signature(connection, debug)
+
+    try:
+        for public_key in _manufacturer_public_keys():
+            if _check_signature(manufacturer_certificate_data, public_key, signature):
+                return Origin.ORIGINAL
+    except aiohttp.client_exceptions.ClientError:
+        return Origin.UNKNOWN
+
+    return Origin.FAKE
+
+
+def session_public_key(connection: Connection, debug: bool = False) -> str:
     """
     Check if the card in the reader is genuine Cryptnox product
 
@@ -34,10 +49,7 @@ def check(connection: Connection, debug: bool = False) -> str:
 
     :raise GenuineCheckException: The card is not genuine
     """
-    _check_manufacturer_certificate(connection, debug)
-
     card_cert_hex = _get_card_certificate(connection, debug)
-    session_public_key = card_cert_hex[18:148]
     card_cert_msg = bytes.fromhex(card_cert_hex[:148])
     card_cert_sig_hex = card_cert_hex[148:]
 
@@ -47,12 +59,12 @@ def check(connection: Connection, debug: bool = False) -> str:
         print("Card sig")
         print(card_cert_sig_hex)
 
-    public_key = bytes.fromhex(_public_key(connection))
-    public_key = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(), public_key)
+    public_key = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(),
+                                                              _public_key(connection))
     if not _check_signature(card_cert_msg, public_key, card_cert_sig_hex):
         raise GenuineCheckException("Wrong card signature")
 
-    return session_public_key
+    return card_cert_hex[18:148]
 
 
 def manufacturer_certificate(connection: Connection, debug: bool = False) -> str:
@@ -110,20 +122,6 @@ def _manufacturer_public_keys():
 
     return asyncio.run(fetch_certificates())
 
-def _check_manufacturer_certificate(connection: Connection, debug: bool = False) -> None:
-    manufacturer_certificate_data = _manufacturer_certificate_data(connection, debug)
-    signature = _manufacturer_signature(connection, debug)
-
-    certified = False
-    for public_key in _manufacturer_public_keys():
-        certified |= _check_signature(manufacturer_certificate_data, public_key, signature)
-
-        if certified:
-            break
-
-    if not certified:
-        raise GenuineCheckException("Wrong Cryptnox factory signature")
-
 
 def _check_signature(message: bytes, public_key: ec.EllipticCurvePublicKey, signature_hex: str) -> bool:
     try:
@@ -143,20 +141,20 @@ def _certificate_parts(connection: Connection, debug: bool = False) -> List[str]
     return parts
 
 
-def _public_key(connection: Connection, debug: bool = False) -> str:
+def _public_key(connection: Connection, debug: bool = False) -> bytes:
     public_key = _certificate_parts(connection)[1][:130]
 
     if debug:
         print("card public key hex")
         print(public_key)
 
-    return public_key
+    return bytes.fromhex(public_key)
 
 
 def _manufacturer_certificate_data(connection: Connection, debug: bool = False) -> bytes:
     # datacert_hex : prem partie + 2a8648ce3d030107034200 + pubhex
     result = bytes.fromhex(_certificate_parts(connection, debug)[0][8:] +
-                           _PUBLIC_K1_OID + _public_key(connection))
+                           _PUBLIC_K1_OID) + _public_key(connection)
     if debug:
         print("Manufacturer data")
         print(result.hex())

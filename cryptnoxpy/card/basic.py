@@ -25,9 +25,9 @@ class Basic(base.Base, metaclass=abc.ABCMeta):
     type = ord("B")
     pin_rule = "4-9 digits"
 
-    def __init__(self, connection: Connection, data: List[int] = None, debug: bool = False):
-        super(Basic, self).__init__(connection, data, debug)
-        connection.pairing_secret = _BASIC_PAIRING_SECRET
+    def __init__(self, *args, **kwargs):
+        super(Basic, self).__init__(*args, **kwargs)
+        self.connection.pairing_secret = _BASIC_PAIRING_SECRET
 
     def change_pin(self, new_pin: str) -> None:
         new_pin = self.valid_pin(new_pin, pin_name="new pin")
@@ -98,6 +98,10 @@ class Basic(base.Base, metaclass=abc.ABCMeta):
                                           "Invalid puk is provided") from error
         except exceptions.SecureChannelException as error:
             raise exceptions.CardNotBlocked("Card is not blocked") from error
+        except exceptions.GenericException as error:
+            if error.status[0] == 0x69 and error.status[1] == 0x85:
+                raise exceptions.CardNotBlocked("The card is not blocked.")
+            raise
 
         if not self.open:
             self.auth_type = base.AuthType.PIN

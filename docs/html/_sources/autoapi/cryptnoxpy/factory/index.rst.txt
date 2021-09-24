@@ -45,6 +45,6 @@ Functions
 .. py:function:: _select(connection, apdu, card_type, debug: bool = False) -> Tuple[Any, Any]
 
 
-.. py:function:: _serial_number(connection, debug: bool = False)
+.. py:function:: _serial_number(connection: cryptnoxpy.connection.Connection, debug: bool = False)
 
 

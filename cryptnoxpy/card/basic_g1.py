@@ -108,6 +108,8 @@ class BasicG1(basic.Basic):
                                                      "without resetting the card") from error
             raise
 
+        self._data[1] |= BasicG1._SEED_FLAG
+
         if result and not self.open:
             self.auth_type = AuthType.PIN
 
@@ -158,6 +160,8 @@ class BasicG1(basic.Basic):
                                                      "without resetting the card") from error
             raise
 
+        self._data[1] |= BasicG1._SEED_FLAG
+
         if not self.open:
             self.auth_type = AuthType.PIN
 
@@ -171,6 +175,7 @@ class BasicG1(basic.Basic):
 
     def reset(self, puk: str) -> None:
         puk = self.valid_puk(puk)
+
         try:
             self.connection.send_encrypted([0x80, 0xFD, 0, 0], puk.encode("ascii"))
         except exceptions.PinException as error:
@@ -180,6 +185,9 @@ class BasicG1(basic.Basic):
 
     @property
     def seed_source(self) -> SeedSource:
+        if not self.valid_key:
+            return SeedSource.NO_SEED
+
         return SeedSource(self._info[0])
 
     def set_pin_authentication(self, status: bool, puk: str) -> None:
@@ -437,8 +445,8 @@ class BasicG1(basic.Basic):
             if error.status[0] == 0x69 and error.status[1] == 0x85:
                 raise exceptions.SecureChannelException("Command may need a secured channel")
             raise
-        else:
-            return result
+
+        return result
 
     @property
     def _owner(self) -> base.User:

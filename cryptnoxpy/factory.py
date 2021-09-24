@@ -39,14 +39,11 @@ def get_card(connection: Connection, debug: bool = False) -> Base:
             serial, _ = _serial_number(connection, debug)
         except (TypeError, CardTypeException, CertificateException, DataException,
                 FirmwareException):
-            pass
-        else:
-            card_instance = card_cls(connection, data)
-            card_instance.applet_version = applet_version
-            card_instance.serial_number = serial
-            connection.session_public_key = genuineness.check(connection, debug)
+            continue
 
-            return card_instance
+        connection.session_public_key = genuineness.session_public_key(connection, debug)
+
+        return card_cls(connection, serial, applet_version, data)
 
     raise CardException("Card not recognized")
 
@@ -77,7 +74,7 @@ def _select(connection, apdu, card_type, debug: bool = False) -> Tuple[Any, Any]
     return applet_version, data
 
 
-def _serial_number(connection, debug: bool = False):
+def _serial_number(connection: Connection, debug: bool = False):
     certificate = genuineness.manufacturer_certificate(connection, debug)
     certificate_parts = certificate.split("0302010202")
     if len(certificate_parts) <= 1:

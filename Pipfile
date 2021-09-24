@@ -8,12 +8,12 @@ mypy = "*"
 pylint = "*"
 pytest = "*"
 sphinx = "*"
-sphinx-autoapi = "==1.8.3"
+sphinx-autoapi = "*"
 
 [packages]
 aiohttp = "*"
 cryptography = "*"
-pyscard = "==2.0.1"
+pyscard = "==2.0.2"
 
 [requires]
 python_version = "3.9"

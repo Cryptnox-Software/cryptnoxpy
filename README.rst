@@ -2,6 +2,9 @@
 Cryptnox Python Communication Library
 =====================================
 
+.. image:: https://img.shields.io/pypi/v/cryptnoxpy
+    :target: https://pypi.org/project/cryptnoxpy
+
 **Warning: This is a beta release of the software.
 It is released for development purposes. 
 Use at your own risk.**

@@ -8,6 +8,18 @@ from enum import (
 )
 
 
+class AuthType(Enum):
+    """
+    Predefined values for authentication type.
+    """
+    NO_AUTH = 0
+    PIN = 1
+    USER_KEY = 2
+
+    def __bool__(self):
+        return self != AuthType.NO_AUTH
+
+
 class Derivation(IntEnum):
     """
     Predefined values to use for parameters as Derivation.
@@ -26,6 +38,15 @@ class KeyType(IntEnum):
     R1 = 0x10
 
 
+class Origin(Enum):
+    """
+    Predefined values for keeping the origin of the card
+    """
+    UNKNOWN = 0
+    ORIGINAL = 1
+    FAKE = 2
+
+
 class SlotIndex(IntEnum):
     """
     Predefined values to use for parameters as SlotIndex.
@@ -34,17 +55,6 @@ class SlotIndex(IntEnum):
     RSA = 0x02
     FIDO = 0x03
 
-
-class AuthType(Enum):
-    """
-    Predefined values for authentication type.
-    """
-    NO_AUTH = 0
-    PIN = 1
-    USER_KEY = 2
-
-    def __bool__(self):
-        return self != AuthType.NO_AUTH
 
 class SeedSource(Enum):
     """

@@ -2,7 +2,6 @@
 """
 Module for keeping information about the card attached to the reader
 """
-
 import abc
 import collections
 from typing import (
@@ -22,6 +21,7 @@ from ..enums import (
     AuthType,
     Derivation,
     KeyType,
+    Origin,
     SeedSource,
     SlotIndex
 )
@@ -48,16 +48,18 @@ class Base(metaclass=abc.ABCMeta):
     _ALGORITHM = ec.SECP256R1
     PUK_LENGTH = 15
 
-    def __init__(self, connection: Connection, data: List[int] = None, debug: bool = False):
+    def __init__(self, connection: Connection, serial: int, applet_version: List[int],
+                 data: List[int] = None, debug: bool = False):
         self.connection = connection
         self.connection.algorithm = self._ALGORITHM
         self.debug = debug
 
-        self.applet_version: List[int] = []
-        self.serial_number: int = -1
-        self.auth_type = AuthType.NO_AUTH
+        self.applet_version: List[int] = applet_version
+        self.auth_type: AuthType = AuthType.NO_AUTH
+        self.serial_number: int = serial
 
         self._data = data
+        self._origin: Origin = Origin.UNKNOWN
         self._user: User = None
 
     @staticmethod
@@ -371,6 +373,18 @@ class Base(metaclass=abc.ABCMeta):
         :rtype: bool
         """
         return self.auth_type != AuthType.NO_AUTH
+
+    @property
+    def origin(self) -> Origin:
+        """
+        :return: Return if the card is original Cryptnox card, fake or there's an
+                 issue getting the information
+        :rtype: Origin
+        """
+        if self._origin == Origin.UNKNOWN:
+            self._origin = genuineness.origin(self.connection, self.debug)
+
+        return self._origin
 
     @property
     @abc.abstractmethod

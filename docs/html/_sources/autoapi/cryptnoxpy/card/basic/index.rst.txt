@@ -36,7 +36,7 @@ Attributes
 
    
 
-.. py:class:: Basic(connection: cryptnoxpy.connection.Connection, data: List[int] = None, debug: bool = False)
+.. py:class:: Basic(*args, **kwargs)
 
    Bases: :py:obj:`cryptnoxpy.card.base.Base`
 
@@ -75,18 +75,6 @@ Attributes
 
       :param str current_puk: The current PUK code of the card
       :param str new_puk: The desired PUK code to be set for the card
-
-
-   .. py:method:: generate_mnemonic(self, checksum: int) -> bytes
-
-      Generate BIP39 specified mnemonic.
-
-      :param int checksum: Checksum of the mnemonic. (4-8)
-
-      :return: 16 byte integers used in wordlist to get the mnemonic (0-2047)
-      :rtype: bytes
-
-      :raises DataValidationException: checksum is not a number between 4 and 8
 
 
    .. py:method:: init(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes = _BASIC_PAIRING_SECRET) -> bytes
