@@ -233,12 +233,12 @@ Classes
       :raises PukException: PUK code is not valid
 
 
-   .. py:method:: set_pinless_path(self, path: bytes, puk: str) -> None
+   .. py:method:: set_pinless_path(self, path: str, puk: str) -> None
       :abstractmethod:
 
       Enable working with the card without a PIN on path.
 
-      :param bytes path: Path to be available without a PIN code
+      :param str path: Path to be available without a PIN code
       :param str puk: PUK code of the card
 
       :raises DataValidationException: input data is not valid

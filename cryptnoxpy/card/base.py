@@ -55,12 +55,12 @@ class Base(metaclass=abc.ABCMeta):
         self.debug = debug
 
         self.applet_version: List[int] = applet_version
-        self.auth_type: AuthType = AuthType.NO_AUTH
         self.serial_number: int = serial
+        self.auth_type: AuthType = AuthType.NO_AUTH
 
         self._data = data
-        self._origin: Origin = Origin.UNKNOWN
         self._user: User = None
+        self._origin: Origin = Origin.UNKNOWN
 
     @staticmethod
     @property
@@ -431,11 +431,11 @@ class Base(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def set_pinless_path(self, path: bytes, puk: str) -> None:
+    def set_pinless_path(self, path: str, puk: str) -> None:
         """
         Enable working with the card without a PIN on path.
 
-        :param bytes path: Path to be available without a PIN code
+        :param str path: Path to be available without a PIN code
         :param str puk: PUK code of the card
 
         :raises DataValidationException: input data is not valid

@@ -100,6 +100,11 @@
 <span class="sig-name descname"><span class="pre">_EXTENDED_PUBLIC_KEY</span></span><a class="headerlink" href="#cryptnoxpy.card.basic_g1.BasicG1._EXTENDED_PUBLIC_KEY" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cryptnoxpy.card.basic_g1.BasicG1._USER_DATA">
+<span class="sig-name descname"><span class="pre">_USER_DATA</span></span><a class="headerlink" href="#cryptnoxpy.card.basic_g1.BasicG1._USER_DATA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.basic_g1.BasicG1.change_pairing_key">
 <span class="sig-name descname"><span class="pre">change_pairing_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.basic_g1.BasicG1.change_pairing_key" title="Permalink to this definition">¶</a></dt>
@@ -415,12 +420,12 @@ challenge-response validation</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.basic_g1.BasicG1.set_pinless_path">
-<span class="sig-name descname"><span class="pre">set_pinless_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.basic_g1.BasicG1.set_pinless_path" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">set_pinless_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.basic_g1.BasicG1.set_pinless_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable working with the card without a PIN on path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>bytes</em>) – Path to be available without a PIN code</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to be available without a PIN code</p></li>
 <li><p><strong>puk</strong> (<em>str</em>) – PUK code of the card</p></li>
 </ul>
 </dd>
@@ -813,7 +818,7 @@ on the card. This method will read and return them.</p>
       &copy;2021, Cryptnox.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.2.0</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

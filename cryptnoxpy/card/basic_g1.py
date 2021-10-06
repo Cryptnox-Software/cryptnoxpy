@@ -40,6 +40,11 @@ class BasicG1(basic.Basic):
     _PINLESS_FLAG = int("00001000", 2)
     _EXTENDED_PUBLIC_KEY = int("00000100", 2)
 
+    _USER_DATA = {
+        "size": 1200,
+        "count": 3
+    }
+
     def change_pairing_key(self, index: int, pairing_key: bytes, puk: str = "") -> None:
         if len(pairing_key) != 32:
             raise exceptions.DataValidationException("Pairing key has to be 32 bytes.")
@@ -203,8 +208,11 @@ class BasicG1(basic.Basic):
                 raise exceptions.PinAuthenticationException("PIN can't be set without user key.")
             raise
 
-    def set_pinless_path(self, path: bytes, puk: str) -> None:
+        self._data[1] |= BasicG1._PIN_AUTH_FLAG
+
+    def set_pinless_path(self, path: str, puk: str) -> None:
         puk = self.valid_puk(puk)
+        path = path_to_bytes(path) if path else b""
 
         try:
             self.connection.send_encrypted([0x80, 0xC1, 0, 0], puk.encode("ascii") + path)
@@ -220,6 +228,8 @@ class BasicG1(basic.Basic):
                     raise exceptions.DataValidationException("No seed or extended key")
 
             raise
+
+        self._data[1] |= BasicG1._PINLESS_FLAG
 
     def set_extended_public_key(self, status: bool, puk: str) -> None:
         puk = self.valid_puk(puk)
@@ -243,26 +253,40 @@ class BasicG1(basic.Basic):
 
     @property
     def user_data(self) -> bytes:
-        try:
-            result = self.connection.send_encrypted([0x80, 0xFA, 0x00, 0x01], b"", True)
-        except exceptions.GenericException as error:
-            if error.status[0] == 0x69 and error.status[1] == 0x85:
-                raise exceptions.SecureChannelException("Command may need a secured channel")
-            raise
+        result = b""
+        index = 1
+        while True:
+            try:
+                result += self.connection.send_encrypted([0x80, 0xFA, 0x00, index], b"", True)
+            except exceptions.GenericException as error:
+                if error.status[0] == 0x69 and error.status[1] == 0x85:
+                    raise exceptions.SecureChannelException("Command may need a secured channel")
+                if error.status[0] == 0x6B and error.status[1] == 0x00:
+                    break
+                raise
+            index += 1
 
         return result
 
     @user_data.setter
     def user_data(self, value: bytes) -> None:
-        try:
-            self.connection.send_encrypted([0x80, 0xFC, 0x00, 0x00], value)
-        except exceptions.GenericException as error:
-            if error.status[0] == 0x69 and error.status[1] == 0x85:
-                raise exceptions.CardClosedException("Card needs to be opened for this operation")
-            if error.status[0] == 0x67 and error.status[1] == 0x00:
-                raise exceptions.DataValidationException("Value to large to write")
+        size = BasicG1._USER_DATA["size"]
+        if len(value) > BasicG1._USER_DATA["count"]*size:
+            raise exceptions.DataValidationException("Value to large to write")
 
-            raise
+        value_to_send = [value[i:i+size] for i in range(0, len(value), size)]
+
+        for index, entry in enumerate(value_to_send):
+            try:
+                self.connection.send_encrypted([0x80, 0xFC, 0x00, index], entry)
+            except exceptions.GenericException as error:
+                if error.status[0] == 0x69 and error.status[1] == 0x85:
+                    raise exceptions.CardClosedException("Card needs to be opened for this operation")
+                if error.status[0] == 0x67 and error.status[1] == 0x00:
+                    raise exceptions.DataValidationException("Value to large to write")
+
+                raise
+            index += 1
 
     def user_key_add(self, slot: SlotIndex, data_info: str, public_key: bytes, puk_code: str,
                      cred_id: bytes = b"") -> None:
@@ -364,6 +388,7 @@ class BasicG1(basic.Basic):
     def sign(self, data: bytes, derivation: Derivation = Derivation.CURRENT_KEY,
              key_type: KeyType = KeyType.K1, path: str = "", pin: str = "",
              filter_eos: bool = False) -> bytes:
+        pin = self.valid_pin(pin)
         derivation = Derivation(derivation)
         key_type = KeyType(key_type)
 

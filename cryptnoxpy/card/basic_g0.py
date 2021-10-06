@@ -148,7 +148,7 @@ class BasicG0(Basic):
     def set_pin_authentication(self, status: bool, puk: str) -> None:
         raise NotImplementedError("Card doesn't have this functionality")
 
-    def set_pinless_path(self, path: bytes, puk: str) -> None:
+    def set_pinless_path(self, path: str, puk: str) -> None:
         raise NotImplementedError("Card doesn't have this functionality")
 
     def set_extended_public_key(self, status: bool, puk: str) -> None:
@@ -156,6 +156,7 @@ class BasicG0(Basic):
 
     def sign(self, data: bytes, derivation: Derivation, key_type: KeyType = KeyType.K1,
              path: str = "", pin: str = "", filter_eos: bool = False) -> bytes:
+        pin = self.valid_pin(pin)
         derivation = Derivation(derivation)
         key_type = KeyType(key_type)
 

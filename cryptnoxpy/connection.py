@@ -147,7 +147,7 @@ class Connection(ContextDecorator):
             print(received.hex())
 
         self._check_response_code(status[0], status[1])
-        if status[0] != 0x90 and status[1] != 0x00:
+        if status[0] != 0x90 or status[1] != 0x00:
             raise exceptions.GenericException(status)
 
         return received
