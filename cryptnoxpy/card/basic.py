@@ -87,15 +87,18 @@ class Basic(base.Base, metaclass=abc.ABCMeta):
         return bytes([0]) + pairing_secret
 
     def unblock_pin(self, puk: str, new_pin: str) -> None:
+        if not self.pin_authentication:
+            raise exceptions.PinException("PIN authentication is disabled. Can not unblock it.")
+
         apdu = [0x80, 0x22, 0x00, 0x00]
         puk = self.valid_puk(puk)
         new_pin = self.valid_pin(new_pin, pin_name="new pin")
+
         try:
             self.connection.send_encrypted(
                 apdu, bytes(puk, 'ascii') + bytes(new_pin, 'ascii'))
         except exceptions.PinException as error:
-            raise exceptions.PukException(error.number_of_retries,
-                                          "Invalid puk is provided") from error
+            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
         except exceptions.SecureChannelException as error:
             raise exceptions.CardNotBlocked("Card is not blocked") from error
         except exceptions.GenericException as error:
@@ -127,6 +130,9 @@ class Basic(base.Base, metaclass=abc.ABCMeta):
         :param str value: Value of the new secret
         """
         message = [0x80, 0x21, select_pin_puk, 0x00]
+
+        if not self.initialized:
+            raise exceptions.InitializationException("Card is not initialized")
 
         self.connection.send_encrypted(message, bytes(value, 'ascii'))
 

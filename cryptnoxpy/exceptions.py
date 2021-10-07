@@ -92,7 +92,7 @@ class PinException(CryptnoxException):
     :param str message: Optional message
     """
 
-    def __init__(self, number_of_retries: int, message: str = "Wrong pin"):
+    def __init__(self, message: str = "Invalid PIN code was provided", number_of_retries: int = 0):
         super().__init__(message)
 
         self.number_of_retries = number_of_retries
@@ -107,7 +107,7 @@ class PukException(CryptnoxException):
     :param str message: Optional message
     """
 
-    def __init__(self, number_of_retries: int = 0, message: str = "Wrong PUK"):
+    def __init__(self, message: str = "Invalid PUK code was provided", number_of_retries: int = 0):
         super().__init__(message)
 
         self.number_of_retries = number_of_retries

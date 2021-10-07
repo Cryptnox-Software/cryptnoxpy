@@ -167,10 +167,13 @@ class Connection(ContextDecorator):
                                                "connected")
 
         if code1 == 0x63 and code2 & 0xF0 == 0xC0:
-            raise exceptions.PinException(code2 - 0xC0)
+            raise exceptions.PinException(number_of_retries=code2 - 0xC0)
 
         if code1 == 0x98 and code2 == 0x40:
-            raise exceptions.PukException("Probably a bad PUK was given.")
+            raise exceptions.PukException()
+
+        if code1 == 0x69 and code2 == 0x85:
+            raise exceptions.PinAuthenticationException("PIN code wasn't authorized")
 
     def _decode(self, rep: bytes, mac_value: bytes) -> bytes:
         rep_data = rep[16:]

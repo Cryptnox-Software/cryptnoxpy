@@ -57,9 +57,11 @@ class BasicG1(basic.Basic):
             self.connection.send_encrypted([0x80, 0xDA, index, 0x00],
                                            pairing_key + puk.encode("ascii"))
         except exceptions.PinException as error:
-            raise exceptions.PukException(error.number_of_retries, "Wrong puk") from error
+            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
 
     def derive(self, key_type: KeyType = KeyType.K1, path: str = ""):
+        if self.seed_source == SeedSource.NO_SEED:
+            raise exceptions.SeedException("There is no seed on the card")
         message = [0x80, 0xD1, 0x08, 0x00]
         binary_path = path_to_bytes(path) if path else b""
         self.connection.send_encrypted(message, binary_path)
@@ -120,9 +122,14 @@ class BasicG1(basic.Basic):
 
         return result
 
-    def get_public_key(self, derivation: Derivation,
-                       key_type: KeyType = KeyType.K1, path: str = "",
+    def get_public_key(self, derivation: Derivation, key_type: KeyType = KeyType.K1, path: str = "",
                        compressed: bool = True) -> str:
+        if not self.initialized:
+            raise exceptions.InitializationException("Card is not initialized")
+
+        if self.seed_source == SeedSource.NO_SEED:
+            raise exceptions.SeedException("There is no seed on the card")
+
         key_type = KeyType(key_type)
         derivation = Derivation(derivation)
 
@@ -184,7 +191,7 @@ class BasicG1(basic.Basic):
         try:
             self.connection.send_encrypted([0x80, 0xFD, 0, 0], puk.encode("ascii"))
         except exceptions.PinException as error:
-            raise exceptions.PukException(error.number_of_retries, "Wrong puk") from error
+            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
 
         self.auth_type = AuthType.NO_AUTH
 
@@ -202,7 +209,7 @@ class BasicG1(basic.Basic):
         try:
             self.connection.send_encrypted([0x80, 0xC3, 0, 0], status + puk.encode("ascii"))
         except exceptions.PinException as error:
-            raise exceptions.PukException(error.number_of_retries, "Wrong puk") from error
+            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
         except exceptions.GenericException as error:
             if error.status[0] == 0x69 and error.status[1] == 0x86:
                 raise exceptions.PinAuthenticationException("PIN can't be set without user key.")
@@ -211,13 +218,16 @@ class BasicG1(basic.Basic):
         self._data[1] |= BasicG1._PIN_AUTH_FLAG
 
     def set_pinless_path(self, path: str, puk: str) -> None:
+        if self.seed_source == SeedSource.NO_SEED:
+            raise exceptions.SeedException("There is no seed on the card")
+
         puk = self.valid_puk(puk)
         path = path_to_bytes(path) if path else b""
 
         try:
             self.connection.send_encrypted([0x80, 0xC1, 0, 0], puk.encode("ascii") + path)
         except exceptions.PinException as error:
-            raise exceptions.PukException(error.number_of_retries, "Wrong puk") from error
+            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
         except exceptions.GenericException as error:
             if error.status[0] == 0x6A and error.status[1] == 0x80:
                 raise exceptions.DataValidationException("Path length not multiple of 4")
@@ -232,13 +242,16 @@ class BasicG1(basic.Basic):
         self._data[1] |= BasicG1._PINLESS_FLAG
 
     def set_extended_public_key(self, status: bool, puk: str) -> None:
+        if self.seed_source == SeedSource.NO_SEED:
+            raise exceptions.SeedException("There is no seed on the card")
+
         puk = self.valid_puk(puk)
         status = int(status).to_bytes(1, "big")
 
         try:
             self.connection.send_encrypted([0x80, 0xC3, 0, 0], status + puk.encode("ascii"))
         except exceptions.PinException as error:
-            raise exceptions.PukException(error.number_of_retries, "Wrong puk") from error
+            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
         except exceptions.GenericException as error:
             if error.status[0] == 0x69 and error.status[1] == 0x85:
                 raise exceptions.SeedException("Seed not found")
@@ -307,7 +320,7 @@ class BasicG1(basic.Basic):
         try:
             self.connection.send_encrypted([0x80, 0xD5, 0x00, 0x00], data)
         except exceptions.PinException as error:
-            raise exceptions.PukException(error.number_of_retries)
+            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
         except exceptions.GenericException as error:
             if error.status == 0x6A80:
                 raise exceptions.DataValidationException("Invalid slot index")
@@ -326,7 +339,7 @@ class BasicG1(basic.Basic):
         try:
             self.connection.send_encrypted([0x80, 0xD7, 0x00, 0x00], data)
         except exceptions.PinException as error:
-            raise exceptions.PukException(error.number_of_retries)
+            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
         except exceptions.GenericException as error:
             if error.status == 0x6A80:
                 raise exceptions.DataValidationException("Invalid slot index")
@@ -388,6 +401,9 @@ class BasicG1(basic.Basic):
     def sign(self, data: bytes, derivation: Derivation = Derivation.CURRENT_KEY,
              key_type: KeyType = KeyType.K1, path: str = "", pin: str = "",
              filter_eos: bool = False) -> bytes:
+        if self.seed_source == SeedSource.NO_SEED:
+            raise exceptions.SeedException("There is no key on the card")
+
         pin = self.valid_pin(pin)
         derivation = Derivation(derivation)
         key_type = KeyType(key_type)

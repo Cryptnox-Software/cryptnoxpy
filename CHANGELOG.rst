@@ -7,8 +7,16 @@ All notable changes to this project will be documented in this file.
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`_\ ,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.1...HEAD>`_
+`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.2...HEAD>`_
 -------------------------------------------------------------------------------------
+
+`1.1.2 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.1...v1.1.2>`_ - 2021-10-06
+-----------------------------------------------------------------------------------------------
+
+Fixed
+^^^^^
+
+* Handling of error response from the card for not authenticated
 
 `1.1.1 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.0...v1.1.1>`_ - 2021-10-06
 -----------------------------------------------------------------------------------------------
@@ -16,7 +24,7 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 Changed
 ^^^^^^^
 
-* User data size increased to 3600 bytes.
+* User data size increased to 3600 bytes
 
 Fixed
 ^^^^^
