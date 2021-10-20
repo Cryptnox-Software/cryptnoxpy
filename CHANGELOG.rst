@@ -7,10 +7,18 @@ All notable changes to this project will be documented in this file.
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`_\ ,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.2...HEAD>`_
+`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.3...HEAD>`_
 -------------------------------------------------------------------------------------
 
-`1.1.2 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.1...v1.1.2>`_ - 2021-10-06
+`1.1.3 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.2...v1.1.3>`_ - 2021-10-20
+-----------------------------------------------------------------------------------------------
+
+Fixed
+^^^^^
+
+* sign operation throws error if PIN code is not provided when user key is used for authentication.
+
+`1.1.2 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.1...v1.1.2>`_ - 2021-10-07
 -----------------------------------------------------------------------------------------------
 
 Fixed

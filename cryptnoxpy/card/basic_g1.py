@@ -404,7 +404,7 @@ class BasicG1(basic.Basic):
         if self.seed_source == SeedSource.NO_SEED:
             raise exceptions.SeedException("There is no key on the card")
 
-        pin = self.valid_pin(pin)
+        pin = self.valid_pin(pin) if pin else ""
         derivation = Derivation(derivation)
         key_type = KeyType(key_type)
 
