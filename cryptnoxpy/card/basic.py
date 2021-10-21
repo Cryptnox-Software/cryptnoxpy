@@ -26,7 +26,7 @@ class Basic(base.Base, metaclass=abc.ABCMeta):
     pin_rule = "4-9 digits"
 
     def __init__(self, *args, **kwargs):
-        super(Basic, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.connection.pairing_secret = _BASIC_PAIRING_SECRET
 
     def change_pin(self, new_pin: str) -> None:

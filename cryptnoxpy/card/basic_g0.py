@@ -34,7 +34,7 @@ class BasicG0(Basic):
     _ALGORITHM = ec.SECP256K1
 
     def __init__(self, *args, **kwargs):
-        super(Basic, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self._initialized = False
 
         self._check_init()
