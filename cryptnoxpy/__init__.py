@@ -9,4 +9,4 @@ from . import factory
 from .enums import *
 from .exceptions import *
 
-__version__ = "1.1.4"
+__version__ = "1.1.5"

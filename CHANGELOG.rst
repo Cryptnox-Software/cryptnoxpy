@@ -7,8 +7,16 @@ All notable changes to this project will be documented in this file.
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`_\ ,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.4...HEAD>`_
+`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.5...HEAD>`_
 -------------------------------------------------------------------------------------
+
+`1.1.5 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.4...v1.1.5>`_ - 2021-10-29
+-----------------------------------------------------------------------------------------------
+
+Fixed
+^^^^^
+
+* Genuineness check made more resilient to exceptions
 
 `1.1.4 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.3...v1.1.4>`_ - 2021-10-21
 -----------------------------------------------------------------------------------------------

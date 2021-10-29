@@ -24,14 +24,29 @@ _PUBLIC_K1_OID = "2a8648ce3d030107034200"
 
 
 def origin(connection: Connection, debug: bool = False) -> Origin:
-    manufacturer_certificate_data = _manufacturer_certificate_data(connection, debug)
+    try:
+        certificates = _manufacturer_public_keys()
+    except Exception:
+        return Origin.UNKNOWN
+
+    if not certificates:
+        return Origin.UNKNOWN
+
+    certificate = _manufacturer_certificate_data(connection, debug)
     signature = _manufacturer_signature(connection, debug)
 
-    try:
-        for public_key in _manufacturer_public_keys():
-            if _check_signature(manufacturer_certificate_data, public_key, signature):
+    error = False
+
+    for public_key in certificates:
+        try:
+            valid = _check_signature(certificate, public_key, signature)
+        except Exception:
+            error = True
+        else:
+            if valid:
                 return Origin.ORIGINAL
-    except aiohttp.client_exceptions.ClientError:
+
+    if error:
         return Origin.UNKNOWN
 
     return Origin.FAKE
