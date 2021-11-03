@@ -5,6 +5,10 @@ Cryptnox Python Communication Library
 .. image:: https://img.shields.io/pypi/v/cryptnoxpy
     :target: https://pypi.org/project/cryptnoxpy
 
+.. image:: https://readthedocs.org/projects/cryptnoxpy/badge/?version=latest
+    :target: https://cryptnoxpy.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
+
 **Warning: This is a beta release of the software.
 It is released for development purposes. 
 Use at your own risk.**
