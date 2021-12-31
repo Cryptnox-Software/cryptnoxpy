@@ -7,8 +7,23 @@ All notable changes to this project will be documented in this file.
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`_\ ,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.6...HEAD>`_
+`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.0...HEAD>`_
 -------------------------------------------------------------------------------------
+
+`2.0.0 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.6...v2.0.0>`_ - 2022-01-03
+-----------------------------------------------------------------------------------------------
+
+Added
+^^^^^
+
+- New cad type, NFT, with limited functionality intended for keeping one NFT
+- Method for checking private key validity
+
+Changed
+^^^^^^^
+
+- User data read and write property to list
+- pyscard on windows fixed to version 2.0.1, in pipenv all OSes.
 
 `1.1.6 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v1.1.5...v1.1.6>`_ - 2021-11-03
 -----------------------------------------------------------------------------------------------

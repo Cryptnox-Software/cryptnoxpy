@@ -10,10 +10,9 @@ from typing import (
 from cryptography.hazmat.primitives.asymmetric import ec
 
 from . import base
-from .basic import Basic
+from .base import Base
 from .. import exceptions
 from ..binary_utils import path_to_bytes
-from ..connection import Connection
 from ..cryptos import encode_pubkey
 from ..enums import (
     AuthType,
@@ -24,7 +23,7 @@ from ..enums import (
 )
 
 
-class BasicG0(Basic):
+class BasicG0(Base):
     """
     Class containing functionality for Basic cards of the 0th generation
     """
@@ -105,7 +104,7 @@ class BasicG0(Basic):
 
         return result
 
-    def history(self, slot: int = 0) -> NamedTuple:
+    def history(self, index: int = 0) -> NamedTuple:
         raise NotImplementedError("Card doesn't have this functionality")
 
     @property
@@ -178,14 +177,6 @@ class BasicG0(Basic):
     def signing_counter(self) -> int:
         raise NotImplementedError("Card doesn't have this functionality")
 
-    @property
-    def user_data(self) -> bytes:
-        raise NotImplementedError("Card doesn't have this functionality")
-
-    @user_data.setter
-    def user_data(self, value: bytes) -> None:
-        raise NotImplementedError("Card doesn't have this functionality")
-
     def user_key_add(self, slot: SlotIndex, data_info: str, public_key: bytes, puk_code: str,
                      cred_id: bytes = b"") -> None:
         raise NotImplementedError("Card doesn't have this functionality")
@@ -256,13 +247,13 @@ class BasicG0(Basic):
         if not self.open:
             self.auth_type = AuthType.PIN
 
-    def _check_init(self):
+    def _check_init(self) -> None:
         apdu = [0x80, 0xFE, 0x00, 0x00, 0x01, 0x01]
 
         try:
             _, code1, code2 = self.connection.send_apdu(apdu)
         except exceptions.DataValidationException:
-            return False
+            return
 
         self._initialized = code1 == 0x6D and code2 == 0x00
 

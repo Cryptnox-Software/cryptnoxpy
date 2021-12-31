@@ -16,10 +16,11 @@ Submodules
    :maxdepth: 1
 
    base/index.rst
-   basic/index.rst
    basic_g0/index.rst
    basic_g1/index.rst
    genuineness/index.rst
+   nft/index.rst
+   user_data/index.rst
 
 
 Package Contents
@@ -33,6 +34,7 @@ Classes
    cryptnoxpy.card.Base
    cryptnoxpy.card.BasicG0
    cryptnoxpy.card.BasicG1
+   cryptnoxpy.card.Nft
 
 
 
@@ -61,27 +63,31 @@ Classes
 
       
 
+   .. py:attribute:: pin_rule
+      :annotation: = 4-9 digits
+
+      
+
+   .. py:attribute:: type
+      
+
+      
+
+   .. py:attribute:: _type
+      :annotation: = Basic
+
+      
+
+   .. py:attribute:: user_data
+      
+
+      
+
    .. py:method:: select_apdu() -> List[int]
       :property:
 
       :return: Value to add to select command to select the applet on the card
       :rtype: List[int]
-
-
-   .. py:method:: type() -> int
-      :property:
-
-      :return: Card type
-      :rtype: int
-
-
-   .. py:method:: pin_rule() -> str
-      :property:
-
-      Human readable PIN code rule
-
-      :return: Human readable PIN code rule
-      :rtype: str
 
 
    .. py:method:: puk_rule() -> str
@@ -115,7 +121,6 @@ Classes
 
 
    .. py:method:: change_pin(self, new_pin: str) -> None
-      :abstractmethod:
 
       Change the current pin code of the card to a new pin code.
 
@@ -130,7 +135,6 @@ Classes
 
 
    .. py:method:: change_puk(self, current_puk: str, new_puk: str) -> None
-      :abstractmethod:
 
       Change the current pin code of the card to a new pin code.
 
@@ -278,8 +282,7 @@ Classes
       :rtype: Dict[str, Any]
 
 
-   .. py:method:: init(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes) -> bytes
-      :abstractmethod:
+   .. py:method:: init(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes = BASIC_PAIRING_SECRET, nfc_sign: bool = False) -> bytes
 
       Initialize the Cryptnox card.
 
@@ -292,6 +295,7 @@ Classes
       :param str pin: PIN code that will be used to open the card
       :param str puk: PUK code that will be used to open the card
       :param bytes pairing_secret: Pairing secret to use with the card
+      :param bool nfc_sign: Signature command can be used over NFC, only available on certain type
 
       :return: Pairing secret
       :rtype: bytes
@@ -435,6 +439,23 @@ Classes
       :raises DataException: Invalid data received during signature
 
 
+   .. py:method:: signature_check(self, nonce: bytes) -> SignatureCheckResult
+      :abstractmethod:
+
+      Sign random 32 bytes for validation that private key of public key is on the card.
+
+      This call doesn't increase signature counter and doesn't go into signature history.
+
+      :param bytes nonce: random 16 bytes that will be used to sign
+
+      :return: Message that was signed and the signature
+      :rtype: SignatureCheckResult
+
+      :raises DataValidationException: Nonce has to be 16 bytes
+      :raises SeedException: There is no seed on the card
+      :raises DataException: Data returned from the card is not valid
+
+
    .. py:method:: signing_counter(self) -> int
       :property:
 
@@ -461,13 +482,6 @@ Classes
 
       :raises PukException: PUK code not valid
       :raises CardNotBlocked: Card is not blocked, operation can't be done
-
-
-   .. py:method:: user_data(self) -> bytes
-      :property:
-
-      :return: Read user data that was written into the card.
-      :rtype: bytes
 
 
    .. py:method:: user_key_add(self, slot: cryptnoxpy.enums.SlotIndex, data_info: str, public_key: bytes, puk_code: str, cred_id: bytes = b'') -> None
@@ -578,7 +592,6 @@ Classes
 
    .. py:method:: valid_pin(pin: str, pin_name: str = 'pin') -> str
       :staticmethod:
-      :abstractmethod:
 
       Check if provided pin is valid
 
@@ -621,6 +634,23 @@ Classes
                         it can be used again
 
 
+   .. py:method:: _change_secret(self, select_pin_puk: int, value: str)
+
+      Change secret, PIN or PUK code, of the card
+
+      :param int select_pin_puk: Change the PIN or PUK code:
+                                 0 - PIN
+                                 1 - PUK
+      :param str value: Value of the new secret
+
+
+   .. py:method:: _get_coded_value(value)
+      :staticmethod:
+
+
+   .. py:method:: _init_data(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes = BASIC_PAIRING_SECRET, nfc_sign: bool = False)
+
+
    .. py:method:: _owner(self) -> User
       :property:
 
@@ -655,7 +685,7 @@ Classes
 
 .. py:class:: BasicG0(*args, **kwargs)
 
-   Bases: :py:obj:`cryptnoxpy.card.basic.Basic`
+   Bases: :py:obj:`cryptnoxpy.card.base.Base`
 
    Class containing functionality for Basic cards of the 0th generation
 
@@ -786,7 +816,7 @@ Classes
       :raises ReadPublicKeyException: Invalid data received from card
 
 
-   .. py:method:: history(self, slot: int = 0) -> NamedTuple
+   .. py:method:: history(self, index: int = 0) -> NamedTuple
       :abstractmethod:
 
       Get history of hashes the card has signed regardless of any
@@ -924,13 +954,6 @@ Classes
 
       :return: Counter of how many times the card has been used to sign
       :rtype: int
-
-
-   .. py:method:: user_data(self) -> bytes
-      :property:
-
-      :return: Read user data that was written into the card.
-      :rtype: bytes
 
 
    .. py:method:: user_key_add(self, slot: cryptnoxpy.enums.SlotIndex, data_info: str, public_key: bytes, puk_code: str, cred_id: bytes = b'') -> None
@@ -1072,7 +1095,7 @@ Classes
                         it can be used again
 
 
-   .. py:method:: _check_init(self)
+   .. py:method:: _check_init(self) -> None
 
 
    .. py:method:: _owner(self) -> cryptnoxpy.card.base.User
@@ -1093,7 +1116,7 @@ Classes
 
 .. py:class:: BasicG1(*args, **kwargs)
 
-   Bases: :py:obj:`cryptnoxpy.card.basic.Basic`
+   Bases: :py:obj:`cryptnoxpy.card.base.Base`
 
    Class containing functionality for Basic cards of the 1st generation
 
@@ -1138,11 +1161,6 @@ Classes
       
 
    .. py:attribute:: _EXTENDED_PUBLIC_KEY
-      
-
-      
-
-   .. py:attribute:: _USER_DATA
       
 
       
@@ -1363,13 +1381,6 @@ Classes
 
       :return: Counter of how many times the card has been used to sign
       :rtype: int
-
-
-   .. py:method:: user_data(self) -> bytes
-      :property:
-
-      :return: Read user data that was written into the card.
-      :rtype: bytes
 
 
    .. py:method:: user_key_add(self, slot: cryptnoxpy.enums.SlotIndex, data_info: str, public_key: bytes, puk_code: str, cred_id: bytes = b'') -> None
@@ -1553,6 +1564,225 @@ Classes
 
    .. py:method:: _set_bit(value, bit)
       :staticmethod:
+
+
+
+.. py:class:: Nft(*args, **kwargs)
+
+   Bases: :py:obj:`cryptnoxpy.card.basic_g1.BasicG1`
+
+   Class containing functionality for NFT card which has limited capabilities
+
+   .. py:attribute:: type
+      
+
+      
+
+   .. py:attribute:: _type
+      :annotation: = NFT
+
+      
+
+   .. py:method:: derive(self, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '')
+      :abstractmethod:
+
+      Derive key on path and make it the current key in the card
+
+      :requires:
+          - PIN code or challenge-response validated
+          - Seed must exist
+
+      :param KeyType key_type: Key type to do derive on
+      :param str path: Path on which to do derivation
+
+
+   .. py:method:: get_public_key(self, derivation: cryptnoxpy.enums.Derivation = Derivation.CURRENT_KEY, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '', compressed: bool = False) -> str
+
+      Get the public key from the card.
+
+      :requires:
+          - PIN code or challenge-response validated, except for PIN-less path
+          - Seed must exist
+
+      :param Derivation derivation: Derivation to use.
+      :param KeyType key_type: Key type to use
+      :param str path:
+      :param bool compressed: The returned value is in compressed format.
+
+      :return: The public key for the given path in hexadecimal string format
+      :rtype: str
+
+      :raises DerivationSelectionException: Card is not initialized with seed
+      :raises ReadPublicKeyException: Invalid data received from card
+
+
+   .. py:method:: generate_random_number(self, size: int) -> bytes
+      :abstractmethod:
+
+      Generate random number on the car and return it.
+
+      :param int size: Output data size in bytes (between 16 and 64, mod 4)
+
+      :return: Random number generated by the chip
+      :rtype: bytes
+
+      :raises DataValidationException: size in not a number between 16 and 64 or is not
+                                       divisible by 4
+
+
+   .. py:method:: load_seed(self, seed: bytes, pin: str = '') -> None
+      :abstractmethod:
+
+      Load the given seed into the Cryptnox card.
+
+      :requires:
+          - PIN code or challenge-response validated
+
+      :param bytes seed: Seed to initialize the card with
+      :param pin: PIN code of the card. Can be empty if card is opened with
+                  challenge-response validation
+      :type pin: str, optional
+
+      :raises KeyGenerationException: Data is not correct
+
+
+   .. py:method:: set_pin_authentication(self, status: bool, puk: str) -> None
+      :abstractmethod:
+
+      Turn on/off authentication with the PIN code. Other methods can still be used.
+
+      :param bool status: Status of PIN authentication
+      :param str puk: PUK code associated with the card
+
+      :raises DataValidationException: input data is not valid
+      :raises PukException: PUK code is not valid
+
+
+   .. py:method:: set_pinless_path(self, path: str, puk: str) -> None
+      :abstractmethod:
+
+      Enable working with the card without a PIN on path.
+
+      :param str path: Path to be available without a PIN code
+      :param str puk: PUK code of the card
+
+      :raises DataValidationException: input data is not valid
+      :raises PukException: PUK code is not valid
+
+
+   .. py:method:: user_key_add(self, slot: cryptnoxpy.enums.SlotIndex, data_info: str, public_key: bytes, puk_code: str, cred_id: bytes = b'') -> None
+      :abstractmethod:
+
+      Add user public key into the card for user authentication
+
+      :param int slot: Slot to write the public key to
+                       1 - EC256R1
+                       2 - RSA key, 2048 bits, public exponent must be 65537
+                       3 - FIDO key
+      :param bytes data_info: 64 bytes of user data
+      :param bytes public_key: Public key of the secure element to be used for authentication
+      :param str puk_code: PUK code of the card
+      :param cred_id: Cred id. Used for FIDO2 authentication
+      :type cred_id: bytes, optional
+
+      :raises DataValidationException: Invalid input data
+
+
+   .. py:method:: user_key_delete(self, slot: cryptnoxpy.enums.SlotIndex, puk_code: str) -> None
+      :abstractmethod:
+
+      Delete the user key from slot and free up for insertion
+
+      :param SlotIndex slot: Slot to remove the key from
+      :param str puk_code: PUK code of the card
+
+      :raises DataValidationException: Invalid input data
+
+
+   .. py:method:: user_key_info(self, slot: cryptnoxpy.enums.SlotIndex) -> Tuple[str, str]
+      :abstractmethod:
+
+      Get the description and public key of the user key
+
+      :requires:
+          - PIN code or challenge-response validated
+
+      :param SlotIndex slot: Index of slot for which to fetch the description
+
+      :return: Description and public key in slot
+      :rtype: tuple[str, str]
+
+
+   .. py:method:: user_key_enabled(self, slot_index: cryptnoxpy.enums.SlotIndex)
+
+      Check if user key is present in given slot
+
+      :param SlotIndex slot_index: Slot index to check for
+
+      :return: Whether the user key for slot is present
+      :rtype: bool
+
+
+   .. py:method:: user_key_challenge_response_nonce(self) -> bytes
+      :abstractmethod:
+
+      Get 32 bytes random value from the card that is used to open the card with a user key
+
+      Take nonce value from the card. Sign it with a third party application, like TPM.
+      Send the signature back into the card using
+      :func:`~cryptnoxpy.card.base.Base.user_key_challenge_response_open`
+
+      :return: 32 bytes random value used as nonce
+      :rtype: bytes
+
+
+   .. py:method:: user_key_challenge_response_open(self, slot: cryptnoxpy.enums.SlotIndex, signature: bytes) -> bool
+      :abstractmethod:
+
+      Send the nonce signature to the card to open it for operations, like it was opened by a
+      PIN code
+
+      :param SlotIndex slot: Slot to use to open the card
+      :param bytes signature: Signature generated by a third party like TPM.
+
+      :return: Whether the challenge response authentication succeeded
+      :rtype: bool
+
+      :raises DataValidationException: invalid input data
+
+
+   .. py:method:: user_key_signature_open(self, slot: cryptnoxpy.enums.SlotIndex, message: bytes, signature: bytes) -> bool
+      :abstractmethod:
+
+      Used for opening the card to sign the given message
+
+      :param SlotIndex slot: Slot to use to open the card
+      :param bytes message: Message that will be sent to sign operation
+      :param bytes signature: Signature generated by a third party, like TPM, on the same message
+
+      :return: Whether the challenge response authentication succeeded
+      :rtype: bool
+
+      :raises DataValidationException: invalid input data
+
+
+   .. py:method:: signature_check(self, nonce: bytes) -> cryptnoxpy.card.base.SignatureCheckResult
+
+      Sign random 32 bytes for validation that private key of public key is on the card.
+
+      This call doesn't increase signature counter and doesn't go into signature history.
+
+      :param bytes nonce: random 16 bytes that will be used to sign
+
+      :return: Message that was signed and the signature
+      :rtype: SignatureCheckResult
+
+      :raises DataValidationException: Nonce has to be 16 bytes
+      :raises SeedException: There is no seed on the card
+      :raises DataException: Data returned from the card is not valid
+
+
+   .. py:method:: _init_data(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes = base.BASIC_PAIRING_SECRET, nfc_sign: bool = False)
 
 
 

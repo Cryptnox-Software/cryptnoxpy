@@ -28,10 +28,22 @@ Attributes
 .. autoapisummary::
 
    cryptnoxpy.card.base.User
+   cryptnoxpy.card.base.SignatureCheckResult
+   cryptnoxpy.card.base.BASIC_PAIRING_SECRET
 
 
 .. py:data:: User
    
+
+   
+
+.. py:data:: SignatureCheckResult
+   
+
+   
+
+.. py:data:: BASIC_PAIRING_SECRET
+   :annotation: = b'Cryptnox Basic CommonPairingData'
 
    
 
@@ -59,27 +71,31 @@ Attributes
 
       
 
+   .. py:attribute:: pin_rule
+      :annotation: = 4-9 digits
+
+      
+
+   .. py:attribute:: type
+      
+
+      
+
+   .. py:attribute:: _type
+      :annotation: = Basic
+
+      
+
+   .. py:attribute:: user_data
+      
+
+      
+
    .. py:method:: select_apdu() -> List[int]
       :property:
 
       :return: Value to add to select command to select the applet on the card
       :rtype: List[int]
-
-
-   .. py:method:: type() -> int
-      :property:
-
-      :return: Card type
-      :rtype: int
-
-
-   .. py:method:: pin_rule() -> str
-      :property:
-
-      Human readable PIN code rule
-
-      :return: Human readable PIN code rule
-      :rtype: str
 
 
    .. py:method:: puk_rule() -> str
@@ -113,7 +129,6 @@ Attributes
 
 
    .. py:method:: change_pin(self, new_pin: str) -> None
-      :abstractmethod:
 
       Change the current pin code of the card to a new pin code.
 
@@ -128,7 +143,6 @@ Attributes
 
 
    .. py:method:: change_puk(self, current_puk: str, new_puk: str) -> None
-      :abstractmethod:
 
       Change the current pin code of the card to a new pin code.
 
@@ -276,8 +290,7 @@ Attributes
       :rtype: Dict[str, Any]
 
 
-   .. py:method:: init(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes) -> bytes
-      :abstractmethod:
+   .. py:method:: init(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes = BASIC_PAIRING_SECRET, nfc_sign: bool = False) -> bytes
 
       Initialize the Cryptnox card.
 
@@ -290,6 +303,7 @@ Attributes
       :param str pin: PIN code that will be used to open the card
       :param str puk: PUK code that will be used to open the card
       :param bytes pairing_secret: Pairing secret to use with the card
+      :param bool nfc_sign: Signature command can be used over NFC, only available on certain type
 
       :return: Pairing secret
       :rtype: bytes
@@ -433,6 +447,23 @@ Attributes
       :raises DataException: Invalid data received during signature
 
 
+   .. py:method:: signature_check(self, nonce: bytes) -> SignatureCheckResult
+      :abstractmethod:
+
+      Sign random 32 bytes for validation that private key of public key is on the card.
+
+      This call doesn't increase signature counter and doesn't go into signature history.
+
+      :param bytes nonce: random 16 bytes that will be used to sign
+
+      :return: Message that was signed and the signature
+      :rtype: SignatureCheckResult
+
+      :raises DataValidationException: Nonce has to be 16 bytes
+      :raises SeedException: There is no seed on the card
+      :raises DataException: Data returned from the card is not valid
+
+
    .. py:method:: signing_counter(self) -> int
       :property:
 
@@ -459,13 +490,6 @@ Attributes
 
       :raises PukException: PUK code not valid
       :raises CardNotBlocked: Card is not blocked, operation can't be done
-
-
-   .. py:method:: user_data(self) -> bytes
-      :property:
-
-      :return: Read user data that was written into the card.
-      :rtype: bytes
 
 
    .. py:method:: user_key_add(self, slot: cryptnoxpy.enums.SlotIndex, data_info: str, public_key: bytes, puk_code: str, cred_id: bytes = b'') -> None
@@ -576,7 +600,6 @@ Attributes
 
    .. py:method:: valid_pin(pin: str, pin_name: str = 'pin') -> str
       :staticmethod:
-      :abstractmethod:
 
       Check if provided pin is valid
 
@@ -617,6 +640,23 @@ Attributes
       :raises DataValidationException: Invalid length or PIN code authentication disabled
       :raises SoftLock: The card has been locked and needs power cycling before
                         it can be used again
+
+
+   .. py:method:: _change_secret(self, select_pin_puk: int, value: str)
+
+      Change secret, PIN or PUK code, of the card
+
+      :param int select_pin_puk: Change the PIN or PUK code:
+                                 0 - PIN
+                                 1 - PUK
+      :param str value: Value of the new secret
+
+
+   .. py:method:: _get_coded_value(value)
+      :staticmethod:
+
+
+   .. py:method:: _init_data(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes = BASIC_PAIRING_SECRET, nfc_sign: bool = False)
 
 
    .. py:method:: _owner(self) -> User

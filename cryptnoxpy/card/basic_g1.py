@@ -3,7 +3,6 @@ Module containing class for Basic card of 1st generation
 """
 from collections import namedtuple
 from typing import (
-    Dict,
     NamedTuple,
     Tuple
 )
@@ -11,8 +10,8 @@ from typing import (
 from cryptography.hazmat.primitives.asymmetric import ec
 
 from . import base
-from . import basic
-from .base import AuthType
+from .base import AuthType, SignatureCheckResult
+from .user_data import UserData
 from .. import exceptions
 from ..binary_utils import path_to_bytes
 from ..cryptos import encode_pubkey
@@ -24,7 +23,7 @@ from ..enums import (
 )
 
 
-class BasicG1(basic.Basic):
+class BasicG1(base.Base):
     """
     Class containing functionality for Basic cards of the 1st generation
     """
@@ -40,10 +39,9 @@ class BasicG1(basic.Basic):
     _PINLESS_FLAG = int("00001000", 2)
     _EXTENDED_PUBLIC_KEY = int("00000100", 2)
 
-    _USER_DATA = {
-        "size": 1200,
-        "count": 3
-    }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user_data = UserData(self, reading_index_offset=1)
 
     def change_pairing_key(self, index: int, pairing_key: bytes, puk: str = "") -> None:
         if len(pairing_key) != 32:
@@ -93,8 +91,8 @@ class BasicG1(basic.Basic):
     def generate_random_number(self, size: int) -> bytes:
         try:
             size = int(size)
-        except ValueError:
-            raise exceptions.DataValidationException("Checksum has to be an integer")
+        except ValueError as error:
+            raise exceptions.DataValidationException("Checksum has to be an integer") from error
         if 16 > size > 64 or size % 4:
             raise exceptions.DataValidationException("Checksum value must be between 4 and 8.")
 
@@ -263,43 +261,6 @@ class BasicG1(basic.Basic):
         position = 1 + int(result[1]) + int(result[result[1] + 2]) + 2
 
         return int.from_bytes(result[position:], "big")
-
-    @property
-    def user_data(self) -> bytes:
-        result = b""
-        index = 1
-        while True:
-            try:
-                result += self.connection.send_encrypted([0x80, 0xFA, 0x00, index], b"", True)
-            except exceptions.GenericException as error:
-                if error.status[0] == 0x69 and error.status[1] == 0x85:
-                    raise exceptions.SecureChannelException("Command may need a secured channel")
-                if error.status[0] == 0x6B and error.status[1] == 0x00:
-                    break
-                raise
-            index += 1
-
-        return result
-
-    @user_data.setter
-    def user_data(self, value: bytes) -> None:
-        size = BasicG1._USER_DATA["size"]
-        if len(value) > BasicG1._USER_DATA["count"]*size:
-            raise exceptions.DataValidationException("Value to large to write")
-
-        value_to_send = [value[i:i+size] for i in range(0, len(value), size)]
-
-        for index, entry in enumerate(value_to_send):
-            try:
-                self.connection.send_encrypted([0x80, 0xFC, 0x00, index], entry)
-            except exceptions.GenericException as error:
-                if error.status[0] == 0x69 and error.status[1] == 0x85:
-                    raise exceptions.CardClosedException("Card needs to be opened for this operation")
-                if error.status[0] == 0x67 and error.status[1] == 0x00:
-                    raise exceptions.DataValidationException("Value to large to write")
-
-                raise
-            index += 1
 
     def user_key_add(self, slot: SlotIndex, data_info: str, public_key: bytes, puk_code: str,
                      cred_id: bytes = b"") -> None:

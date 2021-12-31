@@ -24,7 +24,7 @@ Classes
 
 .. py:class:: BasicG1(*args, **kwargs)
 
-   Bases: :py:obj:`cryptnoxpy.card.basic.Basic`
+   Bases: :py:obj:`cryptnoxpy.card.base.Base`
 
    Class containing functionality for Basic cards of the 1st generation
 
@@ -69,11 +69,6 @@ Classes
       
 
    .. py:attribute:: _EXTENDED_PUBLIC_KEY
-      
-
-      
-
-   .. py:attribute:: _USER_DATA
       
 
       
@@ -294,13 +289,6 @@ Classes
 
       :return: Counter of how many times the card has been used to sign
       :rtype: int
-
-
-   .. py:method:: user_data(self) -> bytes
-      :property:
-
-      :return: Read user data that was written into the card.
-      :rtype: bytes
 
 
    .. py:method:: user_key_add(self, slot: cryptnoxpy.enums.SlotIndex, data_info: str, public_key: bytes, puk_code: str, cred_id: bytes = b'') -> None

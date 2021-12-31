@@ -75,6 +75,13 @@ Module Contents
    Not a valid derivation selection.
 
 
+.. py:exception:: KeySelectionException
+
+   Bases: :py:obj:`CryptnoxException`
+
+   Not a valid key type selection
+
+
 .. py:exception:: EOSKeyError
 
    Bases: :py:obj:`CryptnoxException`
@@ -140,7 +147,7 @@ Module Contents
    Error in turning off PIN authentication. There is no user key in the card
 
 
-.. py:exception:: PinException(number_of_retries: int, message: str = 'Wrong pin')
+.. py:exception:: PinException(message: str = 'Invalid PIN code was provided', number_of_retries: int = 0)
 
    Bases: :py:obj:`CryptnoxException`
 
@@ -151,7 +158,7 @@ Module Contents
    :param str message: Optional message
 
 
-.. py:exception:: PukException(number_of_retries: int = 0, message: str = 'Wrong PUK')
+.. py:exception:: PukException(message: str = 'Invalid PUK code was provided', number_of_retries: int = 0)
 
    Bases: :py:obj:`CryptnoxException`
 

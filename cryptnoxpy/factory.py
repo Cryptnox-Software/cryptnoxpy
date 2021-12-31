@@ -10,6 +10,8 @@ from .card import (
 )
 from .card import BasicG0 # pylint: disable=unused-import
 from .card import BasicG1 # pylint: disable=unused-import
+from .card import Nft # pylint: disable=unused-import
+
 
 from .connection import Connection
 from .exceptions import (
@@ -58,8 +60,7 @@ def _select(connection, apdu, card_type, debug: bool = False) -> Tuple[Any, Any]
 
     data_selected = connection.send_apdu(apdu)[0]
     if len(data_selected) == 0:
-        raise DataException("This card is not answering any data. Are you "
-                            "using NFC?")
+        raise DataException("This card is not answering any data. Are you using NFC?")
 
     if card_type != data_selected[0]:
         raise CardTypeException("Type not recognized")

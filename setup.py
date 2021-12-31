@@ -13,7 +13,7 @@ def read(file):
 
 PYSCARD = "pyscard"
 if sys.platform.startswith("win"):
-    PYSCARD += "==2.0.2"
+    PYSCARD += "==2.0.1"
 
 setup(
     install_requires=[

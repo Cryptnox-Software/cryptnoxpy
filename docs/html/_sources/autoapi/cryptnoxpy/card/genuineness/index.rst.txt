@@ -58,6 +58,14 @@ Attributes
 
 .. py:function:: origin(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> cryptnoxpy.enums.Origin
 
+   Check the origin of the card, whether it's a genuine
+   :param Connection connection: connection to use for the card
+   :param bool debug: print debug messages
+
+   :return: Whether the card on the connection is genuine
+
+   :rtype: Origin
+
 
 .. py:function:: session_public_key(connection: cryptnoxpy.connection.Connection, debug: bool = False) -> str
 

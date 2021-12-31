@@ -40,10 +40,11 @@
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="base/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cryptnoxpy.card.base</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="basic/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cryptnoxpy.card.basic</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="basic_g0/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cryptnoxpy.card.basic_g0</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="basic_g1/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cryptnoxpy.card.basic_g1</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="genuineness/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cryptnoxpy.card.genuineness</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="nft/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cryptnoxpy.card.nft</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_data/index.html"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cryptnoxpy.card.user_data</span></code></a></li>
 </ul>
 </div>
 </section>
@@ -65,6 +66,9 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cryptnoxpy.card.BasicG1" title="cryptnoxpy.card.BasicG1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BasicG1</span></code></a></p></td>
 <td><p>Class containing functionality for Basic cards of the 1st generation</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#cryptnoxpy.card.Nft" title="cryptnoxpy.card.Nft"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Nft</span></code></a></p></td>
+<td><p>Class containing functionality for NFT card which has limited capabilities</p></td>
 </tr>
 </tbody>
 </table>
@@ -101,6 +105,26 @@
 <span class="sig-name descname"><span class="pre">PUK_LENGTH</span></span><em class="property"> <span class="pre">=</span> <span class="pre">15</span></em><a class="headerlink" href="#cryptnoxpy.card.Base.PUK_LENGTH" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Base.pin_rule">
+<span class="sig-name descname"><span class="pre">pin_rule</span></span><em class="property"> <span class="pre">=</span> <span class="pre">4-9</span> <span class="pre">digits</span></em><a class="headerlink" href="#cryptnoxpy.card.Base.pin_rule" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Base.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#cryptnoxpy.card.Base.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Base._type">
+<span class="sig-name descname"><span class="pre">_type</span></span><em class="property"> <span class="pre">=</span> <span class="pre">Basic</span></em><a class="headerlink" href="#cryptnoxpy.card.Base._type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Base.user_data">
+<span class="sig-name descname"><span class="pre">user_data</span></span><a class="headerlink" href="#cryptnoxpy.card.Base.user_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.Base.select_apdu">
 <em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">select_apdu</span></span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.select_apdu" title="Permalink to this definition">¶</a></dt>
@@ -110,33 +134,6 @@
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p>List[int]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cryptnoxpy.card.Base.type">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">type</span></span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.type" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Card type</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>int</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cryptnoxpy.card.Base.pin_rule">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">pin_rule</span></span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.pin_rule" title="Permalink to this definition">¶</a></dt>
-<dd><p>Human readable PIN code rule</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Human readable PIN code rule</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -192,7 +189,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.Base.change_pin">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">change_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_pin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.change_pin" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">change_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_pin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.change_pin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the current pin code of the card to a new pin code.</p>
 <p>The method will set the given pin code as the pin code of the card.
 For it to work the card first must be opened with the current pin code.</p>
@@ -211,7 +208,7 @@ For it to work the card first must be opened with the current pin code.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.Base.change_puk">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">change_puk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.change_puk" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">change_puk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.change_puk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change the current pin code of the card to a new pin code.</p>
 <p>The method will set the given pin code as the pin code of the card.
 For it to work the card first must be opened with the current pin code.</p>
@@ -439,7 +436,7 @@ hashed_data, the data that was signed</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.Base.init">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing_secret</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.init" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing_secret</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">BASIC_PAIRING_SECRET</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfc_sign</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.init" title="Permalink to this definition">¶</a></dt>
 <dd><p>Initialize the Cryptnox card.</p>
 <p>Initialize the Cryptnox card with the owners name and email address.
 Set the PIN and PUK codes for authenticating with the card to be able
@@ -452,6 +449,7 @@ to use it.</p>
 <li><p><strong>pin</strong> (<em>str</em>) – PIN code that will be used to open the card</p></li>
 <li><p><strong>puk</strong> (<em>str</em>) – PUK code that will be used to open the card</p></li>
 <li><p><strong>pairing_secret</strong> (<em>bytes</em>) – Pairing secret to use with the card</p></li>
+<li><p><strong>nfc_sign</strong> (<em>bool</em>) – Signature command can be used over NFC, only available on certain type</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -682,6 +680,31 @@ might take longer. Defaults to False</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Base.signature_check">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">signature_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SignatureCheckResult</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.signature_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sign random 32 bytes for validation that private key of public key is on the card.</p>
+<p>This call doesn’t increase signature counter and doesn’t go into signature history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nonce</strong> (<em>bytes</em>) – random 16 bytes that will be used to sign</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Message that was signed and the signature</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SignatureCheckResult</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Nonce has to be 16 bytes</p></li>
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.SeedException" title="cryptnoxpy.exceptions.SeedException"><strong>SeedException</strong></a> – There is no seed on the card</p></li>
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataException" title="cryptnoxpy.exceptions.DataException"><strong>DataException</strong></a> – Data returned from the card is not valid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.Base.signing_counter">
 <em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">signing_counter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.signing_counter" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
@@ -721,19 +744,6 @@ the PIN code.</p></li>
 <li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.PukException" title="cryptnoxpy.exceptions.PukException"><strong>PukException</strong></a> – PUK code not valid</p></li>
 <li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.CardNotBlocked" title="cryptnoxpy.exceptions.CardNotBlocked"><strong>CardNotBlocked</strong></a> – Card is not blocked, operation can’t be done</p></li>
 </ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="cryptnoxpy.card.Base.user_data">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">user_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.user_data" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Read user data that was written into the card.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bytes</p>
 </dd>
 </dl>
 </dd></dl>
@@ -898,7 +908,7 @@ PIN code</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.Base.valid_pin">
-<em class="property"><span class="pre">abstract</span> <span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">valid_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'pin'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.valid_pin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">valid_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">'pin'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base.valid_pin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if provided pin is valid</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -958,6 +968,32 @@ it can be used again</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Base._change_secret">
+<span class="sig-name descname"><span class="pre">_change_secret</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">select_pin_puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.Base._change_secret" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change secret, PIN or PUK code, of the card</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>select_pin_puk</strong> (<em>int</em>) – Change the PIN or PUK code:
+0 - PIN
+1 - PUK</p></li>
+<li><p><strong>value</strong> (<em>str</em>) – Value of the new secret</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Base._get_coded_value">
+<em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">_get_coded_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.Base._get_coded_value" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Base._init_data">
+<span class="sig-name descname"><span class="pre">_init_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing_secret</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">BASIC_PAIRING_SECRET</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfc_sign</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.Base._init_data" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.Base._owner">
 <em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">_owner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">User</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Base._owner" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the available information about the owner of the card from the card</p>
@@ -1000,7 +1036,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG0">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.card.</span></span><span class="sig-name descname"><span class="pre">BasicG0</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.BasicG0" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="basic/index.html#cryptnoxpy.card.basic.Basic" title="cryptnoxpy.card.basic.Basic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cryptnoxpy.card.basic.Basic</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="../../../index.html#cryptnoxpy.card.base.Base" title="cryptnoxpy.card.base.Base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cryptnoxpy.card.base.Base</span></code></a></p>
 <p>Class containing functionality for Basic cards of the 0th generation</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG0.select_apdu">
@@ -1202,7 +1238,7 @@ challenge-response validation</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG0.history">
-<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NamedTuple</span></span></span><a class="headerlink" href="#cryptnoxpy.card.BasicG0.history" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">history</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NamedTuple</span></span></span><a class="headerlink" href="#cryptnoxpy.card.BasicG0.history" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get history of hashes the card has signed regardless of any
 parameters given to sign</p>
 <dl class="field-list simple">
@@ -1425,19 +1461,6 @@ might take longer. Defaults to False</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cryptnoxpy.card.BasicG0.user_data">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">user_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.BasicG0.user_data" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Read user data that was written into the card.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bytes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG0.user_key_add">
 <em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">user_key_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_info</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk_code</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cred_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.BasicG0.user_key_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add user public key into the card for user authentication</p>
@@ -1643,7 +1666,7 @@ it can be used again</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG0._check_init">
-<span class="sig-name descname"><span class="pre">_check_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.BasicG0._check_init" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_check_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.BasicG0._check_init" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1673,7 +1696,7 @@ on the card. This method will read and return them.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG1">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.card.</span></span><span class="sig-name descname"><span class="pre">BasicG1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.BasicG1" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="basic/index.html#cryptnoxpy.card.basic.Basic" title="cryptnoxpy.card.basic.Basic"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cryptnoxpy.card.basic.Basic</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="../../../index.html#cryptnoxpy.card.base.Base" title="cryptnoxpy.card.base.Base"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cryptnoxpy.card.base.Base</span></code></a></p>
 <p>Class containing functionality for Basic cards of the 1st generation</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG1.select_apdu">
@@ -1718,11 +1741,6 @@ on the card. This method will read and return them.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG1._EXTENDED_PUBLIC_KEY">
 <span class="sig-name descname"><span class="pre">_EXTENDED_PUBLIC_KEY</span></span><a class="headerlink" href="#cryptnoxpy.card.BasicG1._EXTENDED_PUBLIC_KEY" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="cryptnoxpy.card.BasicG1._USER_DATA">
-<span class="sig-name descname"><span class="pre">_USER_DATA</span></span><a class="headerlink" href="#cryptnoxpy.card.BasicG1._USER_DATA" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -2098,19 +2116,6 @@ challenge-response validation</p></li>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="cryptnoxpy.card.BasicG1.user_data">
-<em class="property"><span class="pre">property</span> </em><span class="sig-name descname"><span class="pre">user_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.BasicG1.user_data" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>Read user data that was written into the card.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p>bytes</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG1.user_key_add">
 <span class="sig-name descname"><span class="pre">user_key_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_info</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk_code</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cred_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.BasicG1.user_key_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add user public key into the card for user authentication</p>
@@ -2379,6 +2384,335 @@ on the card. This method will read and return them.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.BasicG1._set_bit">
 <em class="property"><span class="pre">static</span> </em><span class="sig-name descname"><span class="pre">_set_bit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bit</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.BasicG1._set_bit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.card.</span></span><span class="sig-name descname"><span class="pre">Nft</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.Nft" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="basic_g1/index.html#cryptnoxpy.card.basic_g1.BasicG1" title="cryptnoxpy.card.basic_g1.BasicG1"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cryptnoxpy.card.basic_g1.BasicG1</span></code></a></p>
+<p>Class containing functionality for NFT card which has limited capabilities</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.type">
+<span class="sig-name descname"><span class="pre">type</span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft._type">
+<span class="sig-name descname"><span class="pre">_type</span></span><em class="property"> <span class="pre">=</span> <span class="pre">NFT</span></em><a class="headerlink" href="#cryptnoxpy.card.Nft._type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.derive">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">derive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><span class="pre">cryptnoxpy.enums.KeyType</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">KeyType.K1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.Nft.derive" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derive key on path and make it the current key in the card</p>
+<dl class="field-list simple">
+<dt class="field-odd">Requires</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>PIN code or challenge-response validated</p></li>
+<li><p>Seed must exist</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>key_type</strong> (<a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><em>KeyType</em></a>) – Key type to do derive on</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path on which to do derivation</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.get_public_key">
+<span class="sig-name descname"><span class="pre">get_public_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">derivation</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.Derivation" title="cryptnoxpy.enums.Derivation"><span class="pre">cryptnoxpy.enums.Derivation</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">Derivation.CURRENT_KEY</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_type</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><span class="pre">cryptnoxpy.enums.KeyType</span></a></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">KeyType.K1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compressed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.get_public_key" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the public key from the card.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Requires</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>PIN code or challenge-response validated, except for PIN-less path</p></li>
+<li><p>Seed must exist</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>derivation</strong> (<a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.Derivation" title="cryptnoxpy.enums.Derivation"><em>Derivation</em></a>) – Derivation to use.</p></li>
+<li><p><strong>key_type</strong> (<a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><em>KeyType</em></a>) – Key type to use</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – </p></li>
+<li><p><strong>compressed</strong> (<em>bool</em>) – The returned value is in compressed format.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The public key for the given path in hexadecimal string format</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>str</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DerivationSelectionException" title="cryptnoxpy.exceptions.DerivationSelectionException"><strong>DerivationSelectionException</strong></a> – Card is not initialized with seed</p></li>
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.ReadPublicKeyException" title="cryptnoxpy.exceptions.ReadPublicKeyException"><strong>ReadPublicKeyException</strong></a> – Invalid data received from card</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.generate_random_number">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">generate_random_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.generate_random_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate random number on the car and return it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>size</strong> (<em>int</em>) – Output data size in bytes (between 16 and 64, mod 4)</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Random number generated by the chip</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bytes</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – size in not a number between 16 and 64 or is not
+divisible by 4</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.load_seed">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">load_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.load_seed" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load the given seed into the Cryptnox card.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Requires</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>PIN code or challenge-response validated</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>seed</strong> (<em>bytes</em>) – Seed to initialize the card with</p></li>
+<li><p><strong>pin</strong> (<em>str</em><em>, </em><em>optional</em>) – PIN code of the card. Can be empty if card is opened with
+challenge-response validation</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.KeyGenerationException" title="cryptnoxpy.exceptions.KeyGenerationException"><strong>KeyGenerationException</strong></a> – Data is not correct</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.set_pin_authentication">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">set_pin_authentication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.set_pin_authentication" title="Permalink to this definition">¶</a></dt>
+<dd><p>Turn on/off authentication with the PIN code. Other methods can still be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>status</strong> (<em>bool</em>) – Status of PIN authentication</p></li>
+<li><p><strong>puk</strong> (<em>str</em>) – PUK code associated with the card</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.PukException" title="cryptnoxpy.exceptions.PukException"><strong>PukException</strong></a> – PUK code is not valid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.set_pinless_path">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">set_pinless_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.set_pinless_path" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enable working with the card without a PIN on path.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em>) – Path to be available without a PIN code</p></li>
+<li><p><strong>puk</strong> (<em>str</em>) – PUK code of the card</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.PukException" title="cryptnoxpy.exceptions.PukException"><strong>PukException</strong></a> – PUK code is not valid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.user_key_add">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">user_key_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_info</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_key</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk_code</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cred_id</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.user_key_add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add user public key into the card for user authentication</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>slot</strong> (<em>int</em>) – Slot to write the public key to
+1 - EC256R1
+2 - RSA key, 2048 bits, public exponent must be 65537
+3 - FIDO key</p></li>
+<li><p><strong>data_info</strong> (<em>bytes</em>) – 64 bytes of user data</p></li>
+<li><p><strong>public_key</strong> (<em>bytes</em>) – Public key of the secure element to be used for authentication</p></li>
+<li><p><strong>puk_code</strong> (<em>str</em>) – PUK code of the card</p></li>
+<li><p><strong>cred_id</strong> (<em>bytes</em><em>, </em><em>optional</em>) – Cred id. Used for FIDO2 authentication</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Invalid input data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.user_key_delete">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">user_key_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk_code</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.user_key_delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Delete the user key from slot and free up for insertion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>slot</strong> (<a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Slot to remove the key from</p></li>
+<li><p><strong>puk_code</strong> (<em>str</em>) – PUK code of the card</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Invalid input data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.user_key_info">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">user_key_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.user_key_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the description and public key of the user key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Requires</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p>PIN code or challenge-response validated</p></li>
+</ul>
+</dd>
+<dt class="field-even">Parameters</dt>
+<dd class="field-even"><p><strong>slot</strong> (<a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Index of slot for which to fetch the description</p>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>Description and public key in slot</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>tuple[str, str]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.user_key_enabled">
+<span class="sig-name descname"><span class="pre">user_key_enabled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slot_index</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.Nft.user_key_enabled" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if user key is present in given slot</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>slot_index</strong> (<a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Slot index to check for</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the user key for slot is present</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.user_key_challenge_response_nonce">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">user_key_challenge_response_nonce</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.user_key_challenge_response_nonce" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get 32 bytes random value from the card that is used to open the card with a user key</p>
+<p>Take nonce value from the card. Sign it with a third party application, like TPM.
+Send the signature back into the card using
+<a class="reference internal" href="../../../index.html#cryptnoxpy.card.base.Base.user_key_challenge_response_open" title="cryptnoxpy.card.base.Base.user_key_challenge_response_open"><code class="xref py py-func docutils literal notranslate"><span class="pre">user_key_challenge_response_open()</span></code></a></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>32 bytes random value used as nonce</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>bytes</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.user_key_challenge_response_open">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">user_key_challenge_response_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.user_key_challenge_response_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send the nonce signature to the card to open it for operations, like it was opened by a
+PIN code</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>slot</strong> (<a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Slot to use to open the card</p></li>
+<li><p><strong>signature</strong> (<em>bytes</em>) – Signature generated by a third party like TPM.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the challenge response authentication succeeded</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – invalid input data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.user_key_signature_open">
+<em class="property"><span class="pre">abstract</span> </em><span class="sig-name descname"><span class="pre">user_key_signature_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.user_key_signature_open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for opening the card to sign the given message</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>slot</strong> (<a class="reference internal" href="../enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Slot to use to open the card</p></li>
+<li><p><strong>message</strong> (<em>bytes</em>) – Message that will be sent to sign operation</p></li>
+<li><p><strong>signature</strong> (<em>bytes</em>) – Signature generated by a third party, like TPM, on the same message</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Whether the challenge response authentication succeeded</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – invalid input data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft.signature_check">
+<span class="sig-name descname"><span class="pre">signature_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="base/index.html#cryptnoxpy.card.base.SignatureCheckResult" title="cryptnoxpy.card.base.SignatureCheckResult"><span class="pre">cryptnoxpy.card.base.SignatureCheckResult</span></a></span></span><a class="headerlink" href="#cryptnoxpy.card.Nft.signature_check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sign random 32 bytes for validation that private key of public key is on the card.</p>
+<p>This call doesn’t increase signature counter and doesn’t go into signature history.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>nonce</strong> (<em>bytes</em>) – random 16 bytes that will be used to sign</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Message that was signed and the signature</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>SignatureCheckResult</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Nonce has to be 16 bytes</p></li>
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.SeedException" title="cryptnoxpy.exceptions.SeedException"><strong>SeedException</strong></a> – There is no seed on the card</p></li>
+<li><p><a class="reference internal" href="../exceptions/index.html#cryptnoxpy.exceptions.DataException" title="cryptnoxpy.exceptions.DataException"><strong>DataException</strong></a> – Data returned from the card is not valid</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="cryptnoxpy.card.Nft._init_data">
+<span class="sig-name descname"><span class="pre">_init_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">email</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing_secret</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bytes</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">base.BASIC_PAIRING_SECRET</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nfc_sign</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.Nft._init_data" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>

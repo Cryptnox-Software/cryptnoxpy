@@ -24,6 +24,15 @@ _PUBLIC_K1_OID = "2a8648ce3d030107034200"
 
 
 def origin(connection: Connection, debug: bool = False) -> Origin:
+    """
+    Check the origin of the card, whether it's a genuine
+    :param Connection connection: connection to use for the card
+    :param bool debug: print debug messages
+
+    :return: Whether the card on the connection is genuine
+
+    :rtype: Origin
+    """
     try:
         certificates = _manufacturer_public_keys()
     except Exception:
@@ -138,7 +147,8 @@ def _manufacturer_public_keys():
     return asyncio.run(fetch_certificates())
 
 
-def _check_signature(message: bytes, public_key: ec.EllipticCurvePublicKey, signature_hex: str) -> bool:
+def _check_signature(message: bytes, public_key: ec.EllipticCurvePublicKey,
+                     signature_hex: str) -> bool:
     try:
         public_key.verify(bytes.fromhex(signature_hex), message, ec.ECDSA(hashes.SHA256()))
     except InvalidSignature:
@@ -180,8 +190,7 @@ def _manufacturer_certificate_data(connection: Connection, debug: bool = False) 
 def _get_card_certificate(connection: Connection, debug: bool = False) -> str:
     nonce = secrets.randbits(64)
     nonce_list = hexadecimal_to_list("%0.16X" % nonce)
-    certificate = connection.send_apdu([0x80, 0xF8, 0x00, 0x00] +
-                                       [8] + nonce_list)[0]
+    certificate = connection.send_apdu([0x80, 0xF8, 0x00, 0x00, 0x08] + nonce_list)[0]
 
     card_cert_hex = list_to_hexadecimal(certificate)
     if debug:

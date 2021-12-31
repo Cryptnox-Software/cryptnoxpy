@@ -4,19 +4,24 @@ Module for keeping information about the card attached to the reader
 """
 import abc
 import collections
+import secrets
 from typing import (
     Any,
     Dict,
-    List,
     NamedTuple,
     Tuple
 )
+from typing import List
 
+from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 
 from . import genuineness
+from .user_data import UserDataBase
 from .. import exceptions
+from ..binary_utils import binary_to_list, pad_data
 from ..connection import Connection
+from ..crypto_utils import aes_encrypt
 from ..enums import (
     AuthType,
     Derivation,
@@ -28,6 +33,9 @@ from ..enums import (
 from ..exceptions import InitializationException
 
 User = collections.namedtuple("User", ["name", "email"])
+SignatureCheckResult = collections.namedtuple("SignatureCheckResult", ["message", "signature"])
+
+BASIC_PAIRING_SECRET = b'Cryptnox Basic CommonPairingData'
 
 
 class Base(metaclass=abc.ABCMeta):
@@ -48,10 +56,18 @@ class Base(metaclass=abc.ABCMeta):
     _ALGORITHM = ec.SECP256R1
     PUK_LENGTH = 15
 
+    pin_rule = "4-9 digits"
+    type = ord("B")
+    _type = "Basic"
+
+    user_data = UserDataBase()
+
     def __init__(self, connection: Connection, serial: int, applet_version: List[int],
                  data: List[int] = None, debug: bool = False):
         self.connection = connection
+        self.connection.pairing_secret = BASIC_PAIRING_SECRET
         self.connection.algorithm = self._ALGORITHM
+
         self.debug = debug
 
         self.applet_version: List[int] = applet_version
@@ -69,26 +85,6 @@ class Base(metaclass=abc.ABCMeta):
         """
         :return: Value to add to select command to select the applet on the card
         :rtype: List[int]
-        """
-
-    @staticmethod
-    @property
-    @abc.abstractmethod
-    def type() -> int:
-        """
-        :return: Card type
-        :rtype: int
-        """
-
-    @staticmethod
-    @property
-    @abc.abstractmethod
-    def pin_rule() -> str:
-        """
-        Human readable PIN code rule
-
-        :return: Human readable PIN code rule
-        :rtype: str
         """
 
     @staticmethod
@@ -141,7 +137,6 @@ class Base(metaclass=abc.ABCMeta):
         :raises PukException: PUK code is not valid
         """
 
-    @abc.abstractmethod
     def change_pin(self, new_pin: str) -> None:
         """
         Change the current pin code of the card to a new pin code.
@@ -155,8 +150,11 @@ class Base(metaclass=abc.ABCMeta):
         :param str new_pin: The desired PIN code to be set for the card
                             (4-9 digits).
         """
+        new_pin = self.valid_pin(new_pin, pin_name="new pin")
+        self._change_secret(0, new_pin)
+        if not self.open:
+            self.auth_type = AuthType.PIN
 
-    @abc.abstractmethod
     def change_puk(self, current_puk: str, new_puk: str) -> None:
         """
         Change the current pin code of the card to a new pin code.
@@ -167,6 +165,15 @@ class Base(metaclass=abc.ABCMeta):
         :param str current_puk: The current PUK code of the card
         :param str new_puk: The desired PUK code to be set for the card
         """
+        current_puk = self.valid_puk(current_puk, "current puk")
+        new_puk = self.valid_puk(new_puk, "new puk")
+        try:
+            self._change_secret(1, new_puk + current_puk)
+        except exceptions.DataValidationException as error:
+            raise exceptions.DataValidationException("The current puk is not matching "
+                                                     "the one on the card") from error
+        if not self.open:
+            self.auth_type = AuthType.PIN
 
     def check_init(self) -> None:
         """
@@ -312,6 +319,7 @@ class Base(metaclass=abc.ABCMeta):
         self._user = self._user or self._owner
 
         return {
+            "type": self._type,
             "serial_number": self.serial_number,
             "applet_version": ".".join(map(str, self.applet_version)),
             "name": self._user.name,
@@ -320,8 +328,8 @@ class Base(metaclass=abc.ABCMeta):
             "seed": self.valid_key
         }
 
-    @abc.abstractmethod
-    def init(self, name: str, email: str, pin: str, puk: str, pairing_secret: bytes) -> bytes:
+    def init(self, name: str, email: str, pin: str, puk: str,
+             pairing_secret: bytes = BASIC_PAIRING_SECRET, nfc_sign: bool = False) -> bytes:
         """
         Initialize the Cryptnox card.
 
@@ -334,12 +342,49 @@ class Base(metaclass=abc.ABCMeta):
         :param str pin: PIN code that will be used to open the card
         :param str puk: PUK code that will be used to open the card
         :param bytes pairing_secret: Pairing secret to use with the card
+        :param bool nfc_sign: Signature command can be used over NFC, only available on certain type
 
         :return: Pairing secret
         :rtype: bytes
 
         :raises InitializationException: There was an issue with initialization
         """
+        puk = self.valid_puk(puk)
+        pin = self.valid_pin(pin)
+        if len(name) > 20:
+            raise exceptions.DataValidationException("Name must be less than 20 characters")
+        if len(email) > 60:
+            raise exceptions.DataValidationException("Name must be less than 60 characters")
+        pairing_secret = pairing_secret or BASIC_PAIRING_SECRET
+
+        session_private_key = ec.generate_private_key(self._ALGORITHM)
+
+        session_public_key = session_private_key.public_key().public_bytes(
+            serialization.Encoding.X962,
+            serialization.PublicFormat.UncompressedPoint)
+
+        send_public_key = bytes.fromhex("{:x}".format(len(session_public_key)) +
+                                        session_public_key.hex())
+
+        public_key = ec.EllipticCurvePublicKey.from_encoded_point(
+            self._ALGORITHM(), bytes.fromhex(self.connection.session_public_key))
+        aes_init_key = session_private_key.exchange(ec.ECDH(), public_key)
+
+        iv_init_key = secrets.token_bytes(nbytes=16)
+
+        data = self._init_data(name, email, pin, puk, pairing_secret, nfc_sign)
+
+        payload = pad_data(data)
+        encrypted_payload = aes_encrypt(aes_init_key, iv_init_key, payload)
+        data_init = send_public_key + iv_init_key + encrypted_payload
+        apdu_init = [0x80, 0xFE, 0x00, 0x00, 82 + len(encrypted_payload)]
+        apdu_init += binary_to_list(data_init)
+        _, code1, code2 = self.connection.send_apdu(apdu_init)
+
+        if code1 != 0x90 or code2 != 0x00:
+            raise exceptions.InitializationException("Card is not initialized")
+
+        return bytes([0]) + pairing_secret
 
     @property
     @abc.abstractmethod
@@ -487,6 +532,23 @@ class Base(metaclass=abc.ABCMeta):
         :raises DataException: Invalid data received during signature
         """
 
+    def signature_check(self, nonce: bytes) -> SignatureCheckResult:
+        """
+        Sign random 32 bytes for validation that private key of public key is on the card.
+
+        This call doesn't increase signature counter and doesn't go into signature history.
+
+        :param bytes nonce: random 16 bytes that will be used to sign
+
+        :return: Message that was signed and the signature
+        :rtype: SignatureCheckResult
+
+        :raises DataValidationException: Nonce has to be 16 bytes
+        :raises SeedException: There is no seed on the card
+        :raises DataException: Data returned from the card is not valid
+        """
+        raise NotImplementedError
+
     @property
     @abc.abstractmethod
     def signing_counter(self) -> int:
@@ -515,26 +577,27 @@ class Base(metaclass=abc.ABCMeta):
         :raises PukException: PUK code not valid
         :raises CardNotBlocked: Card is not blocked, operation can't be done
         """
+        if not self.pin_authentication:
+            raise exceptions.PinException("PIN authentication is disabled. Can not unblock it.")
 
-    @property
-    @abc.abstractmethod
-    def user_data(self) -> bytes:
-        """
-        :return: Read user data that was written into the card.
-        :rtype: bytes
-        """
+        apdu = [0x80, 0x22, 0x00, 0x00]
+        puk = self.valid_puk(puk)
+        new_pin = self.valid_pin(new_pin, pin_name="new pin")
 
-    @user_data.setter
-    @abc.abstractmethod
-    def user_data(self, value: bytes) -> None:
-        """
-        Write data into the card.
+        try:
+            self.connection.send_encrypted(
+                apdu, bytes(puk, 'ascii') + bytes(new_pin, 'ascii'))
+        except exceptions.PinException as error:
+            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
+        except exceptions.SecureChannelException as error:
+            raise exceptions.CardNotBlocked("Card is not blocked") from error
+        except exceptions.GenericException as error:
+            if error.status[0] == 0x69 and error.status[1] == 0x85:
+                raise exceptions.CardNotBlocked("The card is not blocked.")
+            raise
 
-        :requires:
-            - PIN code or challenge-response validated
-
-        :param bytes value: Data to be written to the card
-        """
+        if not self.open:
+            self.auth_type = AuthType.PIN
 
     @abc.abstractmethod
     def user_key_add(self, slot: SlotIndex, data_info: str, public_key: bytes, puk_code: str,
@@ -645,7 +708,6 @@ class Base(metaclass=abc.ABCMeta):
         """
 
     @staticmethod
-    @abc.abstractmethod
     def valid_pin(pin: str, pin_name: str = "pin") -> str:
         """
         Check if provided pin is valid
@@ -656,6 +718,14 @@ class Base(metaclass=abc.ABCMeta):
 
         :raise DataValidationException: Provided pin is not valid
         """
+        if not 4 <= len(pin) <= 9:
+            raise exceptions.DataValidationException(f"The {pin_name} must have between"
+                                                     f" 4 and 9 numeric characters")
+
+        if not pin.isdigit():
+            raise exceptions.DataValidationException(f"The {pin_name} must be numeric.")
+
+        return pin + ("\0" * (9 - len(pin)))
 
     @staticmethod
     @abc.abstractmethod
@@ -688,6 +758,34 @@ class Base(metaclass=abc.ABCMeta):
         :raises SoftLock: The card has been locked and needs power cycling before
                           it can be used again
         """
+
+    def _change_secret(self, select_pin_puk: int, value: str):
+        """
+        Change secret, PIN or PUK code, of the card
+
+        :param int select_pin_puk: Change the PIN or PUK code:
+                                   0 - PIN
+                                   1 - PUK
+        :param str value: Value of the new secret
+        """
+        message = [0x80, 0x21, select_pin_puk, 0x00]
+
+        if not self.initialized:
+            raise exceptions.InitializationException("Card is not initialized")
+
+        self.connection.send_encrypted(message, bytes(value, 'ascii'))
+
+    @staticmethod
+    def _get_coded_value(value):
+        value_bytes = bytes(value, 'ascii')
+        return bytes([len(value_bytes)]) + value_bytes
+
+    def _init_data(self, name: str, email: str, pin: str, puk: str,
+                   pairing_secret: bytes = BASIC_PAIRING_SECRET, nfc_sign: bool = False):
+        data = Base._get_coded_value(name) + Base._get_coded_value(email) + bytes(pin, 'ascii')
+        data += bytes(puk, 'ascii') + pairing_secret
+
+        return data
 
     @property
     @abc.abstractmethod
