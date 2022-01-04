@@ -121,8 +121,8 @@ def manufacturer_certificate(connection: Connection, debug: bool = False) -> str
 def _manufacturer_public_keys():
     async def fetch(session, url):
         async with session.get(url) as response:
-            certificate = await response.text()
-            return x509.load_pem_x509_certificate(certificate.encode("ascii")).public_key()
+            certificate = await response.read()
+            return x509.load_pem_x509_certificate(certificate).public_key()
 
     async def fetch_all(session, certificates):
         tasks = [asyncio.create_task(fetch(session, _MANUFACTURER_CERTIFICATE_URL + certificate))
@@ -135,8 +135,8 @@ def _manufacturer_public_keys():
     async def fetch_certificates():
         async with aiohttp.ClientSession() as session:
             async with session.get(_MANUFACTURER_CERTIFICATE_URL) as response:
-                data = await response.text()
-                certificates = re.findall('href="(.+?crt)"', data)
+                data = await response.read()
+                certificates = re.findall('href="(.+?crt)"', data.decode("UTF8"))
 
         async with aiohttp.ClientSession() as session:
             return await fetch_all(session, certificates)
