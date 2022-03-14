@@ -585,16 +585,11 @@ class Base(metaclass=abc.ABCMeta):
         new_pin = self.valid_pin(new_pin, pin_name="new pin")
 
         try:
-            self.connection.send_encrypted(
-                apdu, bytes(puk, 'ascii') + bytes(new_pin, 'ascii'))
+            self.connection.send_encrypted(apdu, bytes(puk, 'ascii') + bytes(new_pin, 'ascii'))
         except exceptions.PinException as error:
             raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
-        except exceptions.SecureChannelException as error:
-            raise exceptions.CardNotBlocked("Card is not blocked") from error
-        except exceptions.GenericException as error:
-            if error.status[0] == 0x69 and error.status[1] == 0x85:
-                raise exceptions.CardNotBlocked("The card is not blocked.")
-            raise
+        except (exceptions.SecureChannelException, exceptions.PinAuthenticationException) as error:
+            raise exceptions.CardNotBlocked("Card is not blocked or pin disabled") from error
 
         if not self.open:
             self.auth_type = AuthType.PIN

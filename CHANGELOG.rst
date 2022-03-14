@@ -10,6 +10,11 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 `Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.1...HEAD>`_
 -------------------------------------------------------------------------------------
 
+Fixed
+^^^^^
+
+- `unblock_pin` command shows "PIN code wasn't authorized" when card is not locked
+
 `2.0.1 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.0...v2.0.1>`_ - 2022-01-03
 -----------------------------------------------------------------------------------------------
 
