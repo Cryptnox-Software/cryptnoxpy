@@ -39,8 +39,8 @@ class Connection(ContextDecorator):
     :var Card self.card: Information about the card.
     """
 
-    def __init__(self, index: int = 0, debug: bool = False):
-        self.conn = None
+    def __init__(self, index: int = 0, debug: bool = False, conn: list = []):
+        self.conn = conn[index] if (conn != []) and (len(conn) > index) else None
         self.debug = debug
         self.index = index
 
@@ -58,9 +58,10 @@ class Connection(ContextDecorator):
     def _init_reader(self, index):
         retry = 0
         try:
-            self._reader = None
+            if not self.conn:
+                raise reader.ReaderException
         except reader.ReaderException as error:
-            raise exceptions.ReaderException("Can't find any reader connected.") from error
+            raise exceptions.ReaderException("Can't find any incoming card connections.") from error
 
         return self
 
@@ -92,7 +93,6 @@ class Connection(ContextDecorator):
             self.conn.send(send_length)
             self.conn.send(message)
             p_apdu = pickle.dumps(apdu)
-            print(f'Sending command to client\n{apdu}')
             self.conn.send(p_apdu)
             while True:
                 msg_length = self.conn.recv(64).decode('utf-8')
@@ -103,7 +103,6 @@ class Connection(ContextDecorator):
                         resp  = self.conn.recv(1024)
                         response = pickle.loads(resp)
                         data, status1, status2 = response
-                        print(f'Response from client, \n{response}')
                         break
         except reader.ConnectionException as error:
             print(f'Connection error on server')
