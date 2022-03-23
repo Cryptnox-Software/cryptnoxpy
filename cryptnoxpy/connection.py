@@ -11,6 +11,7 @@ from collections import namedtuple
 from contextlib import ContextDecorator
 from time import time, sleep
 from typing import List, Tuple, Union
+import pickle
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -39,6 +40,7 @@ class Connection(ContextDecorator):
     """
 
     def __init__(self, index: int = 0, debug: bool = False):
+        self.conn = None
         self.debug = debug
         self.index = index
 
@@ -56,20 +58,9 @@ class Connection(ContextDecorator):
     def _init_reader(self, index):
         retry = 0
         try:
-            self._reader = reader.get(index)
+            self._reader = None
         except reader.ReaderException as error:
             raise exceptions.ReaderException("Can't find any reader connected.") from error
-
-        while True:
-            try:
-                self._reader.connect()
-            except reader.CardException as error:
-                retry += 1
-                if retry >= 3:
-                    raise exceptions.CardException("The reader has no card inserted") from error
-                sleep(0.5)
-            else:
-                break
 
         return self
 
@@ -94,8 +85,28 @@ class Connection(ContextDecorator):
             t_env = time()
 
         try:
-            data, status1, status2 = self._reader.send(apdu)
+            message = "!Data".encode('utf-8')
+            msg_length = len(message)
+            send_length = str(msg_length).encode('utf-8')
+            send_length += b' ' * (64 - len(send_length))
+            self.conn.send(send_length)
+            self.conn.send(message)
+            p_apdu = pickle.dumps(apdu)
+            print(f'Sending command to client\n{apdu}')
+            self.conn.send(p_apdu)
+            while True:
+                msg_length = self.conn.recv(64).decode('utf-8')
+                if msg_length:
+                    msg_length = int(msg_length)
+                    msg = self.conn.recv(msg_length).decode('utf-8')
+                    if msg == "!Data":
+                        resp  = self.conn.recv(1024)
+                        response = pickle.loads(resp)
+                        data, status1, status2 = response
+                        print(f'Response from client, \n{response}')
+                        break
         except reader.ConnectionException as error:
+            print(f'Connection error on server')
             raise exceptions.ConnectionException("Connection issue") from error
 
         if self.debug:
