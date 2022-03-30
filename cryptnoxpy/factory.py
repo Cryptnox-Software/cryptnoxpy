@@ -23,7 +23,7 @@ from .exceptions import (
 )
 
 
-def get_card(connection: Connection, debug: bool = False,remote: bool = False) -> Base:
+def get_card(connection: Connection, debug: bool = False) -> Base:
     """
     Get card instance that is using given connection.
 
@@ -37,7 +37,7 @@ def get_card(connection: Connection, debug: bool = False,remote: bool = False) -
     """
     for card_cls in _all_subclasses(Base):
         try:
-            applet_version, data = _select(connection, card_cls.select_apdu, card_cls.type,remote)
+            applet_version, data = _select(connection, card_cls.select_apdu, card_cls.type)
             serial, _ = _serial_number(connection, debug)
         except (TypeError, CardTypeException, CertificateException, DataException,
                 FirmwareException):

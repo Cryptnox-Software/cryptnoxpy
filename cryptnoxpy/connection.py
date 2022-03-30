@@ -43,6 +43,7 @@ class Connection(ContextDecorator):
         self.conn = conn[index] if (conn != []) and (len(conn) > index) else None
         self.debug = debug
         self.index = index
+        self.remote = remote
 
         self.session_public_key: str = ""
         self.algorithm = ec.SECP256R1
@@ -82,7 +83,7 @@ class Connection(ContextDecorator):
         if self._reader:
             del self._reader
 
-    def send_apdu(self, apdu: List[int],remote: bool = False) -> Tuple[List[int], int, int]:
+    def send_apdu(self, apdu: List[int]) -> Tuple[List[int], int, int]:
         """
         Send data to the card in plain format
 
@@ -99,7 +100,7 @@ class Connection(ContextDecorator):
             t_env = time()
 
         try:
-            if remote:
+            if self.remote:
                 message = "!Data".encode('utf-8')
                 msg_length = len(message)
                 send_length = str(msg_length).encode('utf-8')
