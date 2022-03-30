@@ -36,14 +36,11 @@ def get_card(connection: Connection, debug: bool = False) -> Base:
     :raise CardException: Card with given serial number not found
     """
     for card_cls in _all_subclasses(Base):
-        print(card_cls)
         try:
             applet_version, data = _select(connection, card_cls.select_apdu, card_cls.type)
-            print(f'Checking serial number of card')
             serial, _ = _serial_number(connection, debug)
         except (TypeError, CardTypeException, CertificateException, DataException,
                 FirmwareException) as e:
-            print(f'Exception here: {e}')
             continue
 
         connection.session_public_key = genuineness.session_public_key(connection, debug)

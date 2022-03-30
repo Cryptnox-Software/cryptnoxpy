@@ -101,7 +101,6 @@ class Connection(ContextDecorator):
 
         try:
             if self.remote:
-                print(f'Sending remote command')
                 message = "!Data".encode('utf-8')
                 msg_length = len(message)
                 send_length = str(msg_length).encode('utf-8')
@@ -121,7 +120,6 @@ class Connection(ContextDecorator):
                             data, status1, status2 = response
                             break
             else:
-                print(f'Sending local command')
                 data, status1, status2 = self._reader.send(apdu)
         except reader.ConnectionException as error:
             raise exceptions.ConnectionException("Connection issue") from error
