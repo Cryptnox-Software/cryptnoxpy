@@ -23,7 +23,7 @@ from .exceptions import (
 )
 
 
-def get_card(connection: Connection, debug: bool = False) -> Base:
+def get_card(connection: Connection, debug: bool = False,remote: bool = False) -> Base:
     """
     Get card instance that is using given connection.
 
@@ -37,7 +37,7 @@ def get_card(connection: Connection, debug: bool = False) -> Base:
     """
     for card_cls in _all_subclasses(Base):
         try:
-            applet_version, data = _select(connection, card_cls.select_apdu, card_cls.type)
+            applet_version, data = _select(connection, card_cls.select_apdu, card_cls.type,remote)
             serial, _ = _serial_number(connection, debug)
         except (TypeError, CardTypeException, CertificateException, DataException,
                 FirmwareException):
@@ -55,10 +55,10 @@ def _all_subclasses(cls):
         [s for c in cls.__subclasses__() for s in _all_subclasses(c)])
 
 
-def _select(connection, apdu, card_type, debug: bool = False) -> Tuple[Any, Any]:
+def _select(connection, apdu, card_type, debug: bool = False,remote: bool = False) -> Tuple[Any, Any]:
     apdu = [0x00, 0xA4, 0x04, 0x00, 0x07] + apdu
 
-    data_selected = connection.send_apdu(apdu)[0]
+    data_selected = connection.send_apdu(apdu,remote)[0]
     if len(data_selected) == 0:
         raise DataException("This card is not answering any data. Are you using NFC?")
 

@@ -39,7 +39,7 @@ class Connection(ContextDecorator):
     :var Card self.card: Information about the card.
     """
 
-    def __init__(self, index: int = 0, debug: bool = False, conn: list = []):
+    def __init__(self, index: int = 0, debug: bool = False, conn: list = [],remote: bool = False):
         self.conn = conn[index] if (conn != []) and (len(conn) > index) else None
         self.debug = debug
         self.index = index
@@ -53,23 +53,36 @@ class Connection(ContextDecorator):
         self._iv: bytes = b""
         self._mac_iv: bytes = b""
         self._mac_key: bytes = b""
-        self._init_reader(index)
+        self._init_reader(index,remote)
 
-    def _init_reader(self, index):
+    def _init_reader(self, index, remote):
         retry = 0
         try:
-            if not self.conn:
-                raise reader.ReaderException
+            if remote:
+                if not self.conn:
+                    raise reader.ReaderException
+            else:
+                self._reader = reader.get(index)
         except reader.ReaderException as error:
-            raise exceptions.ReaderException("Can't find any incoming card connections.") from error
+            raise exceptions.ReaderException("Can't find any reader connected.") from error
 
+        if not remote:
+            while True:
+                try:
+                    self._reader.connect()
+                except reader.CardException as error:
+                    retry += 1
+                    if retry >= 3:
+                        raise exceptions.CardException("The reader has no card inserted") from error
+                else:
+                    break
         return self
 
     def __del__(self):
         if self._reader:
             del self._reader
 
-    def send_apdu(self, apdu: List[int]) -> Tuple[List[int], int, int]:
+    def send_apdu(self, apdu: List[int],remote: bool = False) -> Tuple[List[int], int, int]:
         """
         Send data to the card in plain format
 
@@ -86,26 +99,28 @@ class Connection(ContextDecorator):
             t_env = time()
 
         try:
-            message = "!Data".encode('utf-8')
-            msg_length = len(message)
-            send_length = str(msg_length).encode('utf-8')
-            send_length += b' ' * (64 - len(send_length))
-            self.conn.send(send_length)
-            self.conn.send(message)
-            p_apdu = pickle.dumps(apdu)
-            self.conn.send(p_apdu)
-            while True:
-                msg_length = self.conn.recv(64).decode('utf-8')
-                if msg_length:
-                    msg_length = int(msg_length)
-                    msg = self.conn.recv(msg_length).decode('utf-8')
-                    if msg == "!Data":
-                        resp  = self.conn.recv(1024)
-                        response = pickle.loads(resp)
-                        data, status1, status2 = response
-                        break
+            if remote:
+                message = "!Data".encode('utf-8')
+                msg_length = len(message)
+                send_length = str(msg_length).encode('utf-8')
+                send_length += b' ' * (64 - len(send_length))
+                self.conn.send(send_length)
+                self.conn.send(message)
+                p_apdu = pickle.dumps(apdu)
+                self.conn.send(p_apdu)
+                while True:
+                    msg_length = self.conn.recv(64).decode('utf-8')
+                    if msg_length:
+                        msg_length = int(msg_length)
+                        msg = self.conn.recv(msg_length).decode('utf-8')
+                        if msg == "!Data":
+                            resp  = self.conn.recv(1024)
+                            response = pickle.loads(resp)
+                            data, status1, status2 = response
+                            break
+            else:
+                data, status1, status2 = self._reader.send(apdu)
         except reader.ConnectionException as error:
-            print(f'Connection error on server')
             raise exceptions.ConnectionException("Connection issue") from error
 
         if self.debug:
