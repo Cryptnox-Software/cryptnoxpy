@@ -40,7 +40,7 @@ def get_card(connection: Connection, debug: bool = False) -> Base:
             applet_version, data = _select(connection, card_cls.select_apdu, card_cls.type)
             serial, _ = _serial_number(connection, debug)
         except (TypeError, CardTypeException, CertificateException, DataException,
-                FirmwareException) as e:
+                FirmwareException):
             continue
 
         connection.session_public_key = genuineness.session_public_key(connection, debug)
