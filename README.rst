@@ -185,6 +185,11 @@ The card contains basic information:
 * card.serial_number : Integer : Card/applet instance Unique ID
 * card.applet_version : 3 integers list : Applet version (ex. 1.2.2)
 
+Remote connection
+^^^^^^^^^^^^^^^^^
+The connection can also be initialized with a socket connection client in a list, and a True value for the 'remote' parameter.
+This enables use with a remote client, communicating apdu commands over the socket connection.
+
 Initialization and pairing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
