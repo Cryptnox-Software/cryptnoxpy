@@ -48,13 +48,15 @@ Ubuntu / Debian
 
 .. code-block:: bash
 
-    (sudo) apt-get install python3-pip python3-setuptools pcscd
+    sudo apt-get install swig python3-pip python3-setuptools pcscd libpcsclite-dev
+    pip install -U setuptools
 
 Fedora / CentOS / RHEL
 
 .. code-block:: bash
 
-    yum install python3-pip python3-setuptools pcsc-lite-ccid
+    yum install swig python3-pip python3-setuptools pcsc-lite-ccid
+    pip install -U setuptools
 
 On some Linux, starts PCSCd service
 
@@ -62,6 +64,12 @@ On some Linux, starts PCSCd service
 
    (sudo) systemctl start pcscd
    (sudo) systemctl enable pcscd
+
+Mac OSX
+
+.. code-block:: bash
+
+    brew install swig
 
 Installation of this library
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^

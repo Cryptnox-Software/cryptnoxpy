@@ -10,6 +10,14 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 `Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.1...HEAD>`_
 -------------------------------------------------------------------------------------
 
+Changed
+^^^^^^^
+
+- Installation instructions added missing instructions
+
+`2.0.2 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.0...v2.0.1>`_ - 2022-03-14
+-----------------------------------------------------------------------------------------------
+
 Fixed
 ^^^^^
 
