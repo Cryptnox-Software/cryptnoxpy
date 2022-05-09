@@ -7,15 +7,24 @@ All notable changes to this project will be documented in this file.
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`_\ ,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.1...HEAD>`_
+`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.3...HEAD>`_
 -------------------------------------------------------------------------------------
+
+`2.0.3 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.2...v2.0.3>`_ - 2022-03-14
+-----------------------------------------------------------------------------------------------
 
 Changed
 ^^^^^^^
 
 - Installation instructions added missing instructions
 
-`2.0.2 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.0...v2.0.1>`_ - 2022-03-14
+Fixed
+^^^^^
+
+- `generate_seed` command allowed without previously verifying PIN code
+
+
+`2.0.2 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.1...v2.0.2>`_ - 2022-03-14
 -----------------------------------------------------------------------------------------------
 
 Fixed

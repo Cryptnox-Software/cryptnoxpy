@@ -10,7 +10,7 @@ from typing import (
 from cryptography.hazmat.primitives.asymmetric import ec
 
 from . import base
-from .base import AuthType, SignatureCheckResult
+from .base import AuthType
 from .user_data import UserData
 from .. import exceptions
 from ..binary_utils import path_to_bytes
@@ -48,18 +48,17 @@ class BasicG1(base.Base):
             raise exceptions.DataValidationException("Pairing key has to be 32 bytes.")
         if index != 0:
             raise exceptions.DataValidationException("Index must be 0")
-        puk = self.valid_puk(puk)
 
         puk = self.valid_puk(puk)
         try:
-            self.connection.send_encrypted([0x80, 0xDA, index, 0x00],
-                                           pairing_key + puk.encode("ascii"))
+            self.connection.send_encrypted([0x80, 0xDA, index, 0x00], pairing_key + puk.encode("ascii"))
         except exceptions.PinException as error:
             raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
 
     def derive(self, key_type: KeyType = KeyType.K1, path: str = ""):
         if self.seed_source == SeedSource.NO_SEED:
             raise exceptions.SeedException("There is no seed on the card")
+
         message = [0x80, 0xD1, 0x08, 0x00]
         binary_path = path_to_bytes(path) if path else b""
         self.connection.send_encrypted(message, binary_path)
@@ -99,7 +98,7 @@ class BasicG1(base.Base):
         return self.connection.send_encrypted([0x80, 0xD3, size, 0x00], b"")
 
     def generate_seed(self, pin: str = "") -> bytes:
-        if self.auth_type == AuthType.PIN:
+        if self.auth_type != AuthType.USER_KEY:
             pin = self.valid_pin(pin)
 
         message = [0x80, 0xD4, 0x00, 0x00]
@@ -108,9 +107,8 @@ class BasicG1(base.Base):
             result = self.connection.send_encrypted(message, pin.encode("ascii"))
         except exceptions.GenericException as error:
             if error.status[0] == 0x69 and error.status[1] == 0x86:
-                raise exceptions.KeyAlreadyGenerated("The card already has a key generated\n\n"
-                                                     "It is not possible to generate another one "
-                                                     "without resetting the card") from error
+                raise exceptions.KeyAlreadyGenerated("The card already has a key generated\n\nIt is not possible to "
+                                                     "generate another one without resetting the card") from error
             raise
 
         self._data[1] |= BasicG1._SEED_FLAG
@@ -133,8 +131,7 @@ class BasicG1(base.Base):
 
         if derivation in (Derivation.PINLESS_PATH,
                           Derivation.DERIVE_AND_MAKE_CURRENT):
-            raise exceptions.DerivationSelectionException("This operation doesn't support "
-                                                          "this derivation form")
+            raise exceptions.DerivationSelectionException("This operation doesn't support this derivation form")
 
         message = [0x80, 0xC2, derivation + key_type, 1]
         binary_path = path_to_bytes(path) if path else b""
@@ -165,9 +162,8 @@ class BasicG1(base.Base):
             self.connection.send_encrypted([0x80, 0xD0, 0x03, 0x00], seed + pin.encode("ascii"))
         except exceptions.GenericException as error:
             if error.status[0] == 0x69 and error.status[1] == 0x86:
-                raise exceptions.KeyAlreadyGenerated("The card already has a key generated\n\n"
-                                                     "It is not possible to generate another one "
-                                                     "without resetting the card") from error
+                raise exceptions.KeyAlreadyGenerated("The card already has a key generated\n\nIt is not possible to "
+                                                     "generate another one without resetting the card") from error
             raise
 
         self._data[1] |= BasicG1._SEED_FLAG
@@ -267,8 +263,8 @@ class BasicG1(base.Base):
         data_info_length = 64
         puk_code = self.valid_puk(puk_code)
         if len(data_info) > data_info_length:
-            raise exceptions.DataValidationException(f"Data info can't be longer than "
-                                                     f"{data_info_length} characters")
+            raise exceptions.DataValidationException(f"Data info can't be longer than {data_info_length} characters")
+
         data_info += "\0" * (data_info_length - len(data_info))
 
         data = bytes([slot]) + data_info.encode("ascii")
@@ -359,9 +355,8 @@ class BasicG1(base.Base):
 
         return int.from_bytes(result, "big") == 0x01
 
-    def sign(self, data: bytes, derivation: Derivation = Derivation.CURRENT_KEY,
-             key_type: KeyType = KeyType.K1, path: str = "", pin: str = "",
-             filter_eos: bool = False) -> bytes:
+    def sign(self, data: bytes, derivation: Derivation = Derivation.CURRENT_KEY, key_type: KeyType = KeyType.K1,
+             path: str = "", pin: str = "", filter_eos: bool = False) -> bytes:
         if self.seed_source == SeedSource.NO_SEED:
             raise exceptions.SeedException("There is no key on the card")
 
@@ -371,8 +366,7 @@ class BasicG1(base.Base):
 
         if derivation == Derivation.DERIVE_AND_MAKE_CURRENT or \
                 (derivation == Derivation.PINLESS_PATH and key_type == KeyType.R1):
-            raise exceptions.DerivationSelectionException("This operation doesn't support "
-                                                          "this derivation form")
+            raise exceptions.DerivationSelectionException("This operation doesn't support this derivation form")
 
         signal = [0x80, 0xC0, derivation + key_type, 0x01 if filter_eos else 0x00]
 
@@ -398,12 +392,10 @@ class BasicG1(base.Base):
     @staticmethod
     def valid_puk(puk: str, puk_name: str = "puk") -> str:
         if len(puk) != BasicG1.PUK_LENGTH:
-            raise exceptions.DataValidationException(f"The {puk_name} must have "
-                                                     f"{BasicG1.PUK_LENGTH} letters or number "
+            raise exceptions.DataValidationException(f"The {puk_name} must have {BasicG1.PUK_LENGTH} letters or number "
                                                      f"characters")
         if not puk.isalnum():
-            raise exceptions.DataValidationException(f"The {puk_name} must be letters and/or number"
-                                                     f" characters.")
+            raise exceptions.DataValidationException(f"The {puk_name} must be letters and/or number characters.")
 
         return puk
 
@@ -423,8 +415,8 @@ class BasicG1(base.Base):
             except (exceptions.DataValidationException, exceptions.PinException):
                 pass
             except exceptions.SecureChannelException as sc_error:
-                raise exceptions.SoftLock("The card is soft locked. Power cycle required before it "
-                                          "can be used again.") from sc_error
+                raise exceptions.SoftLock("The card is soft locked. Power cycle required before it can be used "
+                                          "again.") from sc_error
             raise
         except exceptions.GenericException as error:
             if error.status == 0x6700:
