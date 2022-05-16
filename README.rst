@@ -193,6 +193,35 @@ The card contains basic information:
 * card.serial_number : Integer : Card/applet instance Unique ID
 * card.applet_version : 3 integers list : Applet version (ex. 1.2.2)
 
+Remote connection
+^^^^^^^^^^^^^^^^^
+The connection can also be initialized with a socket connection client in a list, and a True value for the 'remote' parameter.
+This enables use with a remote client, communicating apdu commands over the socket connection.
+
+.. code-block:: python
+
+   import cryptnoxpy
+   import socket
+
+   server = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+   server.bind((SERVER_IP,SERVER_PORT))
+   server.listen()
+   conn, addr = server.accept()
+   try:
+       connection = cryptnoxpy.Connection(0,False,[conn],True)
+   except cryptnoxpy.ReaderException:
+       print("Reader not found on index")
+   else:
+       try:
+           card = cryptnoxpy.factory.get_card(connection)
+       except cryptnoxpy.CryptnoxException as error:
+           # There is an issue with loading the card
+           # CryptnoxException is the base exception class for module
+           print(error)
+       else:
+           # Card is loaded and can be used
+           print(f"Card serial number: {card.serial_number}")
+
 Initialization and pairing
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 

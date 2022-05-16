@@ -44,7 +44,6 @@ def get_card(connection: Connection, debug: bool = False) -> Base:
             continue
 
         connection.session_public_key = genuineness.session_public_key(connection, debug)
-
         return card_cls(connection, serial, applet_version, data, debug)
 
     raise CardException("Card not recognized")
