@@ -6,12 +6,15 @@ Sending and receiving information from the card through the reader.
 """
 
 import hashlib
-import secrets
-from collections import namedtuple
-from contextlib import ContextDecorator
-from time import time, sleep
-from typing import List, Tuple, Union
 import pickle
+import secrets
+from contextlib import ContextDecorator
+from time import time
+from typing import (
+    List,
+    Tuple,
+    Union
+)
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -35,49 +38,50 @@ class Connection(ContextDecorator):
 
     :param int index: Index of the reader to initialize the connection with
     :param bool debug: Show debug information during requests
+    :param List conn: List of sockets to use for remote connections
+    :param bool remote: Use remote sockets for communications with the cards
 
     :var Card self.card: Information about the card.
     """
 
-    def __init__(self, index: int = 0, debug: bool = False, conn: list = [],remote: bool = False):
-        self.conn = conn[index] if (conn != []) and (len(conn) > index) else None
-        self.debug = debug
-        self.index = index
-        self.remote = remote
+    def __init__(self, index: int = 0, debug: bool = False, conn: List = None, remote: bool = False):
+        self.conn = conn[index] if conn and (len(conn) > index) else None
+        self.debug: bool = debug
+        self.index: int = index
+        self.remote: bool = remote
 
         self.session_public_key: str = ""
         self.algorithm = ec.SECP256R1
-        self.pairing_secret = ""
+        self.pairing_secret: str = ""
 
         self._reader = None
         self._aes_key: bytes = b""
         self._iv: bytes = b""
         self._mac_iv: bytes = b""
         self._mac_key: bytes = b""
-        self._init_reader(index,remote)
+        self._init_reader(index, remote)
 
-    def _init_reader(self, index, remote):
+    def _init_reader(self, index: int, remote: bool) -> None:
         retry = 0
+        if remote:
+            if not self.conn:
+                raise exceptions.ReaderException("Can't find any reader connected.")
+            return
+
         try:
-            if remote:
-                if not self.conn:
-                    raise reader.ReaderException
-            else:
-                self._reader = reader.get(index)
+            self._reader = reader.get(index)
         except reader.ReaderException as error:
             raise exceptions.ReaderException("Can't find any reader connected.") from error
 
-        if not remote:
-            while True:
-                try:
-                    self._reader.connect()
-                except reader.CardException as error:
-                    retry += 1
-                    if retry >= 3:
-                        raise exceptions.CardException("The reader has no card inserted") from error
-                else:
-                    break
-        return self
+        while True:
+            try:
+                self._reader.connect()
+            except reader.CardException as error:
+                retry += 1
+                if retry >= 3:
+                    raise exceptions.CardException("The reader has no card inserted") from error
+            else:
+                break
 
     def __del__(self):
         if self._reader:
@@ -99,30 +103,13 @@ class Connection(ContextDecorator):
             print(list_to_hexadecimal(apdu))
             t_env = time()
 
-        try:
-            if self.remote:
-                message = "!Data".encode('utf-8')
-                msg_length = len(message)
-                send_length = str(msg_length).encode('utf-8')
-                send_length += b' ' * (64 - len(send_length))
-                self.conn.send(send_length)
-                self.conn.send(message)
-                p_apdu = pickle.dumps(apdu)
-                self.conn.send(p_apdu)
-                while True:
-                    msg_length = self.conn.recv(64).decode('utf-8')
-                    if msg_length:
-                        msg_length = int(msg_length)
-                        msg = self.conn.recv(msg_length).decode('utf-8')
-                        if msg == "!Data":
-                            resp  = self.conn.recv(1024)
-                            response = pickle.loads(resp)
-                            data, status1, status2 = response
-                            break
-            else:
+        if self.remote:
+            data, status1, status2 = self.remote_read(apdu)
+        else:
+            try:
                 data, status1, status2 = self._reader.send(apdu)
-        except reader.ConnectionException as error:
-            raise exceptions.ConnectionException("Connection issue") from error
+            except reader.ConnectionException as error:
+                raise exceptions.ConnectionException("Connection issue") from error
 
         if self.debug:
             t_ans = int((time() - t_env) * 10000) / 10.0
@@ -283,3 +270,26 @@ class Connection(ContextDecorator):
 
         if len(resp) != 32:
             raise exceptions.CryptnoxException("Bad data during secure channel testing")
+
+    def remote_read(self, apdu: List[int]) -> Tuple[List[int], int, int]:
+        message = "!Data".encode('utf-8')
+        msg_length = len(message)
+        send_length = str(msg_length).encode('utf-8')
+        send_length += b' ' * (64 - len(send_length))
+        self.conn.send(send_length)
+        self.conn.send(message)
+        p_apdu = pickle.dumps(apdu)
+        self.conn.send(p_apdu)
+
+        while True:
+            msg_length = self.conn.recv(64).decode('utf-8')
+            if msg_length:
+                msg_length = int(msg_length)
+                msg = self.conn.recv(msg_length).decode('utf-8')
+                if msg == "!Data":
+                    resp = self.conn.recv(1024)
+                    response = pickle.loads(resp)
+                    data, status1, status2 = response
+                    break
+
+        return data, status1, status2

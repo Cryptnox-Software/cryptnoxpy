@@ -10,6 +10,14 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 `Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.3...HEAD>`_
 -------------------------------------------------------------------------------------
 
+`2.1.0 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.3...v2.1.0>`_ - 2022-06-01
+-----------------------------------------------------------------------------------------------
+
+Added
+^^^^^
+
+- Add option for cards from remote connection
+
 `2.0.3 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.2...v2.0.3>`_ - 2022-03-14
 -----------------------------------------------------------------------------------------------
 
