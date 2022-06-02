@@ -79,7 +79,7 @@ class BasicG0(Base):
         return gen_resp
 
     def get_public_key(self, derivation: Derivation, key_type: KeyType = KeyType.K1, path: str = "",
-                       compressed: bool = True) -> str:
+                       compressed: bool = True, hexed: bool = True) -> str:
         if not self.valid_key:
             raise exceptions.SeedException()
 
@@ -98,7 +98,7 @@ class BasicG0(Base):
             raise exceptions.ReadPublicKeyException("Invalid data received during public key "
                                                     "reading")
 
-        result = data[4:].hex()
+        result = data[4:].hex() if hexed else data[4:]
         if compressed:
             result = encode_pubkey(result, "bin_compressed").hex()
 

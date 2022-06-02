@@ -30,7 +30,7 @@ class Nft(basic_g1.BasicG1):
 
     def get_public_key(self, derivation: Derivation = Derivation.CURRENT_KEY,
                        key_type: KeyType = KeyType.K1, path: str = "",
-                       compressed: bool = False) -> str:
+                       compressed: bool = False,hexed: bool = True) -> str:
         if derivation is not Derivation.CURRENT_KEY:
             raise exceptions.DerivationSelectionException("This card type doesn't support this "
                                                           "derivation form")
@@ -41,7 +41,7 @@ class Nft(basic_g1.BasicG1):
         if path:
             raise exceptions.DataValidationException("Path must be empty for current path")
 
-        return super().get_public_key(derivation, key_type, path, compressed)
+        return super().get_public_key(derivation, key_type, path, compressed,hexed)
 
     def generate_random_number(self, size: int) -> bytes:
         raise NotImplementedError("Card doesn't have this functionality")

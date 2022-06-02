@@ -119,7 +119,7 @@ class BasicG1(base.Base):
         return result
 
     def get_public_key(self, derivation: Derivation, key_type: KeyType = KeyType.K1, path: str = "",
-                       compressed: bool = True) -> str:
+                       compressed: bool = True, hexed: bool = True) -> str:
         if not self.initialized:
             raise exceptions.InitializationException("Card is not initialized")
 
@@ -137,7 +137,7 @@ class BasicG1(base.Base):
         binary_path = path_to_bytes(path) if path else b""
         data = self.connection.send_encrypted(message, binary_path)
 
-        result = data.hex()
+        result = data.hex() if hexed else data
         if compressed:
             result = encode_pubkey(result, "bin_compressed").hex()
 
