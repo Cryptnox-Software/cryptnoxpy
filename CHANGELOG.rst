@@ -10,6 +10,14 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 `Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.3...HEAD>`_
 -------------------------------------------------------------------------------------
 
+`2.1.1 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.1.0...v2.1.1>`_ - 2022-06-13
+-----------------------------------------------------------------------------------------------
+
+Added
+^^^^^
+
+- Add optional "hexed" parameter in get_public_key of cards
+
 `2.1.0 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.3...v2.1.0>`_ - 2022-06-01
 -----------------------------------------------------------------------------------------------
 
