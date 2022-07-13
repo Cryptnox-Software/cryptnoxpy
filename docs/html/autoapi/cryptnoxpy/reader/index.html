@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>cryptnoxpy.reader &#8212; CryptnoxPy  documentation</title>
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
     <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../../../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../../../genindex.html" />
     <link rel="search" title="Search" href="../../../search.html" />
@@ -33,17 +34,13 @@
           <div class="body" role="main">
             
   <section id="module-cryptnoxpy.reader">
-<span id="cryptnoxpy-reader"></span><h1><a class="reference internal" href="#module-cryptnoxpy.reader" title="cryptnoxpy.reader"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cryptnoxpy.reader</span></code></a><a class="headerlink" href="#module-cryptnoxpy.reader" title="Permalink to this headline">¶</a></h1>
+<span id="cryptnoxpy-reader"></span><h1><a class="reference internal" href="#module-cryptnoxpy.reader" title="cryptnoxpy.reader"><code class="xref py py-mod docutils literal notranslate"><span class="pre">cryptnoxpy.reader</span></code></a><a class="headerlink" href="#module-cryptnoxpy.reader" title="Permalink to this heading">¶</a></h1>
 <p>Module that handles different card reader types and their drivers.</p>
 <section id="module-contents">
-<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">¶</a></h2>
 <section id="classes">
-<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<h3>Classes<a class="headerlink" href="#classes" title="Permalink to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cryptnoxpy.reader.Reader" title="cryptnoxpy.reader.Reader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reader</span></code></a></p></td>
 <td><p>Abstract class describing methods to be implemented. Holds the connection.</p></td>
@@ -58,12 +55,8 @@
 </table>
 </section>
 <section id="functions">
-<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<h3>Functions<a class="headerlink" href="#functions" title="Permalink to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#cryptnoxpy.reader.get" title="cryptnoxpy.reader.get"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get</span></code></a>(index: int = 0) → Reader</p></td>
 <td><p>Get the reader that can be found on the given position.</p></td>
@@ -72,12 +65,8 @@
 </table>
 </section>
 <section id="attributes">
-<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this headline">¶</a></h3>
-<table class="longtable docutils align-default">
-<colgroup>
-<col style="width: 10%" />
-<col style="width: 90%" />
-</colgroup>
+<h3>Attributes<a class="headerlink" href="#attributes" title="Permalink to this heading">¶</a></h3>
+<table class="autosummary longtable docutils align-default">
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#id0" title="cryptnoxpy.reader.NFC_AVAILABLE"><code class="xref py py-obj docutils literal notranslate"><span class="pre">NFC_AVAILABLE</span></code></a></p></td>
 <td><p></p></td>
@@ -148,7 +137,7 @@
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.reader.Reader.connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connect to the card found in the selected reader.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -160,13 +149,13 @@
 <dd><p>Send APDU to the reader and card and retrieve the result with status
 codes.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>apdu</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Command to be sent</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Return the result of the query and two status codes</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Tuple[List[str], int, int]</p>
 </dd>
 </dl>
@@ -174,13 +163,13 @@ codes.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.reader.Reader.bool">
-<span class="sig-name descname"><span class="pre">bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cryptnoxpy.reader.Reader.bool" title="cryptnoxpy.reader.Reader.bool"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#cryptnoxpy.reader.Reader.bool" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#cryptnoxpy.reader.Reader.bool" title="Permalink to this definition">¶</a></dt>
 <dd><p>Is there an active connection</p>
 <dl class="field-list simple">
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Is there an active connection</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -208,7 +197,7 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.reader.NfcReader.connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connect to the card found in the selected reader.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -220,13 +209,13 @@ overrides the normal algorithm (and the outcome is cached).</p>
 <dd><p>Send APDU to the reader and card and retrieve the result with status
 codes.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>apdu</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Command to be sent</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Return the result of the query and two status codes</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Tuple[List[str], int, int]</p>
 </dd>
 </dl>
@@ -240,7 +229,7 @@ codes.</p>
 <dd><p>Bases: <a class="reference internal" href="#cryptnoxpy.reader.Reader" title="cryptnoxpy.reader.Reader"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Reader</span></code></a></p>
 <p>Generic smart card reader class</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Index of the reader to initialize.</p>
 </dd>
 </dl>
@@ -249,7 +238,7 @@ codes.</p>
 <span class="sig-name descname"><span class="pre">connect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.reader.SmartCard.connect" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connect to the card found in the selected reader.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -261,13 +250,13 @@ codes.</p>
 <dd><p>Send APDU to the reader and card and retrieve the result with status
 codes.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>apdu</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Command to be sent</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Return the result of the query and two status codes</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Tuple[List[str], int, int]</p>
 </dd>
 </dl>
@@ -280,13 +269,13 @@ codes.</p>
 <span class="sig-prename descclassname"><span class="pre">cryptnoxpy.reader.</span></span><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#cryptnoxpy.reader.Reader" title="cryptnoxpy.reader.Reader"><span class="pre">Reader</span></a></span></span><a class="headerlink" href="#cryptnoxpy.reader.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the reader that can be found on the given position.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Index of reader to be initialized and used</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Reader object that can be used.</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="#cryptnoxpy.reader.Reader" title="cryptnoxpy.reader.Reader">Reader</a></p>
 </dd>
 </dl>
@@ -330,7 +319,7 @@ codes.</p>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -347,7 +336,7 @@ codes.</p>
       &copy;2021, Cryptnox.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

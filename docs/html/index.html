@@ -1,10 +1,10 @@
 
 <!DOCTYPE html>
 
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>Cryptnox Python Communication Library &#8212; CryptnoxPy  documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
@@ -13,6 +13,7 @@
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -33,7 +34,7 @@
           <div class="body" role="main">
             
   <section id="cryptnox-python-communication-library">
-<h1>Cryptnox Python Communication Library<a class="headerlink" href="#cryptnox-python-communication-library" title="Permalink to this headline">¶</a></h1>
+<h1>Cryptnox Python Communication Library<a class="headerlink" href="#cryptnox-python-communication-library" title="Permalink to this heading">¶</a></h1>
 <a class="reference external image-reference" href="https://pypi.org/project/cryptnoxpy"><img alt="https://img.shields.io/pypi/v/cryptnoxpy" src="https://img.shields.io/pypi/v/cryptnoxpy" /></a>
 <a class="reference external image-reference" href="https://cryptnoxpy.readthedocs.io/en/latest/?badge=latest"><img alt="Documentation Status" src="https://readthedocs.org/projects/cryptnoxpy/badge/?version=latest" /></a>
 <p><strong>Warning: This is a beta release of the software.
@@ -47,29 +48,31 @@ factory method.</p>
 <p>To buy NFC enabled cards that are supported by this library go to:
 <a class="reference external" href="https://www.cryptnox.com/">https://www.cryptnox.com/</a></p>
 <section id="license">
-<h2>License<a class="headerlink" href="#license" title="Permalink to this headline">¶</a></h2>
+<h2>License<a class="headerlink" href="#license" title="Permalink to this heading">¶</a></h2>
 <p>The library is available under dual licensing. You can use the library under the
 conditions of <a class="reference external" href="https://www.gnu.org/licenses/lgpl-3.0.en.html">GNU LESSER GENERAL PUBLIC LICENSE 3.0+</a>
 or <a class="reference external" href="mailto:info&#37;&#52;&#48;cryptnox&#46;ch">contact us</a> to ask about commercial licensing.</p>
 </section>
 <section id="documentation">
-<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h2>
+<h2>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">¶</a></h2>
 <p>API documentation can be found in HTML format in the <a class="reference external" href="docs/html/index.html">docs folder</a>
 It is generated using Sphynx from the code and can be generated in other formats too.</p>
 </section>
 <section id="installation-and-requirements">
-<h2>Installation and requirements<a class="headerlink" href="#installation-and-requirements" title="Permalink to this headline">¶</a></h2>
+<h2>Installation and requirements<a class="headerlink" href="#installation-and-requirements" title="Permalink to this heading">¶</a></h2>
 <p>Requires :</p>
 <ul class="simple">
 <li><p>Python 3.6-3.9</p></li>
 <li><p>PCSCd on Linux</p></li>
 </ul>
 <p>Ubuntu / Debian</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="o">(</span>sudo<span class="o">)</span> apt-get install python3-pip python3-setuptools pcscd
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install swig python3-pip python3-setuptools pcscd libpcsclite-dev
+pip install -U setuptools
 </pre></div>
 </div>
 <p>Fedora / CentOS / RHEL</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>yum install python3-pip python3-setuptools pcsc-lite-ccid
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>yum install swig python3-pip python3-setuptools pcsc-lite-ccid
+pip install -U setuptools
 </pre></div>
 </div>
 <p>On some Linux, starts PCSCd service</p>
@@ -77,8 +80,12 @@ It is generated using Sphynx from the code and can be generated in other formats
 <span class="o">(</span>sudo<span class="o">)</span> systemctl <span class="nb">enable</span> pcscd
 </pre></div>
 </div>
+<p>Mac OSX</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew install swig
+</pre></div>
+</div>
 <section id="installation-of-this-library">
-<h3>Installation of this library<a class="headerlink" href="#installation-of-this-library" title="Permalink to this headline">¶</a></h3>
+<h3>Installation of this library<a class="headerlink" href="#installation-of-this-library" title="Permalink to this heading">¶</a></h3>
 <p>Make sure that you installed the required packages for your system.
 See the “Requires” section above.</p>
 <p>Install with pip:</p>
@@ -101,7 +108,7 @@ See the “Requires” section above.</p>
 </div>
 </section>
 <section id="installation-issues">
-<h3>Installation issues<a class="headerlink" href="#installation-issues" title="Permalink to this headline">¶</a></h3>
+<h3>Installation issues<a class="headerlink" href="#installation-issues" title="Permalink to this heading">¶</a></h3>
 <p>If the <strong>Linux system doesn't have Python 3.6, 3.7, 3.8 nor 3.9</strong>, install
 Python 3.7 with the following recipe (Debian like):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install -y make build-essential libssl-dev zlib1g-dev swig libpcsclite-dev
@@ -139,7 +146,7 @@ sudo rm -r /lib/modules/*/kernel/drivers/nfc/pn533
 </div>
 </section>
 <section id="update-issues">
-<h3>Update issues<a class="headerlink" href="#update-issues" title="Permalink to this headline">¶</a></h3>
+<h3>Update issues<a class="headerlink" href="#update-issues" title="Permalink to this heading">¶</a></h3>
 <p>In case you just want to update the package, with old pip version on some Linux, it is better to remove and reinstall the package:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo pip uninstall cryptnoxpy
 sudo pip install .
@@ -148,7 +155,7 @@ sudo pip install .
 </section>
 </section>
 <section id="library-use">
-<h2>Library use<a class="headerlink" href="#library-use" title="Permalink to this headline">¶</a></h2>
+<h2>Library use<a class="headerlink" href="#library-use" title="Permalink to this heading">¶</a></h2>
 <p>To get the card a connection has to be established with the reader’s index. The connection can
 then be passed to the factory that will initialize an object for the card in the reader from the
 correct class for the card type and version.</p>
@@ -182,8 +189,36 @@ correct class for the card type and version.</p>
 <li><p>card.serial_number : Integer : Card/applet instance Unique ID</p></li>
 <li><p>card.applet_version : 3 integers list : Applet version (ex. 1.2.2)</p></li>
 </ul>
+<section id="remote-connection">
+<h3>Remote connection<a class="headerlink" href="#remote-connection" title="Permalink to this heading">¶</a></h3>
+<p>The connection can also be initialized with a socket connection client in a list, and a True value for the ‘remote’ parameter.
+This enables use with a remote client, communicating apdu commands over the socket connection.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">cryptnoxpy</span>
+<span class="kn">import</span> <span class="nn">socket</span>
+
+<span class="n">server</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span><span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
+<span class="n">server</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">SERVER_IP</span><span class="p">,</span><span class="n">SERVER_PORT</span><span class="p">))</span>
+<span class="n">server</span><span class="o">.</span><span class="n">listen</span><span class="p">()</span>
+<span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">server</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">connection</span> <span class="o">=</span> <span class="n">cryptnoxpy</span><span class="o">.</span><span class="n">Connection</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="kc">False</span><span class="p">,[</span><span class="n">conn</span><span class="p">],</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">cryptnoxpy</span><span class="o">.</span><span class="n">ReaderException</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Reader not found on index&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">card</span> <span class="o">=</span> <span class="n">cryptnoxpy</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">get_card</span><span class="p">(</span><span class="n">connection</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">cryptnoxpy</span><span class="o">.</span><span class="n">CryptnoxException</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="c1"># There is an issue with loading the card</span>
+        <span class="c1"># CryptnoxException is the base exception class for module</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">error</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Card is loaded and can be used</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Card serial number: </span><span class="si">{</span><span class="n">card</span><span class="o">.</span><span class="n">serial_number</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
 <section id="initialization-and-pairing">
-<h3>Initialization and pairing<a class="headerlink" href="#initialization-and-pairing" title="Permalink to this headline">¶</a></h3>
+<h3>Initialization and pairing<a class="headerlink" href="#initialization-and-pairing" title="Permalink to this heading">¶</a></h3>
 <p>Right after the installation, the applet is not initialized, and the user needs
 to send some parameters to use the card. The initialization can be executed once.
 Any change of the base parameters requires a full applet reinstallation
@@ -222,7 +257,7 @@ layer with the card using standards APDU messages. Many applet commands require
 a secure channel.</p>
 </section>
 <section id="pin">
-<h3>PIN<a class="headerlink" href="#pin" title="Permalink to this headline">¶</a></h3>
+<h3>PIN<a class="headerlink" href="#pin" title="Permalink to this heading">¶</a></h3>
 <p>The PIN chosen during the initialization needs to be provided after each card
 reset, and a secure channel is opened.</p>
 <p>To test a PIN string, simply use:</p>
@@ -231,13 +266,13 @@ reset, and a secure channel is opened.</p>
 </div>
 </section>
 <section id="seed-administration">
-<h3>Seed administration<a class="headerlink" href="#seed-administration" title="Permalink to this headline">¶</a></h3>
+<h3>Seed administration<a class="headerlink" href="#seed-administration" title="Permalink to this heading">¶</a></h3>
 <p>The applet manages a 256 bits master secret called the “seed”. This is the BIP32
 Master Seed, and can be externally computed from a mnemonic to a binary seed
 using BIP39. The key pairs used for ECDSA are then computationally derived from
 this seed using BIP32 derivation scheme.</p>
 <section id="seed-generation">
-<h4>Seed generation<a class="headerlink" href="#seed-generation" title="Permalink to this headline">¶</a></h4>
+<h4>Seed generation<a class="headerlink" href="#seed-generation" title="Permalink to this heading">¶</a></h4>
 <p>The seed can be generated in the card using the random number generator in the
 java chip system (AIS 20 class DRG.3). Doing this way, the seed secret never
 escapes the card protection.</p>
@@ -254,7 +289,7 @@ We don’t recommend doing so, this is very insecure, as the seed is exposed in
 clear and full in the user’s system.</p>
 </section>
 <section id="recovery">
-<h4>Recovery<a class="headerlink" href="#recovery" title="Permalink to this headline">¶</a></h4>
+<h4>Recovery<a class="headerlink" href="#recovery" title="Permalink to this heading">¶</a></h4>
 <p>The Cryptnox applet can load binary seed.</p>
 <p>The seed is loaded in the card using this method:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">card</span><span class="o">.</span><span class="n">load_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">pin</span><span class="p">)</span>
@@ -269,7 +304,7 @@ See derivation and key system just below for more details.</p>
 </section>
 </section>
 <section id="derivation-and-keys-system">
-<h3>Derivation and keys system<a class="headerlink" href="#derivation-and-keys-system" title="Permalink to this headline">¶</a></h3>
+<h3>Derivation and keys system<a class="headerlink" href="#derivation-and-keys-system" title="Permalink to this heading">¶</a></h3>
 <p>The card applet is fully compliant with
 <a class="reference external" href="https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki">BIP32</a>,
 except the maximum depth of derivation from the master key is 8 levels.
@@ -294,7 +329,7 @@ is below one thousand per day.</p>
 <p>See derive and sign methods in the API documentation.</p>
 </section>
 <section id="ec-signature">
-<h3>EC Signature<a class="headerlink" href="#ec-signature" title="Permalink to this headline">¶</a></h3>
+<h3>EC Signature<a class="headerlink" href="#ec-signature" title="Permalink to this heading">¶</a></h3>
 <p>The derivation of the key pair node can be also possible using the signature
 command (relative or absolute).</p>
 <p>The card applet can sign any 256 bits hash provided, using ECDSA with 256k1 EC
@@ -312,19 +347,19 @@ users beforehand, when they provide their EC384 signature of this hash.</p>
 </section>
 </section>
 <section id="card">
-<h2>Card<a class="headerlink" href="#card" title="Permalink to this headline">¶</a></h2>
+<h2>Card<a class="headerlink" href="#card" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.card.base.</span></span><span class="sig-name descname"><span class="pre">Base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><span class="pre">cryptnoxpy.connection.Connection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">serial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">applet_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.base.Base" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.card.base.</span></span><span class="sig-name descname"><span class="pre">Base</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/connection/index.html#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><span class="pre">Connection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">serial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">applet_version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.base.Base" title="Permalink to this definition">¶</a></dt>
 <dd><p>Object that contains information about the card that is in the reader.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>connection</strong> (<a class="reference internal" href="#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><em>Connection</em></a>) – Connection to use for card initialization</p></li>
+<li><p><strong>connection</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/connection/index.html#cryptnoxpy.connection.Connection" title="cryptnoxpy.connection.Connection"><em>Connection</em></a>) – Connection to use for card initialization</p></li>
 <li><p><strong>debug</strong> (<em>bool</em>) – Show debug information to the user.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Variables</dt>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>applet_version</strong> (<em>List</em><em>[</em><em>int</em><em>]</em>) – Version of the applet on the card.</p></li>
 <li><p><strong>serial_number</strong> (<em>int</em>) – Serial number of card.</p></li>
@@ -332,7 +367,7 @@ users beforehand, when they provide their EC384 signature of this hash.</p>
 <li><p><strong>initialized</strong> (<em>bool</em>) – The card has been initialized with secrets.</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.CardTypeException" title="cryptnoxpy.exceptions.CardTypeException"><strong>CardTypeException</strong></a> – The card in the reader is not a Cryptnox card</p>
 </dd>
 </dl>
@@ -340,10 +375,10 @@ users beforehand, when they provide their EC384 signature of this hash.</p>
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.alive">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">alive</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.alive" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The connection to the card is established and the card hasn’t been changed</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -354,14 +389,14 @@ users beforehand, when they provide their EC384 signature of this hash.</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">change_pairing_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pairing_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.change_pairing_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Set the pairing key of the card</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>index</strong> (<em>int</em>) – Index of the pairing key</p></li>
 <li><p><strong>pairing_key</strong> (<em>bytes</em>) – Pairing key to set for the card</p></li>
 <li><p><strong>puk</strong> (<em>str</em>) – PUK code of the card</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.SecureChannelException" title="cryptnoxpy.exceptions.SecureChannelException"><strong>SecureChannelException</strong></a> – operation not allowed</p></li>
@@ -378,12 +413,12 @@ users beforehand, when they provide their EC384 signature of this hash.</p>
 <p>The method will set the given pin code as the pin code of the card.
 For it to work the card first must be opened with the current pin code.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code or challenge-response validated</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>new_pin</strong> (<em>str</em>) – The desired PIN code to be set for the card
 (4-9 digits).</p>
 </dd>
@@ -397,7 +432,7 @@ For it to work the card first must be opened with the current pin code.</p>
 <p>The method will set the given pin code as the pin code of the card.
 For it to work the card first must be opened with the current pin code.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>current_puk</strong> (<em>str</em>) – The current PUK code of the card</p></li>
 <li><p><strong>new_puk</strong> (<em>str</em>) – The desired PUK code to be set for the card</p></li>
@@ -413,7 +448,7 @@ For it to work the card first must be opened with the current pin code.</p>
 <p>It can be useful to check if the card is initialized before doing
 anything else, like asking for pin code from the user.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.InitializationException" title="cryptnoxpy.exceptions.InitializationException"><strong>InitializationException</strong></a> – The card is not initialized</p>
 </dd>
 </dl>
@@ -421,16 +456,16 @@ anything else, like asking for pin code from the user.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.derive">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">derive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><span class="pre">cryptnoxpy.enums.KeyType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">KeyType.K1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.base.Base.derive" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">derive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><span class="pre">KeyType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">KeyType.K1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.card.base.Base.derive" title="Permalink to this definition">¶</a></dt>
 <dd><p>Derive key on path and make it the current key in the card</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code or challenge-response validated</p></li>
 <li><p>Seed must exist</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>key_type</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><em>KeyType</em></a>) – Key type to do derive on</p></li>
 <li><p><strong>path</strong> (<em>str</em>) – Path on which to do derivation</p></li>
@@ -444,12 +479,12 @@ anything else, like asking for pin code from the user.</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dual_seed_load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.dual_seed_load" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load public key and signature from the other card into the card to generate same seed.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code or challenge-response validated</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>pin</strong> (<em>str</em>) – PIN code of card if it was opened with a PIN check</p></li>
 <li><p><strong>data</strong> (<em>bytes</em>) – Public key and signature of public key from the other card</p></li>
@@ -463,21 +498,21 @@ anything else, like asking for pin code from the user.</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dual_seed_public_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.dual_seed_public_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the public key from the card for dual initialization of the cards</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code or challenge-response validated</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>pin</strong> (<em>str</em>) – PIN code of card if it was opened with a PIN check</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Public key and signature that can be sent into the other card</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bytes</p>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataException" title="cryptnoxpy.exceptions.DataException"><strong>DataException</strong></a> – The received data is invalid</p>
 </dd>
 </dl>
@@ -487,10 +522,10 @@ anything else, like asking for pin code from the user.</p>
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.extended_public_key">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">extended_public_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.extended_public_key" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Extended public key turned on</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -501,16 +536,16 @@ anything else, like asking for pin code from the user.</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_random_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.generate_random_number" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate random number on the car and return it.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>size</strong> (<em>int</em>) – Output data size in bytes (between 16 and 64, mod 4)</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Random number generated by the chip</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bytes</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – size in not a number between 16 and 64 or is not
 divisible by 4</p>
 </dd>
@@ -522,22 +557,22 @@ divisible by 4</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">generate_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.generate_seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate a seed directly on the card.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code or challenge-response validated</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>pin</strong> (<em>str</em><em>, </em><em>optional</em>) – PIN code of the card. Can be empty if card is opened with
 challenge-response validation</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Primary node “m” UID (hash of public key)</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bytes</p>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.KeyGenerationException" title="cryptnoxpy.exceptions.KeyGenerationException"><strong>KeyGenerationException</strong></a> – There was an issue with generating the key</p></li>
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.KeyAlreadyGenerated" title="cryptnoxpy.exceptions.KeyAlreadyGenerated"><strong>KeyAlreadyGenerated</strong></a> – The card already has a seed generated</p></li>
@@ -548,16 +583,16 @@ challenge-response validation</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.get_public_key">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_public_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">derivation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.Derivation" title="cryptnoxpy.enums.Derivation"><span class="pre">cryptnoxpy.enums.Derivation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><span class="pre">cryptnoxpy.enums.KeyType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">KeyType.K1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compressed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.get_public_key" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_public_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">derivation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.Derivation" title="cryptnoxpy.enums.Derivation"><span class="pre">Derivation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><span class="pre">KeyType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">KeyType.K1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compressed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.get_public_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the public key from the card.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code or challenge-response validated, except for PIN-less path</p></li>
 <li><p>Seed must exist</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>derivation</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.Derivation" title="cryptnoxpy.enums.Derivation"><em>Derivation</em></a>) – Derivation to use.</p></li>
 <li><p><strong>key_type</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><em>KeyType</em></a>) – Key type to use</p></li>
@@ -565,13 +600,13 @@ challenge-response validation</p>
 <li><p><strong>compressed</strong> (<em>bool</em>) – The returned value is in compressed format.</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The public key for the given path in hexadecimal string format</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DerivationSelectionException" title="cryptnoxpy.exceptions.DerivationSelectionException"><strong>DerivationSelectionException</strong></a> – Card is not initialized with seed</p></li>
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.ReadPublicKeyException" title="cryptnoxpy.exceptions.ReadPublicKeyException"><strong>ReadPublicKeyException</strong></a> – Invalid data received from card</p></li>
@@ -586,19 +621,19 @@ challenge-response validation</p>
 <dd><p>Get history of hashes the card has signed regardless of any
 parameters given to sign</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code or challenge-response validated</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>index</strong> (<em>int</em>) – Index of entry in history</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Return entry containing signing_counter, representing index of sign call, and
 hashed_data, the data that was signed</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>NamedTuple</p>
 </dd>
 </dl>
@@ -609,10 +644,10 @@ hashed_data, the data that was signed</p>
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">info</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get relevant information about the card.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dictionary containing information for the card</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dict[str, Any]</p>
 </dd>
 </dl>
@@ -626,7 +661,7 @@ hashed_data, the data that was signed</p>
 Set the PIN and PUK codes for authenticating with the card to be able
 to use it.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>name</strong> (<em>str</em>) – Name of the card owner</p></li>
 <li><p><strong>email</strong> (<em>str</em>) – Email of the card owner</p></li>
@@ -636,13 +671,13 @@ to use it.</p>
 <li><p><strong>nfc_sign</strong> (<em>bool</em>) – Signature command can be used over NFC, only available on certain type</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Pairing secret</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bytes</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.InitializationException" title="cryptnoxpy.exceptions.InitializationException"><strong>InitializationException</strong></a> – There was an issue with initialization</p>
 </dd>
 </dl>
@@ -652,10 +687,10 @@ to use it.</p>
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.initialized">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">initialized</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.initialized" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Whether the card is initialized</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -666,19 +701,19 @@ to use it.</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">load_seed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.load_seed" title="Permalink to this definition">¶</a></dt>
 <dd><p>Load the given seed into the Cryptnox card.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code or challenge-response validated</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>seed</strong> (<em>bytes</em>) – Seed to initialize the card with</p></li>
 <li><p><strong>pin</strong> (<em>str</em><em>, </em><em>optional</em>) – PIN code of the card. Can be empty if card is opened with
 challenge-response validation</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.KeyGenerationException" title="cryptnoxpy.exceptions.KeyGenerationException"><strong>KeyGenerationException</strong></a> – Data is not correct</p>
 </dd>
 </dl>
@@ -688,11 +723,11 @@ challenge-response validation</p></li>
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.open">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">open</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.open" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Whether the user has authenticated using the PIN code or
 challenge-response validation</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -700,13 +735,13 @@ challenge-response validation</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.origin">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">origin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.Origin" title="cryptnoxpy.enums.Origin"><span class="pre">cryptnoxpy.enums.Origin</span></a></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.origin" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">origin</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.Origin" title="cryptnoxpy.enums.Origin"><span class="pre">Origin</span></a></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.origin" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Return if the card is original Cryptnox card, fake or there’s an
 issue getting the information</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.Origin" title="cryptnoxpy.enums.Origin">Origin</a></p>
 </dd>
 </dl>
@@ -716,10 +751,10 @@ issue getting the information</p>
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.pin_authentication">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pin_authentication</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.pin_authentication" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Whether the PIN code can be used for authentication</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -729,10 +764,10 @@ issue getting the information</p>
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.pinless_enabled">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pinless_enabled</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.pinless_enabled" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Return whether the card has a pinless path</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -743,10 +778,10 @@ issue getting the information</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">puk_rule</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.puk_rule" title="Permalink to this definition">¶</a></dt>
 <dd><p>Human readable PUK code rule</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Human readable PUK code rule</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>str</p>
 </dd>
 </dl>
@@ -757,7 +792,7 @@ issue getting the information</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset the card and return it to factory settings.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>puk</strong> – PUK code associated with the card</p>
 </dd>
 </dl>
@@ -765,12 +800,12 @@ issue getting the information</p>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.seed_source">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SeedSource" title="cryptnoxpy.enums.SeedSource"><span class="pre">cryptnoxpy.enums.SeedSource</span></a></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.seed_source" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">seed_source</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SeedSource" title="cryptnoxpy.enums.SeedSource"><span class="pre">SeedSource</span></a></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.seed_source" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>How the seed was generated</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SeedSource" title="cryptnoxpy.enums.SeedSource">SeedSource</a></p>
 </dd>
 </dl>
@@ -780,10 +815,10 @@ issue getting the information</p>
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.select_apdu">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">select_apdu</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.select_apdu" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Value to add to select command to select the applet on the card</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>List[int]</p>
 </dd>
 </dl>
@@ -794,18 +829,18 @@ issue getting the information</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_extended_public_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.set_extended_public_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn on/off extended public key output.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>Seed must be loaded</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>status</strong> (<em>bool</em>) – Status of PIN authentication</p></li>
 <li><p><strong>puk</strong> (<em>str</em>) – PUK code associated with the card</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.PukException" title="cryptnoxpy.exceptions.PukException"><strong>PukException</strong></a> – PUK code is not valid</p></li>
@@ -820,13 +855,13 @@ issue getting the information</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_pin_authentication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.set_pin_authentication" title="Permalink to this definition">¶</a></dt>
 <dd><p>Turn on/off authentication with the PIN code. Other methods can still be used.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>status</strong> (<em>bool</em>) – Status of PIN authentication</p></li>
 <li><p><strong>puk</strong> (<em>str</em>) – PUK code associated with the card</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.PukException" title="cryptnoxpy.exceptions.PukException"><strong>PukException</strong></a> – PUK code is not valid</p></li>
@@ -840,13 +875,13 @@ issue getting the information</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">set_pinless_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.set_pinless_path" title="Permalink to this definition">¶</a></dt>
 <dd><p>Enable working with the card without a PIN on path.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>path</strong> (<em>str</em>) – Path to be available without a PIN code</p></li>
 <li><p><strong>puk</strong> (<em>str</em>) – PUK code of the card</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.PukException" title="cryptnoxpy.exceptions.PukException"><strong>PukException</strong></a> – PUK code is not valid</p></li>
@@ -857,17 +892,17 @@ issue getting the information</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.sign">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">derivation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.Derivation" title="cryptnoxpy.enums.Derivation"><span class="pre">cryptnoxpy.enums.Derivation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><span class="pre">cryptnoxpy.enums.KeyType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">KeyType.K1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_eos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.sign" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">derivation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.Derivation" title="cryptnoxpy.enums.Derivation"><span class="pre">Derivation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.KeyType" title="cryptnoxpy.enums.KeyType"><span class="pre">KeyType</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">KeyType.K1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filter_eos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.sign" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sign the message using given derivation.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code provided, authenticate with user key by signing same message
 or PIN-less path used</p></li>
 <li><p>Seed must be loaded</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>data</strong> (<em>bytes</em>) – Data to sign</p></li>
 <li><p><strong>derivation</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.Derivation" title="cryptnoxpy.enums.Derivation"><em>Derivation</em></a>) – Derivation to use.</p></li>
@@ -878,13 +913,13 @@ or PIN-less path used</p></li>
 might take longer. Defaults to False</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>The signature generated by the card in DER common format.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bytes</p>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataException" title="cryptnoxpy.exceptions.DataException"><strong>DataException</strong></a> – Invalid data received during signature</p>
 </dd>
 </dl>
@@ -892,20 +927,20 @@ might take longer. Defaults to False</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.signature_check">
-<span class="sig-name descname"><span class="pre">signature_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="autoapi/cryptnoxpy/card/base/index.html#cryptnoxpy.card.base.SignatureCheckResult" title="cryptnoxpy.card.base.SignatureCheckResult"><span class="pre">cryptnoxpy.card.base.SignatureCheckResult</span></a></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.signature_check" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">signature_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nonce</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SignatureCheckResult</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.signature_check" title="Permalink to this definition">¶</a></dt>
 <dd><p>Sign random 32 bytes for validation that private key of public key is on the card.</p>
 <p>This call doesn’t increase signature counter and doesn’t go into signature history.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>nonce</strong> (<em>bytes</em>) – random 16 bytes that will be used to sign</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Message that was signed and the signature</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>SignatureCheckResult</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Nonce has to be 16 bytes</p></li>
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.SeedException" title="cryptnoxpy.exceptions.SeedException"><strong>SeedException</strong></a> – There is no seed on the card</p></li>
@@ -919,10 +954,10 @@ might take longer. Defaults to False</p></li>
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.signing_counter">
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signing_counter</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.signing_counter" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Counter of how many times the card has been used to sign</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>int</p>
 </dd>
 </dl>
@@ -937,20 +972,20 @@ By entering the PUK code the user verifies his/hers identity and can
 set the new PIN code on the card.
 Can be used only if the card is locked.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>User PIN must be locked</p></li>
 <li><p>PIN code authentication must be enabled</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><strong>puk</strong> (<em>str</em>) – PUK code for verification of the user, before changing
 the PIN code.</p></li>
 <li><p><strong>new_pin</strong> (<em>str</em>) – The desired PIN code to be set for the card (4-9 digits).</p></li>
 </ul>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.PukException" title="cryptnoxpy.exceptions.PukException"><strong>PukException</strong></a> – PUK code not valid</p></li>
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.CardNotBlocked" title="cryptnoxpy.exceptions.CardNotBlocked"><strong>CardNotBlocked</strong></a> – Card is not blocked, operation can’t be done</p></li>
@@ -961,10 +996,10 @@ the PIN code.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.user_key_add">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cred_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_add" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">public_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cred_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">b''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_add" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add user public key into the card for user authentication</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>slot</strong> (<em>int</em>) – Slot to write the public key to
 1 - EC256R1
@@ -976,7 +1011,7 @@ the PIN code.</p></li>
 <li><p><strong>cred_id</strong> (<em>bytes</em><em>, </em><em>optional</em>) – Cred id. Used for FIDO2 authentication</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Invalid input data</p>
 </dd>
 </dl>
@@ -988,12 +1023,12 @@ the PIN code.</p></li>
 <dd><p>Get 32 bytes random value from the card that is used to open the card with a user key</p>
 <p>Take nonce value from the card. Sign it with a third party application, like TPM.
 Send the signature back into the card using
-<a class="reference internal" href="#cryptnoxpy.card.base.Base.user_key_challenge_response_open" title="cryptnoxpy.card.base.Base.user_key_challenge_response_open"><code class="xref py py-func docutils literal notranslate"><span class="pre">user_key_challenge_response_open()</span></code></a></p>
+<a class="reference internal" href="autoapi/cryptnoxpy/card/base/index.html#cryptnoxpy.card.base.Base.user_key_challenge_response_open" title="cryptnoxpy.card.base.Base.user_key_challenge_response_open"><code class="xref py py-func docutils literal notranslate"><span class="pre">user_key_challenge_response_open()</span></code></a></p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>32 bytes random value used as nonce</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bytes</p>
 </dd>
 </dl>
@@ -1001,23 +1036,23 @@ Send the signature back into the card using
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.user_key_challenge_response_open">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_challenge_response_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_challenge_response_open" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_challenge_response_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_challenge_response_open" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send the nonce signature to the card to open it for operations, like it was opened by a
 PIN code</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>slot</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Slot to use to open the card</p></li>
 <li><p><strong>signature</strong> (<em>bytes</em>) – Signature generated by a third party like TPM.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Whether the challenge response authentication succeeded</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – invalid input data</p>
 </dd>
 </dl>
@@ -1025,16 +1060,16 @@ PIN code</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.user_key_delete">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_delete" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_delete</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk_code</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_delete" title="Permalink to this definition">¶</a></dt>
 <dd><p>Delete the user key from slot and free up for insertion</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>slot</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Slot to remove the key from</p></li>
 <li><p><strong>puk_code</strong> (<em>str</em>) – PUK code of the card</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Invalid input data</p>
 </dd>
 </dl>
@@ -1042,16 +1077,16 @@ PIN code</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.user_key_enabled">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_enabled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_enabled" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_enabled</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">SlotIndex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_enabled" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if user key is present in given slot</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>slot_index</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Slot index to check for</p>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Whether the user key for slot is present</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
 </dl>
@@ -1059,21 +1094,21 @@ PIN code</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.user_key_info">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_info" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">SlotIndex</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_info" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get the description and public key of the user key</p>
 <dl class="field-list simple">
-<dt class="field-odd">Requires</dt>
+<dt class="field-odd">Requires<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p>PIN code or challenge-response validated</p></li>
 </ul>
 </dd>
-<dt class="field-even">Parameters</dt>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>slot</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Index of slot for which to fetch the description</p>
 </dd>
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Description and public key in slot</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>tuple[str, str]</p>
 </dd>
 </dl>
@@ -1081,23 +1116,23 @@ PIN code</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnoxpy.card.base.Base.user_key_signature_open">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_signature_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">cryptnoxpy.enums.SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_signature_open" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">user_key_signature_open</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">slot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><span class="pre">SlotIndex</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.user_key_signature_open" title="Permalink to this definition">¶</a></dt>
 <dd><p>Used for opening the card to sign the given message</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>slot</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/enums/index.html#cryptnoxpy.enums.SlotIndex" title="cryptnoxpy.enums.SlotIndex"><em>SlotIndex</em></a>) – Slot to use to open the card</p></li>
 <li><p><strong>message</strong> (<em>bytes</em>) – Message that will be sent to sign operation</p></li>
 <li><p><strong>signature</strong> (<em>bytes</em>) – Signature generated by a third party, like TPM, on the same message</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Whether the challenge response authentication succeeded</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bool</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – invalid input data</p>
 </dd>
 </dl>
@@ -1108,10 +1143,10 @@ PIN code</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">valid_key</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#cryptnoxpy.card.base.Base.valid_key" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the card has a valid key</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Whether the card has a valid key.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>bool</p>
 </dd>
 </dl>
@@ -1122,16 +1157,16 @@ PIN code</p>
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">valid_pin</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pin_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pin'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.valid_pin" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if provided pin is valid</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>pin</strong> (<em>str</em>) – The pin to check if valid</p></li>
 <li><p><strong>pin_name</strong> (<em>str</em>) – Value used in DataValidationException for pin name</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return str</dt>
+<dt class="field-even">Return str<span class="colon">:</span></dt>
 <dd class="field-even"><p>Provided pin in str format if valid</p>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Provided pin is not valid</p>
 </dd>
 </dl>
@@ -1142,16 +1177,16 @@ PIN code</p>
 <em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">valid_puk</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'puk'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#cryptnoxpy.card.base.Base.valid_puk" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if provided puk is valid</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>puk</strong> (<em>str</em>) – The puk to check if valid</p></li>
 <li><p><strong>puk_name</strong> (<em>str</em><em>, </em><em>optional</em>) – Value used in DataValidationException for puk name. Defaults to: puk</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return str</dt>
+<dt class="field-even">Return str<span class="colon">:</span></dt>
 <dd class="field-even"><p>Provided puk in str format if valid</p>
 </dd>
-<dt class="field-odd">Raises</dt>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Provided puk is not valid</p>
 </dd>
 </dl>
@@ -1164,10 +1199,10 @@ PIN code</p>
 <p>The method is sending the PIN code to the card to open it for other
 operations. If there is an issue an exception will be raised.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>pin</strong> (<em>str</em>) – PIN code to check against the card.</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.PinException" title="cryptnoxpy.exceptions.PinException"><strong>PinException</strong></a> – Invalid PIN code</p></li>
 <li><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.DataValidationException" title="cryptnoxpy.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Invalid length or PIN code authentication disabled</p></li>
@@ -1182,20 +1217,22 @@ it can be used again</p></li>
 
 </section>
 <section id="connection">
-<h2>Connection<a class="headerlink" href="#connection" title="Permalink to this headline">¶</a></h2>
+<h2>Connection<a class="headerlink" href="#connection" title="Permalink to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="cryptnoxpy.connection.Connection">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.connection.</span></span><span class="sig-name descname"><span class="pre">Connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.connection.Connection" title="Permalink to this definition">¶</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">cryptnoxpy.connection.</span></span><span class="sig-name descname"><span class="pre">Connection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remote</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#cryptnoxpy.connection.Connection" title="Permalink to this definition">¶</a></dt>
 <dd><p>Connection to the reader.</p>
 <p>Sends and receives messages from the card using the reader.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>index</strong> (<em>int</em>) – Index of the reader to initialize the connection with</p></li>
 <li><p><strong>debug</strong> (<em>bool</em>) – Show debug information during requests</p></li>
+<li><p><strong>conn</strong> (<em>List</em>) – List of sockets to use for remote connections</p></li>
+<li><p><strong>remote</strong> (<em>bool</em>) – Use remote sockets for communications with the cards</p></li>
 </ul>
 </dd>
-<dt class="field-even">Variables</dt>
+<dt class="field-even">Variables<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>self.card</strong> (<a class="reference internal" href="autoapi/cryptnoxpy/index.html#cryptnoxpy.Card" title="cryptnoxpy.Card"><em>Card</em></a>) – Information about the card.</p>
 </dd>
 </dl>
@@ -1204,16 +1241,16 @@ it can be used again</p></li>
 <span class="sig-name descname"><span class="pre">send_apdu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">apdu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#cryptnoxpy.connection.Connection.send_apdu" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send data to the card in plain format</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>apdu</strong> (<em>int</em>) – list of the APDU header</p>
 </dd>
-<dt class="field-even">Return bytes</dt>
+<dt class="field-even">Return bytes<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result of the query that was sent to the card</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bytes</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.ConnectionException" title="cryptnoxpy.exceptions.ConnectionException"><strong>ConnectionException</strong></a> – Issue in the connection</p>
 </dd>
 </dl>
@@ -1224,20 +1261,20 @@ it can be used again</p></li>
 <span class="sig-name descname"><span class="pre">send_encrypted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">apdu</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">receive_long</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#cryptnoxpy.connection.Connection.send_encrypted" title="Permalink to this definition">¶</a></dt>
 <dd><p>Send data to the card in encrypted format</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>apdu</strong> (<em>int</em>) – list of the APDU header</p></li>
 <li><p><strong>data</strong> – bytes of the data payload (in clear, will be encrypted)</p></li>
 <li><p><strong>receive_long</strong> (<em>bool</em>) – </p></li>
 </ul>
 </dd>
-<dt class="field-even">Return bytes</dt>
+<dt class="field-even">Return bytes<span class="colon">:</span></dt>
 <dd class="field-even"><p>Result of the query that was sent to the card</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>bytes</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><a class="reference internal" href="autoapi/cryptnoxpy/exceptions/index.html#cryptnoxpy.exceptions.CryptnoxException" title="cryptnoxpy.exceptions.CryptnoxException"><strong>CryptnoxException</strong></a> – General exceptions</p>
 </dd>
 </dl>
@@ -1282,7 +1319,7 @@ it can be used again</p></li>
     </form>
     </div>
 </div>
-<script>$('#searchbox').show(0);</script>
+<script>document.getElementById('searchbox').style.display = "block"</script>
 
 
 
@@ -1299,7 +1336,7 @@ it can be used again</p></li>
       &copy;2021, Cryptnox.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.3.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

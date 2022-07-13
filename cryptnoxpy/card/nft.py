@@ -38,9 +38,6 @@ class Nft(basic_g1.BasicG1):
         if key_type is not KeyType.K1:
             raise exceptions.KeySelectionException("This card type doesn't support this key type")
 
-        if path:
-            raise exceptions.DataValidationException("Path must be empty for current path")
-
         return super().get_public_key(derivation, key_type, path, compressed,hexed)
 
     def generate_random_number(self, size: int) -> bytes:

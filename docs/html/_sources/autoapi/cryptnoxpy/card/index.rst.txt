@@ -796,7 +796,7 @@ Classes
       :raises KeyAlreadyGenerated: The card already has a seed generated
 
 
-   .. py:method:: get_public_key(self, derivation: cryptnoxpy.enums.Derivation, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '', compressed: bool = True) -> str
+   .. py:method:: get_public_key(self, derivation: cryptnoxpy.enums.Derivation, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '', compressed: bool = True, hexed: bool = True) -> str
 
       Get the public key from the card.
 
@@ -1254,7 +1254,7 @@ Classes
       :raises KeyAlreadyGenerated: The card already has a seed generated
 
 
-   .. py:method:: get_public_key(self, derivation: cryptnoxpy.enums.Derivation, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '', compressed: bool = True) -> str
+   .. py:method:: get_public_key(self, derivation: cryptnoxpy.enums.Derivation, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '', compressed: bool = True, hexed: bool = True) -> str
 
       Get the public key from the card.
 
@@ -1596,7 +1596,7 @@ Classes
       :param str path: Path on which to do derivation
 
 
-   .. py:method:: get_public_key(self, derivation: cryptnoxpy.enums.Derivation = Derivation.CURRENT_KEY, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '', compressed: bool = False) -> str
+   .. py:method:: get_public_key(self, derivation: cryptnoxpy.enums.Derivation = Derivation.CURRENT_KEY, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '', compressed: bool = False, hexed: bool = True) -> str
 
       Get the public key from the card.
 

@@ -24,7 +24,7 @@ Classes
 
 
 
-.. py:class:: Connection(index: int = 0, debug: bool = False)
+.. py:class:: Connection(index: int = 0, debug: bool = False, conn: List = None, remote: bool = False)
 
    Bases: :py:obj:`contextlib.ContextDecorator`
 
@@ -34,10 +34,12 @@ Classes
 
    :param int index: Index of the reader to initialize the connection with
    :param bool debug: Show debug information during requests
+   :param List conn: List of sockets to use for remote connections
+   :param bool remote: Use remote sockets for communications with the cards
 
    :var Card self.card: Information about the card.
 
-   .. py:method:: _init_reader(self, index)
+   .. py:method:: _init_reader(self, index: int, remote: bool) -> None
 
 
    .. py:method:: __del__(self)
@@ -78,6 +80,9 @@ Classes
 
 
    .. py:method:: _open_secure_channel(self, pairing_secret: bytes = b'', pairing_key_index: int = 0) -> None
+
+
+   .. py:method:: remote_read(self, apdu: List[int]) -> Tuple[List[int], int, int]
 
 
 

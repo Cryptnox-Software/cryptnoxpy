@@ -135,7 +135,7 @@ Classes
       :raises KeyAlreadyGenerated: The card already has a seed generated
 
 
-   .. py:method:: get_public_key(self, derivation: cryptnoxpy.enums.Derivation, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '', compressed: bool = True) -> str
+   .. py:method:: get_public_key(self, derivation: cryptnoxpy.enums.Derivation, key_type: cryptnoxpy.enums.KeyType = KeyType.K1, path: str = '', compressed: bool = True, hexed: bool = True) -> str
 
       Get the public key from the card.
 

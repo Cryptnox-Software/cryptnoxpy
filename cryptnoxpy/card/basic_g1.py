@@ -120,6 +120,9 @@ class BasicG1(base.Base):
 
     def get_public_key(self, derivation: Derivation, key_type: KeyType = KeyType.K1, path: str = "",
                        compressed: bool = True, hexed: bool = True) -> str:
+        if derivation == Derivation.CURRENT_KEY and path:
+            raise exceptions.DataValidationException("Path must be empty for current path")
+
         if not self.initialized:
             raise exceptions.InitializationException("Card is not initialized")
 

@@ -7,10 +7,28 @@ All notable changes to this project will be documented in this file.
 The format is based on `Keep a Changelog <https://keepachangelog.com/en/1.0.0/>`_\ ,
 and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0.html>`_.
 
-`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.0.3...HEAD>`_
+`Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.2.0...HEAD>`_
 -------------------------------------------------------------------------------------
 
-`2.1.1 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.1.0...02106a4a9ea299caeb88d3a661a8c39a3b353c3c>`_ - 2022-06-13
+`2.2.0 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.1.1...2.2.0>`_ - 2022-07-13
+-----------------------------------------------------------------------------------------------
+
+Added
+^^^^^
+
+- Support for Python 3.10
+
+Removed
+^^^^^^^
+
+- Support for Python 3.6
+
+Fixed
+^^^^^
+
+- `get_public_key` raises an unhandled exception when asking for current key with a derivation path
+
+`2.1.1 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.1.0...2.1.1>`_ - 2022-06-13
 -----------------------------------------------------------------------------------------------
 
 Added
