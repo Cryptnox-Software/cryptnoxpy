@@ -17,6 +17,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 
 from . import genuineness
+from .custom_bits import CustomBitsBase
 from .user_data import UserDataBase
 from .. import exceptions
 from ..binary_utils import binary_to_list, pad_data
@@ -61,6 +62,7 @@ class Base(metaclass=abc.ABCMeta):
     _type = "Basic"
 
     user_data = UserDataBase()
+    custom_bits = CustomBitsBase()
 
     def __init__(self, connection: Connection, serial: int, applet_version: List[int],
                  data: List[int] = None, debug: bool = False):

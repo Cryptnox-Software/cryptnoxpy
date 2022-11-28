@@ -54,8 +54,7 @@ class UserData:
                 self.card.connection.send_encrypted(message, entry)
             except exceptions.GenericException as error:
                 if error.status[0] == 0x69 and error.status[1] == 0x85:
-                    raise exceptions.CardClosedException("Card needs to be opened for this "
-                                                         "operation")
+                    raise exceptions.CardClosedException("Card needs to be opened for this operation")
                 if error.status[0] == 0x67 and error.status[1] == 0x00:
                     raise exceptions.DataValidationException("Value to large to write")
 

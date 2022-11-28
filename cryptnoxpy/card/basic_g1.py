@@ -10,7 +10,7 @@ from typing import (
 from cryptography.hazmat.primitives.asymmetric import ec
 
 from . import base
-from .base import AuthType
+from .custom_bits import CustomBits
 from .user_data import UserData
 from .. import exceptions
 from ..binary_utils import path_to_bytes
@@ -42,6 +42,7 @@ class BasicG1(base.Base):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user_data = UserData(self, reading_index_offset=1)
+        self.custom_bits = CustomBits(self._data[4:], self._update_custom_bytes)
 
     def change_pairing_key(self, index: int, pairing_key: bytes, puk: str = "") -> None:
         if len(pairing_key) != 32:
@@ -64,7 +65,7 @@ class BasicG1(base.Base):
         self.connection.send_encrypted(message, binary_path)
 
     def dual_seed_public_key(self, pin: str = "") -> bytes:
-        if self.auth_type == AuthType.PIN:
+        if self.auth_type == base.AuthType.PIN:
             pin = self.valid_pin(pin)
 
         result = self.connection.send_encrypted([0x80, 0xD0, 0x04, 0x00], pin.encode("ascii"))
@@ -75,13 +76,13 @@ class BasicG1(base.Base):
         return result
 
     def dual_seed_load(self, data: bytes, pin: str = "") -> None:
-        if self.auth_type == AuthType.PIN:
+        if self.auth_type == base.AuthType.PIN:
             pin = self.valid_pin(pin)
 
         self.connection.send_encrypted([0x80, 0xD0, 0x05, 0x00], data + pin.encode("ascii"))
 
         if not self.open:
-            self.auth_type = AuthType.PIN
+            self.auth_type = base.AuthType.PIN
 
     @property
     def extended_public_key(self) -> bool:
@@ -98,7 +99,7 @@ class BasicG1(base.Base):
         return self.connection.send_encrypted([0x80, 0xD3, size, 0x00], b"")
 
     def generate_seed(self, pin: str = "") -> bytes:
-        if self.auth_type != AuthType.USER_KEY:
+        if self.auth_type != base.AuthType.USER_KEY:
             pin = self.valid_pin(pin)
 
         message = [0x80, 0xD4, 0x00, 0x00]
@@ -114,7 +115,7 @@ class BasicG1(base.Base):
         self._data[1] |= BasicG1._SEED_FLAG
 
         if result and not self.open:
-            self.auth_type = AuthType.PIN
+            self.auth_type = base.AuthType.PIN
 
         return result
 
@@ -158,7 +159,7 @@ class BasicG1(base.Base):
         return bool(self._data[1] & BasicG1._INITIALIZATION_FLAG)
 
     def load_seed(self, seed: bytes, pin: str = "") -> None:
-        if self.auth_type == AuthType.PIN:
+        if self.auth_type == base.AuthType.PIN:
             pin = self.valid_pin(pin) or ""
 
         try:
@@ -172,7 +173,7 @@ class BasicG1(base.Base):
         self._data[1] |= BasicG1._SEED_FLAG
 
         if not self.open:
-            self.auth_type = AuthType.PIN
+            self.auth_type = base.AuthType.PIN
 
     @property
     def pin_authentication(self) -> bool:
@@ -190,7 +191,7 @@ class BasicG1(base.Base):
         except exceptions.PinException as error:
             raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
 
-        self.auth_type = AuthType.NO_AUTH
+        self.auth_type = base.AuthType.NO_AUTH
 
     @property
     def seed_source(self) -> SeedSource:
@@ -343,7 +344,7 @@ class BasicG1(base.Base):
         result = int.from_bytes(result, "big") == 0x01
 
         if result and not self.open:
-            self.auth_type = AuthType.USER_KEY
+            self.auth_type = base.AuthType.USER_KEY
 
         return result
 
@@ -383,7 +384,7 @@ class BasicG1(base.Base):
         result = self.connection.send_encrypted(signal, data)
 
         if not result or result[0] != 0x30:
-            self.auth_type = AuthType.NO_AUTH
+            self.auth_type = base.AuthType.NO_AUTH
             raise exceptions.DataException("Invalid data received during signature")
 
         return result
@@ -428,7 +429,7 @@ class BasicG1(base.Base):
                 raise exceptions.DataValidationException("PIN authentication disabled")
 
         if not self.open:
-            self.auth_type = AuthType.PIN
+            self.auth_type = base.AuthType.PIN
 
     @staticmethod
     def _clear_bit(value, bit):
@@ -464,3 +465,8 @@ class BasicG1(base.Base):
     @staticmethod
     def _set_bit(value, bit):
         return value | (1 << bit)
+
+    def _update_custom_bytes(self, data: bytes) -> None:
+        message = [0x80, 0xFC, 0x01, 0x00]
+        self.connection.send_encrypted(message, data)
+
