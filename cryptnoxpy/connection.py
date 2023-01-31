@@ -272,24 +272,35 @@ class Connection(ContextDecorator):
             raise exceptions.CryptnoxException("Bad data during secure channel testing")
 
     def remote_read(self, apdu: List[int]) -> Tuple[List[int], int, int]:
-        message = "!Data".encode('utf-8')
+        if not self.conn:
+            raise ConnectionError('Calling remote read without connection')
+
+        message = pickle.dumps(apdu)
         msg_length = len(message)
         send_length = str(msg_length).encode('utf-8')
-        send_length += b' ' * (64 - len(send_length))
-        self.conn.send(send_length)
-        self.conn.send(message)
-        p_apdu = pickle.dumps(apdu)
-        self.conn.send(p_apdu)
+        send_length += (" " * (64 - len(send_length))).encode('utf-8')
+        self.conn.send(send_length + message)
 
         while True:
-            msg_length = self.conn.recv(64).decode('utf-8')
-            if msg_length:
-                msg_length = int(msg_length)
-                msg = self.conn.recv(msg_length).decode('utf-8')
-                if msg == "!Data":
-                    resp = self.conn.recv(1024)
-                    response = pickle.loads(resp)
-                    data, status1, status2 = response
-                    break
+            message = self.conn.recv(64)
+            if not message:
+                continue
+
+            try:
+                message_length = int(message.decode('utf-8'))
+            except ValueError as error:
+                raise ConnectionError('Error in remote connection') from error
+
+            received_message = self.conn.recv(message_length)
+            if not received_message:
+                continue
+
+            try:
+                response = pickle.loads(received_message)
+            except pickle.UnpicklingError as error:
+                raise ConnectionError('Error in remote connection') from error
+
+            data, status1, status2 = response
+            break
 
         return data, status1, status2

@@ -10,6 +10,14 @@ and this project adheres to `Semantic Versioning <https://semver.org/spec/v2.0.0
 `Unreleased <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.3.0...HEAD>`_
 -------------------------------------------------------------------------------------
 
+`2.4.0 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.3.0...2.4.0>`_ - 2023-01-31
+-----------------------------------------------------------------------------------------------
+
+Changed
+^^^^^^^
+
+- Remote connection message format, not compatible with previous version
+
 `2.3.0 <https://github.com/Cryptnox-Software/cryptnoxpy/compare/v2.2.1...2.3.0>`_ - 2022-11-28
 -----------------------------------------------------------------------------------------------
 
