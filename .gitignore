@@ -13,3 +13,5 @@ _build
 .idea
 
 /docs/
+/venv/
+/.vscode/
