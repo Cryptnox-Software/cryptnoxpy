@@ -14,7 +14,7 @@ It is released for development purposes.
 Use at your own risk.**
 
 A Python3 library to use the `Cryptnox smartcard applet <https://www.cryptnox.com/>`_.
-It provides high level functions to send instructions with the Cryptnox and to manage its lifecycle. 
+It provides high level functions to send instructions to a Cryptnox Hardware Wallet Card and to manage its lifecycle. 
 The core module is *CryptnoxPy* which provides a *Connection* class to 
 establish a channel of communication that can be used to initialize a card instance through the 
 factory method.
