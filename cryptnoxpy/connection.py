@@ -237,7 +237,7 @@ class Connection(ContextDecorator):
         if self._aes_key:
             return
 
-        session_private_key = ec.generate_private_key(self.algorithm)
+        session_private_key = ec.generate_private_key(self.algorithm())
 
         session_public_key = session_private_key.public_key().public_bytes(
             serialization.Encoding.X962,

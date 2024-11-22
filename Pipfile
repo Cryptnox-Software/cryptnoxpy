@@ -13,7 +13,7 @@ sphinx-autoapi = "*"
 [packages]
 aiohttp = "*"
 cryptography = "*"
-pyscard = "==2.0.3"
+pyscard = "==2.1.1"
 
 [requires]
-python_version = "3.10"
+python_version = "3.12"

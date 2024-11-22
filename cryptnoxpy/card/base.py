@@ -359,7 +359,7 @@ class Base(metaclass=abc.ABCMeta):
             raise exceptions.DataValidationException("Name must be less than 60 characters")
         pairing_secret = pairing_secret or BASIC_PAIRING_SECRET
 
-        session_private_key = ec.generate_private_key(self._ALGORITHM)
+        session_private_key = ec.generate_private_key(self._ALGORITHM())
 
         session_public_key = session_private_key.public_key().public_bytes(
             serialization.Encoding.X962,
