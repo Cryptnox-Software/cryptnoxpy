@@ -119,6 +119,20 @@ class BasicG1(base.Base):
 
         return result
 
+    def get_manufacturer_certificate(self):
+        idx_page = 0
+        mnft_cert_resp = self.connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
+        certlen = (mnft_cert_resp[0] << 8) + mnft_cert_resp[1]
+        while len(mnft_cert_resp) < (certlen + 2):
+            idx_page += 1
+            mnft_cert_resp = (
+                mnft_cert_resp
+                + self.connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
+            )
+        assert len(mnft_cert_resp) == (certlen + 2)
+        cert = mnft_cert_resp[2:]
+        return "".join(["%0.2x" % x for x in cert])
+
     def get_public_key(self, derivation: Derivation, key_type: KeyType = KeyType.K1, path: str = "",
                        compressed: bool = True, hexed: bool = True) -> str:
         if derivation == Derivation.CURRENT_KEY and path:
@@ -157,7 +171,7 @@ class BasicG1(base.Base):
     @property
     def initialized(self) -> bool:
         return bool(self._data[1] & BasicG1._INITIALIZATION_FLAG)
-    
+
     def load_wrapped_seed(self,seed: bytes, pin: str = "") -> None:
         if self.auth_type == base.AuthType.PIN:
             pin = self.valid_pin(pin) or ""
@@ -375,7 +389,7 @@ class BasicG1(base.Base):
             raise
 
         return int.from_bytes(result, "big") == 0x01
-    
+
     def generate_seed_wrapper(self, size: int = 2048) -> bytes:
         if size % 8 != 0:
             raise exceptions.DataValidationException("Size must be a multiple of 8")
@@ -399,7 +413,6 @@ class BasicG1(base.Base):
         response = self.connection.send_encrypted(apdu_command, DATA, True)
 
         return response
-
 
     def sign(self, data: bytes, derivation: Derivation = Derivation.CURRENT_KEY, key_type: KeyType = KeyType.K1,
              path: str = "", pin: str = "", filter_eos: bool = False) -> bytes:
@@ -511,4 +524,3 @@ class BasicG1(base.Base):
     def _update_custom_bytes(self, data: bytes) -> None:
         message = [0x80, 0xFC, 0x01, 0x00]
         self.connection.send_encrypted(message, data)
-
