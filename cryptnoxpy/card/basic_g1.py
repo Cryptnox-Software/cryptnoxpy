@@ -157,6 +157,23 @@ class BasicG1(base.Base):
     @property
     def initialized(self) -> bool:
         return bool(self._data[1] & BasicG1._INITIALIZATION_FLAG)
+    
+    def load_wrapped_seed(self,seed: bytes, pin: str = "") -> None:
+        if self.auth_type == base.AuthType.PIN:
+            pin = self.valid_pin(pin) or ""
+
+        try:
+            self.connection.send_encrypted([0x80, 0xD0, 0x06, 0x00], seed + pin.encode("ascii"))
+        except exceptions.GenericException as error:
+            if error.status[0] == 0x69 and error.status[1] == 0x86:
+                raise exceptions.KeyAlreadyGenerated("The card already has a key generated\n\nIt is not possible to "
+                                                     "generate another one without resetting the card") from error
+            raise
+
+        self._data[1] |= BasicG1._SEED_FLAG
+
+        if not self.open:
+            self.auth_type = base.AuthType.PIN
 
     def load_seed(self, seed: bytes, pin: str = "") -> None:
         if self.auth_type == base.AuthType.PIN:
@@ -364,8 +381,7 @@ class BasicG1(base.Base):
             raise exceptions.DataValidationException("Size must be a multiple of 8")
         try:
             size_bytes = size.to_bytes(2, 'big')  
-            print(f"Size in bits: {size}, Encoded as: {size_bytes.hex()}")
-            self.connection.send_encrypted([0x80, 0xF9, 0x00, 0x00], size_bytes,True)
+            return self.connection.send_encrypted([0x80, 0xF9, 0x00, 0x00], size_bytes,True)
         except Exception as error:
             raise error
 
