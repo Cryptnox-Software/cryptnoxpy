@@ -66,3 +66,4 @@ class SeedSource(Enum):
     EXTERNAL = ord("L")
     INTERNAL = ord("S")
     DUAL = ord("D")
+    WRAPPED = ord("R")
