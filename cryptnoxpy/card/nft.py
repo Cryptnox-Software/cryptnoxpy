@@ -40,6 +40,28 @@ class Nft(basic_g1.BasicG1):
 
         return super().get_public_key(derivation, key_type, path, compressed,hexed)
 
+    def get_public_key_clear(self, derivation: int, path: str = "", compressed: bool = True) -> bytes:
+        
+        if derivation != Derivation.CURRENT_KEY:
+            raise exceptions.DerivationSelectionException("This card type doesn't support this derivation form")
+
+        return super().get_public_key_clear(derivation, path, compressed)
+
+    def get_card_pubkey(self) -> bytes:
+        
+        return super().get_card_pubkey()
+
+    def set_pubexport(self, status: bool, p1: int, puk: str) -> None:
+
+        if p1 not in [0, 1]:
+            raise exceptions.DataValidationException("P1 must be 0 (xpub) or 1 (clear pubkey)")
+
+        super().set_pubexport(status, p1, puk)
+
+    def set_clearpubkey(self, status: bool, puk: str) -> None:
+
+        super().set_clearpubkey(status, puk)
+
     def generate_random_number(self, size: int) -> bytes:
         raise NotImplementedError("Card doesn't have this functionality")
 

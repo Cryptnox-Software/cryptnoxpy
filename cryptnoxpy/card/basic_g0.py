@@ -104,6 +104,129 @@ class BasicG0(Base):
 
         return result
 
+    def get_public_key_clear(self, derivation: int, path: str = "", compressed: bool = True) -> bytes:
+        
+        if not self.valid_key:
+            raise exceptions.SeedException()
+
+        SELe = [0x80, 0xC2, int(derivation), 1]
+        
+        if not path:
+            pubkeyl, status1, status2 = self.connection.send_apdu(SELe + [0])
+        else:
+            # Only for testing, should throw error
+            path_bin = path_to_bytes(path)
+            pubkeyl, status1, status2 = self.connection.send_apdu(SELe + [len(path_bin)] + binary_to_list(path_bin))
+        
+        # Check if we got an error status
+        if status1 != 0x90 or status2 != 0x00:
+            raise exceptions.ReadPublicKeyException(f"Card returned error status: {status1:02x}{status2:02x}")
+        
+        pubkey = bytes(pubkeyl)
+        
+        # Validate public key format (should start with 0x04 for uncompressed)
+        if pubkey[0] != 0x04:
+            raise exceptions.ReadPublicKeyException("Bad data received during public key reading")
+        
+        if not compressed:
+            return pubkey
+        else:
+            pub_bin = encode_pubkey(pubkey, "bin_compressed")
+            return pub_bin
+
+    def get_card_pubkey(self) -> bytes:
+        
+        cmd = [0x80, 0xF4, 0x00, 0x00]
+        result, status1, status2 = self.connection.send_apdu(cmd)
+        
+        if status1 != 0x90 or status2 != 0x00:
+            raise exceptions.ReadPublicKeyException(f"Card returned error status: {status1:02x}{status2:02x}")
+        
+        pubkey = bytes(result)
+        
+        # Validate that we received a 65-byte public key (uncompressed format)
+        if len(pubkey) != 65:
+            raise exceptions.ReadPublicKeyException(f"Invalid public key length: {len(pubkey)} bytes (expected 65)")
+        
+        # Validate public key format (should start with 0x04 for uncompressed)
+        if pubkey[0] != 0x04:
+            raise exceptions.ReadPublicKeyException("Invalid public key format (should start with 0x04)")
+        
+        return pubkey
+
+    def decrypt(self, p1: int, pubkey: bytes, encrypted_data: bytes = b"", pin: str = "") -> bytes:
+        
+        # Validate inputs
+        if not self.initialized:
+            raise exceptions.InitializationException("Card is not initialized")
+
+        if not self.valid_key:
+            raise exceptions.SeedException("No seed/key loaded")
+        
+        if p1 not in [0, 1]:
+            raise exceptions.DataValidationException("P1 must be 0 (output symmetric key) or 1 (decrypt data)")
+        
+        if len(pubkey) != 65:
+            raise exceptions.DataValidationException("Public key must be 65 bytes (X9.62 uncompressed format)")
+        
+        if pubkey[0] != 0x04:
+            raise exceptions.DataValidationException("Public key must be in X9.62 uncompressed format (0x04|X|Y)")
+        
+        # Prepare data based on P1 and authentication status
+        data = b""
+        
+        # Add PIN if provided (right-padded with 0x00 to 9 bytes)
+        if pin:
+            pin_bytes = pin.encode("ascii")
+            if len(pin_bytes) > 9:
+                raise exceptions.DataValidationException("PIN too long (max 9 characters)")
+            pin_padded = pin_bytes + b"\x00" * (9 - len(pin_bytes))
+            data += pin_padded
+        
+        # Add public key
+        data += pubkey
+        
+        # Add encrypted data if P1=1
+        if p1 == 1:
+            if not encrypted_data:
+                raise exceptions.DataValidationException("Encrypted data required when P1=1")
+            
+            # Check if data length is multiple of 16 bytes (AES block size)
+            if len(encrypted_data) % 16 != 0:
+                raise exceptions.DataValidationException("Encrypted data length must be multiple of 16 bytes")
+            
+            data += encrypted_data
+        
+        # Validate total data length
+        if p1 == 0:
+            # P1 = 0: No user key auth, with PIN: 74 bytes, User key auth, no PIN: 65 bytes
+            expected_length = 74 if pin else 65
+            if len(data) != expected_length:
+                raise exceptions.DataValidationException(f"Data length incorrect: {len(data)} bytes (expected {expected_length})")
+        else:
+            # P1 = 1: No user key auth, with PIN: at least 74 bytes, User key auth, no PIN: at least 65 bytes
+            min_length = 74 if pin else 65
+            if len(data) < min_length:
+                raise exceptions.DataValidationException(f"Data length too short: {len(data)} bytes (minimum {min_length})")
+        
+        # Send DECRYPT command
+        cmd = [0x80, 0xC4, p1, 0x00]
+        
+        try:
+            result = self.connection.send_encrypted(cmd, data)
+            return result
+        except exceptions.GenericException as error:
+            if error.status[0] == 0x69 and error.status[1] == 0x85:
+                raise exceptions.SeedException("No seed/key loaded") from error
+            elif error.status[0] == 0x63:
+                raise exceptions.PinException("PIN is not correct") from error
+            elif error.status[0] == 0x6A and error.status[1] == 0x80:
+                raise exceptions.DataValidationException("Data length is not correct") from error
+            elif error.status[0] == 0x69 and error.status[1] == 0x82:
+                raise exceptions.GenericException("Data input length is far too long") from error
+            else:
+                raise
+
     def history(self, index: int = 0) -> NamedTuple:
         raise NotImplementedError("Card doesn't have this functionality")
 
