@@ -47,10 +47,6 @@ class Nft(basic_g1.BasicG1):
 
         return super().get_public_key_clear(derivation, path, compressed)
 
-    def get_card_pubkey(self) -> bytes:
-        
-        return super().get_card_pubkey()
-
     def set_pubexport(self, status: bool, p1: int, puk: str) -> None:
 
         if p1 not in [0, 1]:

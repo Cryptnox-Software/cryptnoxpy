@@ -359,23 +359,6 @@ class Base(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractmethod
-    def get_card_pubkey(self) -> bytes:
-        """
-        Get the card's own public key (generated during applet installation).
-        
-        This command reads the card public key. During the installation of the applet,
-        the card initializes its own EC R1 pair. This command is only useful for the
-        manufacturer at factory to send the Cryptnox certificate in the card, which
-        contains this card public key, thus authenticates the genuine of the card.
-        
-        :return: Card public key in bytes format (65 bytes)
-        :rtype: bytes
-        
-        :raises exceptions.ReadPublicKeyException: If invalid data received from card
-        """
-        pass
-
-    @abc.abstractmethod
     def decrypt(self, p1: int, pubkey: bytes, encrypted_data: bytes = b"", pin: str = "") -> bytes:
         """
         Decrypt data using ECIES (Elliptic Curve Integrated Encryption Scheme).

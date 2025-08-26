@@ -221,26 +221,6 @@ class BasicG1(base.Base):
             pub_bin = encode_pubkey(pubkey, "bin_compressed")
             return pub_bin
 
-    def get_card_pubkey(self) -> bytes:
-        
-        cmd = [0x80, 0xF4, 0x00, 0x00]
-        result, status1, status2 = self.connection.send_apdu(cmd)
-        
-        if status1 != 0x90 or status2 != 0x00:
-            raise exceptions.ReadPublicKeyException(f"Card returned error status: {status1:02x}{status2:02x}")
-        
-        pubkey = bytes(result)
-        
-        # Validate that we received a 65-byte public key (uncompressed format)
-        if len(pubkey) != 65:
-            raise exceptions.ReadPublicKeyException(f"Invalid public key length: {len(pubkey)} bytes (expected 65)")
-        
-        # Validate public key format (should start with 0x04 for uncompressed)
-        if pubkey[0] != 0x04:
-            raise exceptions.ReadPublicKeyException("Invalid public key format (should start with 0x04)")
-        
-        return pubkey
-
     def decrypt(self, p1: int, pubkey: bytes, encrypted_data: bytes = b"", pin: str = "") -> bytes:
         
         # Validate inputs
