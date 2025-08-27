@@ -41,7 +41,7 @@ Installation and requirements
 Requires :
 
 
-* Python 3.6-3.12
+* Python 3.11-3.13
 * PCSCd on Linux
 
 Ubuntu / Debian

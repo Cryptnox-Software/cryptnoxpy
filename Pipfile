@@ -7,8 +7,6 @@ verify_ssl = true
 mypy = "*"
 pylint = "*"
 pytest = "*"
-sphinx = "*"
-sphinx-autoapi = "*"
 
 [packages]
 aiohttp = "*"
