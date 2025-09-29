@@ -3,6 +3,7 @@ Module for getting Cryptnox cards information and getting instance of card from
 connection
 """
 from typing import Tuple, Any, Dict
+from cryptography import x509
 
 from .card import (
     genuineness,
@@ -76,19 +77,25 @@ def _select(connection, apdu, card_type, debug: bool = False) -> Tuple[Any, Any]
 
 def _serial_number(connection: Connection, debug: bool = False):
     certificate = genuineness.manufacturer_certificate(connection, debug)
-    certificate_parts = certificate.split("0302010202")
-    if len(certificate_parts) <= 1:
-        raise CertificateException("No card certificate found")
 
     try:
-        if certificate_parts[1][1] == "8":
-            data = certificate_parts[1][2:18]
-        elif certificate_parts[1][1] == "9":
-            data = certificate_parts[1][4:20]
-        else:
-            raise CertificateException("Bad certificate format")
+        cert_der = bytes.fromhex(certificate)
+        cert = x509.load_der_x509_certificate(cert_der)
+        serial_int = cert.serial_number
+        return int(serial_int), certificate
+    except Exception:
+        certificate_parts = certificate.split("0302010202")
+        if len(certificate_parts) <= 1:
+            raise CertificateException("No card certificate found")
 
-    except Exception as error:
-        raise CertificateException("Bad card certificate format") from error
+        try:
+            if certificate_parts[1][1] == "8":
+                data = certificate_parts[1][2:18]
+            elif certificate_parts[1][1] == "9":
+                data = certificate_parts[1][4:20]
+            else:
+                raise CertificateException("Bad certificate format")
+        except Exception as error:
+            raise CertificateException("Bad card certificate format") from error
 
-    return int(data, 16), certificate
+        return int(data, 16), certificate
