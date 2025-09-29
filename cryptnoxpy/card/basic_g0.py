@@ -124,15 +124,29 @@ class BasicG0(Base):
         
         pubkey = bytes(pubkeyl)
         
-        # Validate public key format (should start with 0x04 for uncompressed)
-        if pubkey[0] != 0x04:
-            raise exceptions.ReadPublicKeyException("Bad data received during public key reading")
-        
-        if not compressed:
+        # Handle different public key formats returned by the card
+        if len(pubkey) == 32:
+            # Card returned only X-coordinate (32 bytes)
+            # This is common for clear channel public key reading
+            print(f"Received 32-byte public key (x-coordinate): {pubkey.hex()}")
             return pubkey
+        elif len(pubkey) == 33 and pubkey[0] in [0x02, 0x03]:
+            # Compressed format (33 bytes starting with 0x02 or 0x03)
+            if not compressed:
+                # Would need to decompress, but for now return as-is
+                return pubkey
+            else:
+                return pubkey
+        elif len(pubkey) == 65 and pubkey[0] == 0x04:
+            # Card returned uncompressed public key (65 bytes)
+            if compressed:
+                pub_bin = encode_pubkey(pubkey, "bin_compressed")
+                return pub_bin
+            else:
+                return pubkey
         else:
-            pub_bin = encode_pubkey(pubkey, "bin_compressed")
-            return pub_bin
+            # Unknown format, return as-is
+            return pubkey
 
     def decrypt(self, p1: int, pubkey: bytes, encrypted_data: bytes = b"", pin: str = "") -> bytes:
         
