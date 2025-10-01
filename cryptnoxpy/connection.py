@@ -182,8 +182,8 @@ class Connection(ContextDecorator):
         if code1 == 0x63 and code2 & 0xF0 == 0xC0:
             raise exceptions.PinException(number_of_retries=code2 - 0xC0)
 
-        if code1 == 0x98 and code2 == 0x40:
-            raise exceptions.PukException()
+        if code1 == 0x98 and code2 & 0xF0 == 0x40:
+            raise exceptions.PukException(number_of_retries=code2 - 0x40)
 
         if code1 == 0x69 and code2 == 0x85:
             raise exceptions.PinAuthenticationException("PIN code wasn't authorized")
