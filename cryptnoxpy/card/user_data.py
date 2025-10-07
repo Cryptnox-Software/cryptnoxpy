@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Module for making the uer data behave as a list
 """
@@ -11,6 +12,7 @@ class UserDataBase:
     Class for User Data with all functions returning not implemented in case someone uses it on a
     card that doesn't support the feature
     """
+
     def __getitem__(self, item):
         raise NotImplementedError("Card doesn't have this functionality")
 
@@ -22,6 +24,7 @@ class UserData:
     """
     User data that behaves as a list and can fetch different user slots from the card
     """
+
     def __init__(self, card, slot_offset: int = 0, reading_index_offset: int = 0):
         self.card = card
         self._slot_offset = slot_offset
