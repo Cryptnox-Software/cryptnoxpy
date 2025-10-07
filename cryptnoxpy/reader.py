@@ -46,6 +46,7 @@ class Reader(metaclass=abc.ABCMeta):
     """
     Abstract class describing methods to be implemented. Holds the connection.
     """
+
     def __init__(self):
         self._connection = None
 
@@ -96,6 +97,7 @@ class NfcReader(Reader):
     """
     Specialized reader using xantares/nfc-binding
     """
+
     def __init__(self):
         super().__init__()
 
@@ -125,7 +127,7 @@ class NfcReader(Reader):
 
         length = ret[0]
         return list(ret[1][:length - 2]), int(ret[1][length - 2]), \
-               int(ret[1][length - 1])
+            int(ret[1][length - 1])
 
 
 class SmartCard(Reader):
@@ -134,6 +136,7 @@ class SmartCard(Reader):
 
     :param int index: Index of the reader to initialize.
     """
+
     def __init__(self, index: int = 0):
         super().__init__()
 
