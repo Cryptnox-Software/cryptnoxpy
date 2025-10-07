@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Module containing class for NFT card
 """
@@ -30,7 +31,7 @@ class Nft(basic_g1.BasicG1):
 
     def get_public_key(self, derivation: Derivation = Derivation.CURRENT_KEY,
                        key_type: KeyType = KeyType.K1, path: str = "",
-                       compressed: bool = False,hexed: bool = True) -> str:
+                       compressed: bool = False, hexed: bool = True) -> str:
         if derivation is not Derivation.CURRENT_KEY:
             raise exceptions.DerivationSelectionException("This card type doesn't support this "
                                                           "derivation form")
@@ -38,10 +39,10 @@ class Nft(basic_g1.BasicG1):
         if key_type is not KeyType.K1:
             raise exceptions.KeySelectionException("This card type doesn't support this key type")
 
-        return super().get_public_key(derivation, key_type, path, compressed,hexed)
+        return super().get_public_key(derivation, key_type, path, compressed, hexed)
 
     def get_public_key_clear(self, derivation: int, path: str = "", compressed: bool = True) -> bytes:
-        
+
         if derivation != Derivation.CURRENT_KEY:
             raise exceptions.DerivationSelectionException("This card type doesn't support this derivation form")
 

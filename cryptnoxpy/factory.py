@@ -7,7 +7,7 @@ from typing import Tuple, Any
 from cryptography import x509
 
 from .card import (
-    genuineness,
+    authenticity,
     Base
 )
 # Import card classes to register them with Base class for _all_subclasses()
@@ -46,7 +46,7 @@ def get_card(connection: Connection, debug: bool = False) -> Base:
                 FirmwareException):
             continue
 
-        connection.session_public_key = genuineness.session_public_key(connection, debug)
+        connection.session_public_key = authenticity.session_public_key(connection, debug)
         return card_cls(connection, serial, applet_version, data, debug)
 
     raise CardException("Card not recognized")
@@ -78,7 +78,7 @@ def _select(connection, apdu, card_type, debug: bool = False) -> Tuple[Any, Any]
 
 
 def _serial_number(connection: Connection, debug: bool = False):
-    certificate = genuineness.manufacturer_certificate(connection, debug)
+    certificate = authenticity.manufacturer_certificate(connection, debug)
 
     try:
         cert_der = bytes.fromhex(certificate)

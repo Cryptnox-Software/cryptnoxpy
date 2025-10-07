@@ -1,17 +1,21 @@
+# -*- coding: utf-8 -*-
 """
 Module for making the uer data behave as a list
 """
+
 
 class CustomBitsBase:
     """
     Class for User Data with all functions returning not implemented in case someone uses it on a
     card that doesn't support the feature
     """
+
     def __getitem__(self, item):
         raise NotImplementedError("Card doesn't have this functionality")
 
     def __setitem__(self, key, value):
         raise NotImplementedError("Card doesn't have this functionality")
+
 
 class CustomBits:
     def __init__(self, data, set_item_callback):

@@ -16,7 +16,7 @@ from typing import List
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 
-from . import genuineness
+from . import authenticity
 from .custom_bits import CustomBitsBase
 from .user_data import UserDataBase
 from .. import exceptions
@@ -107,7 +107,7 @@ class Base(metaclass=abc.ABCMeta):
         :rtype: bool
         """
         try:
-            certificate = genuineness.manufacturer_certificate(self.connection, self.debug)
+            certificate = authenticity.manufacturer_certificate(self.connection, self.debug)
         except (exceptions.CardException, exceptions.ConnectionException,
                 exceptions.ReaderException):
             return False
@@ -298,25 +298,26 @@ class Base(metaclass=abc.ABCMeta):
     def get_public_key_extended(self, key_type: KeyType = KeyType.K1, puk: str = "") -> str:
         """
         Get the extended public key (xpub) from the card.
-        
+
         :requires:
             - PIN code or challenge-response validated
             - Seed must exist
             - XPUB capability must be enabled (or PUK provided to enable it)
-        
+
         :param KeyType key_type: Key type to use (default: KeyType.K1)
         :param str puk: Optional PUK code to enable XPUB capability
         :return: Extended public key in hexadecimal string format
         :rtype: str
-        
+
         :raises exceptions.SeedException: If no seed exists on the card
         :raises exceptions.ReadPublicKeyException: If invalid data received from card
         """
         pass
+
     def get_public_key_clear(self, derivation: int, path: str = "", compressed: bool = True) -> bytes:
         """
         Get the public key within clear channel
-        
+
         :param derivation: Derivation + KeyType (e.g., Derivation.CURRENT_KEY + KeyType.K1)
         :param path: Optional BIP path string like "m/44'/0'/0'"
         :param compressed: Whether to return compressed format
@@ -329,7 +330,7 @@ class Base(metaclass=abc.ABCMeta):
     def set_pubexport(self, status: bool, p1: int, puk: str) -> None:
         """
         Set pubexport capability (xpub or clear pubkey)
-        
+
         :param status: True to enable, False to disable
         :param p1: 0 for xpub, 1 for clear pubkey
         :param puk: PUK code
@@ -342,7 +343,7 @@ class Base(metaclass=abc.ABCMeta):
     def set_xpubread(self, status: bool, puk: str) -> None:
         """
         Set extended public key read capability
-        
+
         :param status: True to enable, False to disable
         :param puk: PUK code
         """
@@ -352,7 +353,7 @@ class Base(metaclass=abc.ABCMeta):
     def set_clearpubkey(self, status: bool, puk: str) -> None:
         """
         Set clear public key read capability
-        
+
         :param status: True to enable, False to disable
         :param puk: PUK code
         """
@@ -362,33 +363,34 @@ class Base(metaclass=abc.ABCMeta):
     def decrypt(self, p1: int, pubkey: bytes, encrypted_data: bytes = b"", pin: str = "") -> bytes:
         """
         Decrypt data using ECIES (Elliptic Curve Integrated Encryption Scheme).
-        
+
         Generates a symmetric secret for simplified ECIES using an EC key in the BIP32 tree.
         This command is inspired by DECipher in OpenPGP smartcards. This allows asymmetric
         encryption using a key in the card seed tree. Anyone can encrypt with a public key
         from the card, and only the (private) key in the card can decrypt.
-        
+
         During the seed loading, the card saves in a dedicated key slot the result of a
         fixed derivation path. The child EC key used for this command is fixed (relative
         to a given seed). The path is computed with SLIP17 for the URI "openpgp://cryptnox"
         with index=0, and equals: m/17'/910196630'/2006168372'/332516148'/580566270'
-        
+
         The symmetric key is computed as SHA2(ECDH): SHA2-256(k.PubKey), where k is the
         private ECP256r1 key, the "decrypt" key slot.
-        
+
         :param int p1: 0x00 = Output symmetric key, 0x01 = Decrypt data in card
         :param bytes pubkey: Third party public key in X9.62 uncompressed format (0x04|X|Y, 65 bytes)
         :param bytes encrypted_data: Encrypted data (required when p1=1, must be 16-byte aligned)
         :param str pin: PIN code (required if no user key auth, right-padded with 0x00)
         :return: Symmetric key (p1=0) or decrypted data (p1=1)
         :rtype: bytes
-        
+
         :raises exceptions.SeedException: If no seed/key loaded
         :raises exceptions.PinException: If PIN is incorrect
         :raises exceptions.DataValidationException: If data length is incorrect
         :raises exceptions.GenericException: If other errors occur
         """
         pass
+
     def history(self, index: int = 0) -> NamedTuple:
         """
         Get history of hashes the card has signed regardless of any
@@ -523,7 +525,7 @@ class Base(metaclass=abc.ABCMeta):
         :rtype: Origin
         """
         if self._origin == Origin.UNKNOWN:
-            self._origin = genuineness.origin(self.connection, self.debug)
+            self._origin = authenticity.origin(self.connection, self.debug)
 
         return self._origin
 

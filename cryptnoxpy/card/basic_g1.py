@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Module containing class for Basic card of 1st generation
 """
@@ -172,7 +173,7 @@ class BasicG1(base.Base):
                 enable_data = b"\x01" + puk.encode("ascii")  # status=1 to enable + PUK bytes
                 enable_apdu = [0x80, 0xC5, 0x00, 0x00]
                 self.connection.send_encrypted(enable_apdu, enable_data)
-            except Exception as e:
+            except Exception:
                 # If enabling fails, continue anyway - it might already be enabled
                 pass
 
@@ -188,29 +189,29 @@ class BasicG1(base.Base):
         return data.hex()
 
     def get_public_key_clear(self, derivation: int, path: str = "", compressed: bool = True) -> bytes:
-        
+
         # Validate inputs
         if not self.initialized:
             raise exceptions.InitializationException("Card is not initialized")
 
         if self.seed_source == SeedSource.NO_SEED:
             raise exceptions.SeedException("There is no seed on the card")
-        
+
         SELe = [0x80, 0xC2, int(derivation), 1]
-        
+
         if not path:
             pubkeyl, status1, status2 = self.connection.send_apdu(SELe + [0])
         else:
             # Only for testing, should throw error
             path_bin = path_to_bytes(path)
             pubkeyl, status1, status2 = self.connection.send_apdu(SELe + [len(path_bin)] + binary_to_list(path_bin))
-        
+
         # Check if we got an error status
         if status1 != 0x90 or status2 != 0x00:
             raise exceptions.ReadPublicKeyException(f"Card returned error status: {status1:02x}{status2:02x}")
-        
+
         pubkey = bytes(pubkeyl)
-        
+
         # Handle different public key formats returned by the card
         if len(pubkey) == 32:
             # Card returned only X-coordinate (32 bytes)
@@ -236,26 +237,26 @@ class BasicG1(base.Base):
             return pubkey
 
     def decrypt(self, p1: int, pubkey: bytes, encrypted_data: bytes = b"", pin: str = "") -> bytes:
-        
+
         # Validate inputs
         if not self.initialized:
             raise exceptions.InitializationException("Card is not initialized")
-        
+
         if self.seed_source == SeedSource.NO_SEED:
             raise exceptions.SeedException("No seed/key loaded")
-        
+
         if p1 not in [0, 1]:
             raise exceptions.DataValidationException("P1 must be 0 (output symmetric key) or 1 (decrypt data)")
-        
+
         if len(pubkey) != 65:
             raise exceptions.DataValidationException("Public key must be 65 bytes (X9.62 uncompressed format)")
-        
+
         if pubkey[0] != 0x04:
             raise exceptions.DataValidationException("Public key must be in X9.62 uncompressed format (0x04|X|Y)")
-        
+
         # Prepare data based on P1 and authentication status
         data = b""
-        
+
         # Add PIN if provided (right-padded with 0x00 to 9 bytes)
         if pin:
             pin_bytes = pin.encode("ascii")
@@ -263,36 +264,38 @@ class BasicG1(base.Base):
                 raise exceptions.DataValidationException("PIN too long (max 9 characters)")
             pin_padded = pin_bytes + b"\x00" * (9 - len(pin_bytes))
             data += pin_padded
-        
+
         # Add public key
         data += pubkey
-        
+
         # Add encrypted data if P1=1
         if p1 == 1:
             if not encrypted_data:
                 raise exceptions.DataValidationException("Encrypted data required when P1=1")
-            
+
             # Check if data length is multiple of 16 bytes (AES block size)
             if len(encrypted_data) % 16 != 0:
                 raise exceptions.DataValidationException("Encrypted data length must be multiple of 16 bytes")
-            
+
             data += encrypted_data
-        
+
         # Validate total data length
         if p1 == 0:
             # P1 = 0: No user key auth, with PIN: 74 bytes, User key auth, no PIN: 65 bytes
             expected_length = 74 if pin else 65
             if len(data) != expected_length:
-                raise exceptions.DataValidationException(f"Data length incorrect: {len(data)} bytes (expected {expected_length})")
+                raise exceptions.DataValidationException(
+                    f"Data length incorrect: {len(data)} bytes (expected {expected_length})")
         else:
             # P1 = 1: No user key auth, with PIN: at least 74 bytes, User key auth, no PIN: at least 65 bytes
             min_length = 74 if pin else 65
             if len(data) < min_length:
-                raise exceptions.DataValidationException(f"Data length too short: {len(data)} bytes (minimum {min_length})")
-        
+                raise exceptions.DataValidationException(
+                    f"Data length too short: {len(data)} bytes (minimum {min_length})")
+
         # Send DECRYPT command
         cmd = [0x80, 0xC4, p1, 0x00]
-        
+
         try:
             result = self.connection.send_encrypted(cmd, data)
             return result
@@ -319,7 +322,7 @@ class BasicG1(base.Base):
     def initialized(self) -> bool:
         return bool(self._data[1] & BasicG1._INITIALIZATION_FLAG)
 
-    def load_wrapped_seed(self,seed: bytes, pin: str = "") -> None:
+    def load_wrapped_seed(self, seed: bytes, pin: str = "") -> None:
         if self.auth_type == base.AuthType.PIN:
             pin = self.valid_pin(pin) or ""
 
@@ -541,8 +544,8 @@ class BasicG1(base.Base):
         if size % 8 != 0:
             raise exceptions.DataValidationException("Size must be a multiple of 8")
         try:
-            size_bytes = size.to_bytes(2, 'big')  
-            return self.connection.send_encrypted([0x80, 0xF9, 0x00, 0x00], size_bytes,True)
+            size_bytes = size.to_bytes(2, 'big')
+            return self.connection.send_encrypted([0x80, 0xF9, 0x00, 0x00], size_bytes, True)
         except Exception as error:
             raise error
 
@@ -676,22 +679,22 @@ class BasicG1(base.Base):
 
         if p1 not in [0, 1]:
             raise exceptions.DataValidationException("P1 must be 0 (xpub) or 1 (clear pubkey)")
-        
+
         puk = self.valid_puk(puk)
-        
+
         cmd = [0x80, 0xC5, p1, 0x00]
         if status:
             statbin = b"\x01"  # Enable
         else:
             statbin = b"\x00"  # Disable
-        
+
         try:
             self.connection.send_encrypted(cmd, statbin + puk.encode("ascii"))
         except exceptions.PinException as error:
             raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
 
     def set_xpubread(self, status: bool, puk: str) -> None:
-        
+
         self.set_pubexport(status, 0, puk)
         self.xpubread = status
 
