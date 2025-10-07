@@ -1,17 +1,19 @@
+# -*- coding: utf-8 -*-
 """
 Module for getting Cryptnox cards information and getting instance of card from
 connection
 """
-from typing import Tuple, Any, Dict
+from typing import Tuple, Any
 from cryptography import x509
 
 from .card import (
     genuineness,
     Base
 )
-from .card import BasicG0 # pylint: disable=unused-import
-from .card import BasicG1 # pylint: disable=unused-import
-from .card import Nft # pylint: disable=unused-import
+# Import card classes to register them with Base class for _all_subclasses()
+from .card import BasicG0  # noqa: F401
+from .card import BasicG1  # noqa: F401
+from .card import Nft  # noqa: F401
 
 
 from .connection import Connection

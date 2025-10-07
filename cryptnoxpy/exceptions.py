@@ -43,6 +43,7 @@ class DerivationSelectionException(CryptnoxException):
 class KeySelectionException(CryptnoxException):
     """Not a valid key type selection"""
 
+
 class EOSKeyError(CryptnoxException):
     """The signature wasn't compatible with EOS standard after 10 tries"""
 
