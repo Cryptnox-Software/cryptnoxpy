@@ -9,7 +9,7 @@ import hashlib
 import pickle
 import secrets
 from contextlib import ContextDecorator
-from time import time
+from time import time, sleep
 from typing import (
     List,
     Tuple,
@@ -73,15 +73,15 @@ class Connection(ContextDecorator):
         except reader.ReaderException as error:
             raise exceptions.ReaderException("Can't find any reader connected.") from error
 
-        while True:
+        max_retries = 3
+        for retry in range(max_retries):
             try:
                 self._reader.connect()
-            except reader.CardException as error:
-                retry += 1
-                if retry >= 3:
-                    raise exceptions.CardException("The reader has no card inserted") from error
-            else:
                 break
+            except reader.CardException as error:
+                if retry == max_retries - 1:
+                    raise exceptions.CardException("The reader has no card inserted") from error
+                sleep(0.2)
 
     def __del__(self):
         if self._reader:
