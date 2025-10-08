@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Module containing check for verification of genuineness of a card
 """
