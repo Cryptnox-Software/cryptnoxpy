@@ -1,14 +1,20 @@
 #!/usr/bin/python
-from .py2specials import *
-from .py3specials import *
+# -*- coding: utf-8 -*-
+"""
+Module containing core cryptographic functions for Cryptnox cards.
+
+Provides elliptic curve cryptography (secp256k1), key generation,
+digital signatures, and cryptocurrency address generation.
+"""
+
+from . import py2specials
+from . import py3specials
 import binascii
 import hashlib
 import re
 import base64
-import time
-import random
 import hmac
-from .ripemd import *
+from . import ripemd
 
 # Elliptic curve parameters (secp256k1)
 
@@ -45,7 +51,6 @@ def inv(a, n):
     return lm % n
 
 
-
 # JSON access (for pybtctool convenience)
 
 
@@ -71,6 +76,7 @@ def slice(obj, start=0, end=2**200):
 
 def count(obj):
     return len(obj)
+
 
 _sum = sum
 
@@ -125,13 +131,13 @@ def jacobian_add(p, q):
 
 
 def fast_add(a, b):
-    return from_jacobian(jacobian_add(to_jacobian(a), to_jacobian(b)))
+    return py3specials.from_jacobian(jacobian_add(to_jacobian(a), to_jacobian(b)))
 
 # Functions for handling pubkey and privkey formats
 
 
 def get_pubkey_format(pub):
-    if is_python2:
+    if py2specials.is_python2:
         two = '\x02'
         three = '\x03'
         four = '\x04'
@@ -139,91 +145,137 @@ def get_pubkey_format(pub):
         two = 2
         three = 3
         four = 4
-    
-    if isinstance(pub, (tuple, list)): return 'decimal'
-    elif len(pub) == 65 and pub[0] == four: return 'bin'
-    elif len(pub) == 130 and pub[0:2] == '04': return 'hex'
-    elif len(pub) == 33 and pub[0] in [two, three]: return 'bin_compressed'
-    elif len(pub) == 66 and pub[0:2] in ['02', '03']: return 'hex_compressed'
-    elif len(pub) == 64: return 'bin_electrum'
-    elif len(pub) == 128: return 'hex_electrum'
-    else: raise Exception("Pubkey not in recognized format")
+
+    if isinstance(pub, (tuple, list)):
+        return 'decimal'
+    elif len(pub) == 65 and pub[0] == four:
+        return 'bin'
+    elif len(pub) == 130 and pub[0:2] == '04':
+        return 'hex'
+    elif len(pub) == 33 and pub[0] in [two, three]:
+        return 'bin_compressed'
+    elif len(pub) == 66 and pub[0:2] in ['02', '03']:
+        return 'hex_compressed'
+    elif len(pub) == 64:
+        return 'bin_electrum'
+    elif len(pub) == 128:
+        return 'hex_electrum'
+    else:
+        raise Exception("Pubkey not in recognized format")
 
 
 def encode_pubkey(pub, formt):
     if not isinstance(pub, (tuple, list)):
         pub = decode_pubkey(pub)
-    if formt == 'decimal': return pub
-    elif formt == 'bin': return b'\x04' + encode(pub[0], 256, 32) + encode(pub[1], 256, 32)
+    if formt == 'decimal':
+        return pub
+    elif formt == 'bin':
+        return b'\x04' + py2specials.encode(pub[0], 256, 32) + py2specials.encode(pub[1], 256, 32)
     elif formt == 'bin_compressed':
-        return from_int_to_byte(2+(pub[1] % 2)) + encode(pub[0], 256, 32)
-    elif formt == 'hex': return '04' + encode(pub[0], 16, 64) + encode(pub[1], 16, 64)
+        return py2specials.from_int_to_byte(2+(pub[1] % 2)) + py2specials.encode(pub[0], 256, 32)
+    elif formt == 'hex':
+        return '04' + py2specials.encode(pub[0], 16, 64) + py2specials.encode(pub[1], 16, 64)
     elif formt == 'hex_compressed':
-        return '0'+str(2+(pub[1] % 2)) + encode(pub[0], 16, 64)
-    elif formt == 'bin_electrum': return encode(pub[0], 256, 32) + encode(pub[1], 256, 32)
-    elif formt == 'hex_electrum': return encode(pub[0], 16, 64) + encode(pub[1], 16, 64)
-    else: raise Exception("Invalid format!")
+        return '0'+str(2+(pub[1] % 2)) + py2specials.encode(pub[0], 16, 64)
+    elif formt == 'bin_electrum':
+        return py2specials.encode(pub[0], 256, 32) + py2specials.encode(pub[1], 256, 32)
+    elif formt == 'hex_electrum':
+        return py2specials.encode(pub[0], 16, 64) + py2specials.encode(pub[1], 16, 64)
+    else:
+        raise Exception("Invalid format!")
 
 
 def decode_pubkey(pub, formt=None):
-    if not formt: formt = get_pubkey_format(pub)
-    if formt == 'decimal': return pub
-    elif formt == 'bin': return (decode(pub[1:33], 256), decode(pub[33:65], 256))
+    if not formt:
+        formt = get_pubkey_format(pub)
+    if formt == 'decimal':
+        return pub
+    elif formt == 'bin':
+        return (py2specials.decode(pub[1:33], 256), py2specials.decode(pub[33:65], 256))
     elif formt == 'bin_compressed':
-        x = decode(pub[1:33], 256)
+        x = py2specials.decode(pub[1:33], 256)
         beta = pow(int(x*x*x+A*x+B), int((P+1)//4), int(P))
-        y = (P-beta) if ((beta + from_byte_to_int(pub[0])) % 2) else beta
+        y = (P-beta) if ((beta + py2specials.from_byte_to_int(pub[0])) % 2) else beta
         return (x, y)
-    elif formt == 'hex': return (decode(pub[2:66], 16), decode(pub[66:130], 16))
+    elif formt == 'hex':
+        return (py2specials.decode(pub[2:66], 16), py2specials.decode(pub[66:130], 16))
     elif formt == 'hex_compressed':
-        return decode_pubkey(safe_from_hex(pub), 'bin_compressed')
+        return decode_pubkey(py2specials.safe_from_hex(pub), 'bin_compressed')
     elif formt == 'bin_electrum':
-        return (decode(pub[:32], 256), decode(pub[32:64], 256))
+        return (py2specials.decode(pub[:32], 256), py2specials.decode(pub[32:64], 256))
     elif formt == 'hex_electrum':
-        return (decode(pub[:64], 16), decode(pub[64:128], 16))
-    else: raise Exception("Invalid format!")
+        return (py2specials.decode(pub[:64], 16), py2specials.decode(pub[64:128], 16))
+    else:
+        raise Exception("Invalid format!")
+
 
 def get_privkey_format(priv):
-    if isinstance(priv, int_types): return 'decimal'
-    elif len(priv) == 32: return 'bin'
-    elif len(priv) == 33: return 'bin_compressed'
-    elif len(priv) == 64: return 'hex'
-    elif len(priv) == 66: return 'hex_compressed'
+    if isinstance(priv, py2specials.int_types):
+        return 'decimal'
+    elif len(priv) == 32:
+        return 'bin'
+    elif len(priv) == 33:
+        return 'bin_compressed'
+    elif len(priv) == 64:
+        return 'hex'
+    elif len(priv) == 66:
+        return 'hex_compressed'
     else:
         bin_p = b58check_to_bin(priv)
-        if len(bin_p) == 32: return 'wif'
-        elif len(bin_p) == 33: return 'wif_compressed'
-        else: raise Exception("WIF does not represent privkey")
+        if len(bin_p) == 32:
+            return 'wif'
+        elif len(bin_p) == 33:
+            return 'wif_compressed'
+        else:
+            raise Exception("WIF does not represent privkey")
+
 
 def encode_privkey(priv, formt, vbyte=128):
-    if not isinstance(priv, int_types):
+    if not isinstance(priv, py2specials.int_types):
         return encode_privkey(decode_privkey(priv), formt, vbyte)
-    if formt == 'decimal': return priv
-    elif formt == 'bin': return encode(priv, 256, 32)
-    elif formt == 'bin_compressed': return encode(priv, 256, 32)+b'\x01'
-    elif formt == 'hex': return encode(priv, 16, 64)
-    elif formt == 'hex_compressed': return encode(priv, 16, 64)+'01'
+    if formt == 'decimal':
+        return priv
+    elif formt == 'bin':
+        return py2specials.encode(priv, 256, 32)
+    elif formt == 'bin_compressed':
+        return py2specials.encode(priv, 256, 32)+b'\x01'
+    elif formt == 'hex':
+        return py2specials.encode(priv, 16, 64)
+    elif formt == 'hex_compressed':
+        return py2specials.encode(priv, 16, 64)+'01'
     elif formt == 'wif':
-        return bin_to_b58check(encode(priv, 256, 32), int(vbyte))
+        return py2specials.bin_to_b58check(py2specials.encode(priv, 256, 32), int(vbyte))
     elif formt == 'wif_compressed':
-        return bin_to_b58check(encode(priv, 256, 32) + b'\x01', int(vbyte))
-    else: raise Exception("Invalid format!")
+        return py2specials.bin_to_b58check(py2specials.encode(priv, 256, 32) + b'\x01', int(vbyte))
+    else:
+        raise Exception("Invalid format!")
 
-def decode_privkey(priv,formt=None):
-    if not formt: formt = get_privkey_format(priv)
-    if formt == 'decimal': return priv
-    elif formt == 'bin': return decode(priv, 256)
-    elif formt == 'bin_compressed': return decode(priv[:32], 256)
-    elif formt == 'hex': return decode(priv, 16)
-    elif formt == 'hex_compressed': return decode(priv[:64], 16)
-    elif formt == 'wif': return decode(b58check_to_bin(priv),256)
+
+def decode_privkey(priv, formt=None):
+    if not formt:
+        formt = get_privkey_format(priv)
+    if formt == 'decimal':
+        return priv
+    elif formt == 'bin':
+        return py2specials.decode(priv, 256)
+    elif formt == 'bin_compressed':
+        return py2specials.decode(priv[:32], 256)
+    elif formt == 'hex':
+        return py2specials.decode(priv, 16)
+    elif formt == 'hex_compressed':
+        return py2specials.decode(priv[:64], 16)
+    elif formt == 'wif':
+        return py2specials.decode(b58check_to_bin(priv), 256)
     elif formt == 'wif_compressed':
-        return decode(b58check_to_bin(priv)[:32],256)
-    else: raise Exception("WIF does not represent privkey")
+        return py2specials.decode(b58check_to_bin(priv)[:32], 256)
+    else:
+        raise Exception("WIF does not represent privkey")
+
 
 def add_pubkeys(p1, p2):
     f1, f2 = get_pubkey_format(p1), get_pubkey_format(p2)
     return encode_pubkey(fast_add(decode_pubkey(p1, f1), decode_pubkey(p2, f2)), f1)
+
 
 def add_privkeys(p1, p2):
     f1, f2 = get_privkey_format(p1), get_privkey_format(p2)
@@ -232,21 +284,25 @@ def add_privkeys(p1, p2):
 
 def divide(pubkey, privkey):
     factor = inv(decode_privkey(privkey), N)
-    return multiply(pubkey, factor)
+    return py3specials.multiply(pubkey, factor)
 
 
 def compress(pubkey):
     f = get_pubkey_format(pubkey)
-    if 'compressed' in f: return pubkey
-    elif f == 'bin': return encode_pubkey(decode_pubkey(pubkey, f), 'bin_compressed')
+    if 'compressed' in f:
+        return pubkey
+    elif f == 'bin':
+        return encode_pubkey(decode_pubkey(pubkey, f), 'bin_compressed')
     elif f == 'hex' or f == 'decimal':
         return encode_pubkey(decode_pubkey(pubkey, f), 'hex_compressed')
 
 
 def decompress(pubkey):
     f = get_pubkey_format(pubkey)
-    if 'compressed' not in f: return pubkey
-    elif f == 'bin_compressed': return encode_pubkey(decode_pubkey(pubkey, f), 'bin')
+    if 'compressed' not in f:
+        return pubkey
+    elif f == 'bin_compressed':
+        return encode_pubkey(decode_pubkey(pubkey, f), 'bin')
     elif f == 'hex_compressed' or f == 'decimal':
         return encode_pubkey(decode_pubkey(pubkey, f), 'hex')
 
@@ -262,6 +318,7 @@ def neg_privkey(privkey):
     privkey = decode_privkey(privkey, f)
     return encode_privkey((N - privkey) % N, f)
 
+
 def subtract_pubkeys(p1, p2):
     f1, f2 = get_pubkey_format(p1), get_pubkey_format(p2)
     k2 = decode_pubkey(p2, f2)
@@ -274,7 +331,6 @@ def subtract_privkeys(p1, p2):
     return encode_privkey((decode_privkey(p1, f1) - k2) % N, f1)
 
 
-
 # Hashes
 
 
@@ -283,47 +339,51 @@ def bin_hash160(string):
     digest = ''
     try:
         digest = hashlib.new('ripemd160', intermed).digest()
-    except:
-        digest = RIPEMD160(intermed).digest()
+    except Exception:
+        digest = ripemd.RIPEMD160(intermed).digest()
     return digest
 
+
 def hash160(string):
-    return safe_hexlify(bin_hash160(string))
+    return py2specials.safe_hexlify(bin_hash160(string))
+
 
 def hex_to_hash160(s_hex):
     return hash160(binascii.unhexlify(s_hex))
+
 
 def bin_sha256(string):
     binary_data = string if isinstance(string, bytes) else bytes(string, 'utf-8')
     return hashlib.sha256(binary_data).digest()
 
+
 def sha256(string):
-    return bytes_to_hex_string(bin_sha256(string))
+    return py2specials.bytes_to_hex_string(bin_sha256(string))
 
 
 def bin_ripemd160(string):
     try:
         digest = hashlib.new('ripemd160', string).digest()
-    except:
-        digest = RIPEMD160(string).digest()
+    except Exception:
+        digest = ripemd.RIPEMD160(string).digest()
     return digest
 
 
 def ripemd160(string):
-    return safe_hexlify(bin_ripemd160(string))
+    return py2specials.safe_hexlify(bin_ripemd160(string))
 
 
 def bin_dbl_sha256(s):
-    bytes_to_hash = from_string_to_bytes(s)
+    bytes_to_hash = py2specials.from_string_to_bytes(s)
     return hashlib.sha256(hashlib.sha256(bytes_to_hash).digest()).digest()
 
 
 def dbl_sha256(string):
-    return safe_hexlify(bin_dbl_sha256(string))
+    return py2specials.safe_hexlify(bin_dbl_sha256(string))
 
 
 def bin_slowsha(string):
-    string = from_string_to_bytes(string)
+    string = py2specials.from_string_to_bytes(string)
     orig_input = string
     for i in range(100000):
         string = hashlib.sha256(string + orig_input).digest()
@@ -331,26 +391,30 @@ def bin_slowsha(string):
 
 
 def slowsha(string):
-    return safe_hexlify(bin_slowsha(string))
+    return py2specials.safe_hexlify(bin_slowsha(string))
 
 
 def hash_to_int(x):
     if len(x) in [40, 64]:
-        return decode(x, 16)
-    return decode(x, 256)
+        return py2specials.decode(x, 16)
+    return py2specials.decode(x, 256)
 
 
 def num_to_var_int(x):
     x = int(x)
-    if x < 253: return from_int_to_byte(x)
-    elif x < 65536: return from_int_to_byte(253)+encode(x, 256, 2)[::-1]
-    elif x < 4294967296: return from_int_to_byte(254) + encode(x, 256, 4)[::-1]
-    else: return from_int_to_byte(255) + encode(x, 256, 8)[::-1]
+    if x < 253:
+        return py2specials.from_int_to_byte(x)
+    elif x < 65536:
+        return py2specials.from_int_to_byte(253)+py2specials.encode(x, 256, 2)[::-1]
+    elif x < 4294967296:
+        return py2specials.from_int_to_byte(254) + py2specials.encode(x, 256, 4)[::-1]
+    else:
+        return py2specials.from_int_to_byte(255) + py2specials.encode(x, 256, 8)[::-1]
 
 
 # WTF, Electrum?
 def electrum_sig_hash(message):
-    padded = b"\x18Bitcoin Signed Message:\n" + num_to_var_int(len(message)) + from_string_to_bytes(message)
+    padded = b"\x18Bitcoin Signed Message:\n" + num_to_var_int(len(message)) + py2specials.from_string_to_bytes(message)
     return bin_dbl_sha256(padded)
 
 
@@ -358,24 +422,25 @@ def electrum_sig_hash(message):
 
 def b58check_to_bin(inp):
     leadingzbytes = len(re.match('^1*', inp).group(0))
-    data = b'\x00' * leadingzbytes + changebase(inp, 58, 256)
+    data = b'\x00' * leadingzbytes + py2specials.changebase(inp, 58, 256)
     assert bin_dbl_sha256(data[:-4])[:4] == data[-4:]
     return data[1:-4]
 
 
 def get_version_byte(inp):
     leadingzbytes = len(re.match('^1*', inp).group(0))
-    data = b'\x00' * leadingzbytes + changebase(inp, 58, 256)
+    data = b'\x00' * leadingzbytes + py2specials.changebase(inp, 58, 256)
     assert bin_dbl_sha256(data[:-4])[:4] == data[-4:]
     return ord(data[0])
 
 
 def hex_to_b58check(inp, magicbyte=0):
-    return bin_to_b58check(binascii.unhexlify(inp), magicbyte)
+    return py2specials.bin_to_b58check(binascii.unhexlify(inp), magicbyte)
 
 
 def b58check_to_hex(inp):
-    return safe_hexlify(b58check_to_bin(inp))
+    return py2specials.safe_hexlify(b58check_to_bin(inp))
+
 
 def pubkey_to_hash(pubkey):
     if isinstance(pubkey, (list, tuple)):
@@ -384,12 +449,15 @@ def pubkey_to_hash(pubkey):
         return bin_hash160(binascii.unhexlify(pubkey))
     return bin_hash160(pubkey)
 
+
 def pubkey_to_hash_hex(pubkey):
-    return safe_hexlify(pubkey_to_hash(pubkey))
+    return py2specials.safe_hexlify(pubkey_to_hash(pubkey))
+
 
 def pubkey_to_address(pubkey, magicbyte=0):
     pubkey_hash = pubkey_to_hash(pubkey)
-    return bin_to_b58check(pubkey_hash, magicbyte)
+    return py2specials.bin_to_b58check(pubkey_hash, magicbyte)
+
 
 pubtoaddr = pubkey_to_address
 
@@ -398,14 +466,15 @@ def is_privkey(priv):
     try:
         get_privkey_format(priv)
         return True
-    except:
+    except Exception:
         return False
+
 
 def is_pubkey(pubkey):
     try:
         get_pubkey_format(pubkey)
         return True
-    except:
+    except Exception:
         return False
 
 
@@ -413,15 +482,17 @@ def is_pubkey(pubkey):
 
 
 def encode_sig(v, r, s):
-    vb, rb, sb = from_int_to_byte(v), encode(r, 256), encode(s, 256)
-    
+    vb, rb, sb = py2specials.from_int_to_byte(v), py2specials.encode(r, 256), py2specials.encode(s, 256)
+
     result = base64.b64encode(vb+b'\x00'*(32-len(rb))+rb+b'\x00'*(32-len(sb))+sb)
-    return result if is_python2 else str(result, 'utf-8')
+    return result if py2specials.is_python2 else str(result, 'utf-8')
 
 
 def decode_sig(sig):
     bytez = base64.b64decode(sig)
-    return from_byte_to_int(bytez[0]), decode(bytez[1:33], 256), decode(bytez[33:], 256)
+    return (py2specials.from_byte_to_int(bytez[0]),
+            py2specials.decode(bytez[1:33], 256),
+            py2specials.decode(bytez[33:], 256))
 
 # https://tools.ietf.org/html/rfc6979#section-3.2
 
@@ -430,17 +501,19 @@ def deterministic_generate_k(msghash, priv):
     v = b'\x01' * 32
     k = b'\x00' * 32
     priv = encode_privkey(priv, 'bin')
-    msghash = encode(hash_to_int(msghash), 256, 32)
+    msghash = py2specials.encode(hash_to_int(msghash), 256, 32)
     k = hmac.new(k, v+b'\x00'+priv+msghash, hashlib.sha256).digest()
     v = hmac.new(k, v, hashlib.sha256).digest()
     k = hmac.new(k, v+b'\x01'+priv+msghash, hashlib.sha256).digest()
     v = hmac.new(k, v, hashlib.sha256).digest()
-    return decode(hmac.new(k, v, hashlib.sha256).digest(), 256)
+    return py2specials.decode(hmac.new(k, v, hashlib.sha256).digest(), 256)
 
 # For BitcoinCore, (msg = addr or msg = "") be default
+
+
 def ecdsa_verify_addr(msg, sig, addr, coin):
     assert coin.is_address(addr)
-    Q = ecdsa_recover(msg, sig)
+    Q = py3specials.ecdsa_recover(msg, sig)
     magic = get_version_byte(addr)
     return (addr == coin.pubtoaddr(Q, int(magic))) or (addr == coin.pubtoaddr(compress(Q), int(magic)))
 
@@ -448,28 +521,31 @@ def ecdsa_verify_addr(msg, sig, addr, coin):
 def ecdsa_verify(msg, sig, pub, coin):
     if coin.is_address(pub):
         return ecdsa_verify_addr(msg, sig, pub, coin)
-    return ecdsa_raw_verify(electrum_sig_hash(msg), decode_sig(sig), pub)
+    return py3specials.ecdsa_raw_verify(electrum_sig_hash(msg), decode_sig(sig), pub)
 
 
-# add/subtract 
-def add(p1,p2):
+# add/subtract
+def add(p1, p2):
     if is_privkey(p1):
         return add_privkeys(p1, p2)
     else:
         return add_pubkeys(p1, p2)
 
-def subtract(p1,p2):
+
+def subtract(p1, p2):
     if is_privkey(p1):
         return subtract_privkeys(p1, p2)
     else:
         return subtract_pubkeys(p1, p2)
 
+
 hash160Low = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
 hash160High = b'\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff'
 
+
 def magicbyte_to_prefix(magicbyte):
-    first = bin_to_b58check(hash160Low, magicbyte=magicbyte)[0]
-    last = bin_to_b58check(hash160High, magicbyte=magicbyte)[0]
+    first = py2specials.bin_to_b58check(hash160Low, magicbyte=magicbyte)[0]
+    last = py2specials.bin_to_b58check(hash160High, magicbyte=magicbyte)[0]
     if first == last:
         return (first,)
     return (first, last)

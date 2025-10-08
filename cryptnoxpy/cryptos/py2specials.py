@@ -1,13 +1,29 @@
-import sys, re
+# -*- coding: utf-8 -*-
+"""
+Module containing Python 2 compatibility utilities.
+
+Provides type definitions, string/bytes handling, and encoding
+utilities for Python 2 compatibility in cryptographic operations.
+"""
+
+import sys
+import re
 import binascii
 import os
 import hashlib
 
 
 if sys.version_info.major == 2:
-    string_types = (str, unicode)
+    try:
+        unicode_type = unicode  # type: ignore
+        long_type = long  # type: ignore
+    except NameError:
+        unicode_type = str
+        long_type = int
+
+    string_types = (str, unicode_type)
     string_or_bytes_types = string_types
-    int_types = (int, float, long)
+    int_types = (int, float, long_type)
 
     # Base switching
     code_strings = {
