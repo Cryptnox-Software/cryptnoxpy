@@ -1,4 +1,14 @@
-import sys, os
+# -*- coding: utf-8 -*-
+"""
+Module containing Python 3 specific cryptographic implementations.
+
+Provides Python 3 optimized cryptographic functions including
+elliptic curve operations, ECDSA signing/verification, and
+mathematical utilities for secp256k1 operations.
+"""
+
+import sys
+import os
 import binascii
 import hashlib
 
