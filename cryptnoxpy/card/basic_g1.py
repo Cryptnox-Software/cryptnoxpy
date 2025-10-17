@@ -421,20 +421,13 @@ class BasicG1(base.Base):
         self._data[1] |= BasicG1._PINLESS_FLAG
 
     def set_extended_public_key(self, status: bool, puk: str) -> None:
-        if self.seed_source == SeedSource.NO_SEED:
-            raise exceptions.SeedException("There is no seed on the card")
+        """
+        Set extended public key capability.
 
-        puk = self.valid_puk(puk)
-        status = int(status).to_bytes(1, "big")
-
-        try:
-            self.connection.send_encrypted([0x80, 0xC3, 0, 0], status + puk.encode("ascii"))
-        except exceptions.PinException as error:
-            raise exceptions.PukException(number_of_retries=error.number_of_retries) from error
-        except exceptions.GenericException as error:
-            if error.status[0] == 0x69 and error.status[1] == 0x85:
-                raise exceptions.SeedException("Seed not found")
-            raise
+        This is a convenience wrapper around set_pubexport(status, 0, puk).
+        Use set_pubexport() directly for more control.
+        """
+        self.set_pubexport(status, 0, puk)
 
     @property
     def signing_counter(self) -> int:
