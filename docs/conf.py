@@ -28,6 +28,20 @@ extensions = [
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
+# Handle ambiguous cross-references
+nitpicky = False
+nitpick_ignore = [
+    ('py:class', 'Base'),
+    ('py:class', 'ConnectionException'),
+    ('py:class', 'CardException'),
+]
+
+# Suppress specific warnings
+suppress_warnings = [
+    'ref.python',
+    'toc.not_included',
+]
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
