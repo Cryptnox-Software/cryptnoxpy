@@ -1,0 +1,61 @@
+name: Build and Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout cryptnoxpy repository
+        uses: actions/checkout@v4
+        with:
+          path: cryptnoxpy
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          cd cryptnoxpy
+          pip install sphinx sphinx-rtd-theme
+
+      - name: Build Sphinx documentation
+        run: |
+          cd cryptnoxpy
+          sphinx-build -b html docs docs/_build/html
+
+      - name: Checkout documentation repository
+        uses: actions/checkout@v4
+        with:
+          repository: cryptnox-software/cryptnox-software.github.io
+          token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
+          path: docs-repo
+
+      - name: Update documentation
+        run: |
+          # Remove old cryptnoxpy folder if it exists
+          rm -rf docs-repo/cryptnoxpy
+          
+          # Copy new documentation
+          cp -r cryptnoxpy/docs/_build/html docs-repo/cryptnoxpy
+          
+          # Add a timestamp file for tracking
+          echo "Last updated: $(date)" > docs-repo/cryptnoxpy/last-updated.txt
+
+      - name: Commit and push changes
+        run: |
+          cd docs-repo
+          git config --local user.email "yannw.dev@gmail.com"
+          git config --local user.name "YanNaingWinDev"
+          git add .
+          git commit -m "Update cryptnoxpy documentation from cryptnoxpy@${{ github.sha }}" || exit 0
+          git push
