@@ -67,3 +67,27 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+
+The ``cryptnoxpy.card`` package contains classes for various Cryptnox card types and exports:
+
+.. py:currentmodule:: cryptnoxpy.card
+
+.. py:class:: Base
+   :no-index:
+
+   Base card interface class. See :class:`cryptnoxpy.card.base.Base` for details.
+
+.. py:class:: BasicG0
+   :no-index:
+
+   Basic Generation 0 card implementation. See :class:`cryptnoxpy.card.basic_g0.BasicG0` for details.
+
+.. py:class:: BasicG1
+   :no-index:
+
+   Basic Generation 1 card implementation. See :class:`cryptnoxpy.card.basic_g1.BasicG1` for details.
+
+.. py:class:: Nft
+   :no-index:
+
+   NFT card implementation. See :class:`cryptnoxpy.card.nft.Nft` for details.

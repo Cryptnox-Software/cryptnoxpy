@@ -25,8 +25,38 @@ extensions = [
     "sphinx.ext.viewcode",
 ]
 
+# Disable autosummary generation to prevent hangs
+autosummary_generate = False
+
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
+# Mock external dependencies to prevent import errors during doc build
+autodoc_mock_imports = [
+    'pyscard',
+    'smartcard',
+    'smartcard.System',
+    'smartcard.CardConnection',
+    'smartcard.Exceptions',
+    'smartcard.CardType',
+    'smartcard.CardRequest',
+    'smartcard.util',
+    'smartcard.scard',
+    'cryptography',
+    'cffi',
+    'aiohttp',
+    'aiosignal',
+    'attrs',
+]
+
+# Autodoc configuration
+autodoc_default_options = {
+    'members': True,
+    'member-order': 'bysource',
+    'special-members': '__init__',
+    'undoc-members': True,
+    'exclude-members': '__weakref__'
+}
 
 # Handle ambiguous cross-references
 nitpicky = False

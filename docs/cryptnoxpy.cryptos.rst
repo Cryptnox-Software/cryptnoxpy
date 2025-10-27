@@ -43,3 +43,27 @@ Module contents
    :members:
    :undoc-members:
    :show-inheritance:
+
+The ``cryptnoxpy.cryptos`` package contains cryptographic utilities for Cryptnox cards and exports:
+
+.. py:currentmodule:: cryptnoxpy.cryptos
+
+.. py:module:: main
+   :no-index:
+
+   Main cryptographic operations module. See :mod:`cryptnoxpy.cryptos.main` for details.
+
+.. py:module:: py2specials
+   :no-index:
+
+   Python 2 specific cryptographic utilities. See :mod:`cryptnoxpy.cryptos.py2specials` for details.
+
+.. py:module:: py3specials
+   :no-index:
+
+   Python 3 specific cryptographic utilities. See :mod:`cryptnoxpy.cryptos.py3specials` for details.
+
+.. py:function:: encode_pubkey(pubkey, formt)
+   :no-index:
+
+   Encode a public key in the specified format. See :func:`cryptnoxpy.cryptos.main.encode_pubkey` for details.
