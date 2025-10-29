@@ -511,6 +511,8 @@ class Base(metaclass=abc.ABCMeta):
     @property
     def open(self) -> bool:
         """
+        Check if the user has authenticated.
+
         :return: Whether the user has authenticated using the PIN code or
                  challenge-response validation
         :rtype: bool
@@ -520,6 +522,8 @@ class Base(metaclass=abc.ABCMeta):
     @property
     def origin(self) -> Origin:
         """
+        Check the card origin.
+
         :return: Return if the card is original Cryptnox card, fake or there's an
                  issue getting the information
         :rtype: Origin

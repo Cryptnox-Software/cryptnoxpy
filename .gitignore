@@ -12,6 +12,6 @@ _build
 # pycharm ide
 .idea
 
-/docs/
+/docs/_build/
 /venv/
 /.vscode/
