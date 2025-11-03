@@ -4,7 +4,6 @@ Module for getting Cryptnox cards information and getting instance of card from
 connection
 """
 from typing import Tuple, Any
-import hashlib
 from cryptography import x509
 
 from .card import (
@@ -89,14 +88,6 @@ def _serial_number(connection: Connection, debug: bool = False):
     except Exception:
         certificate_parts = certificate.split("0302010202")
         if len(certificate_parts) <= 1:
-            try:
-                cert_bytes = bytes.fromhex(certificate)
-                if cert_bytes:
-                    digest = hashlib.sha1(cert_bytes).digest()
-                    pseudo_serial = int.from_bytes(digest[:6], "big")
-                    return pseudo_serial, certificate
-            except Exception:
-                pass
             raise CertificateException("No card certificate found")
 
         try:
@@ -107,14 +98,6 @@ def _serial_number(connection: Connection, debug: bool = False):
             else:
                 raise CertificateException("Bad certificate format")
         except Exception as error:
-            try:
-                cert_bytes = bytes.fromhex(certificate)
-                if cert_bytes:
-                    digest = hashlib.sha1(cert_bytes).digest()
-                    pseudo_serial = int.from_bytes(digest[:6], "big")
-                    return pseudo_serial, certificate
-            except Exception:
-                pass
             raise CertificateException("Bad card certificate format") from error
 
         return int(data, 16), certificate
