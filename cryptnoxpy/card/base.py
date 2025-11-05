@@ -830,13 +830,13 @@ class Base(metaclass=abc.ABCMeta):
         """
         Check if provided puk is valid
 
-        :param str puk: The puk to check if valid
+        :param str puk: The puk to check if valid (accepts all ASCII characters)
         :param puk_name: Value used in DataValidationException for puk name. Defaults to: puk
         :type puk_name: str, optional
 
         :return str: Provided puk in str format if valid
 
-        :raise DataValidationException: Provided puk is not valid
+        :raise DataValidationException: Provided puk is not valid (wrong length or non-ASCII characters)
         """
 
     @abc.abstractmethod

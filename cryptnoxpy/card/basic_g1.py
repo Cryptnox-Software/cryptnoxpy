@@ -29,7 +29,7 @@ class BasicG1(base.Base):
     Class containing functionality for Basic cards of the 1st generation
     """
     select_apdu = [0xA0, 0x00, 0x00, 0x10, 0x00, 0x01, 0x12]
-    puk_rule = "12 digits and/or letters"
+    puk_rule = "12 ASCII characters"
 
     _ALGORITHM = ec.SECP256R1
     PUK_LENGTH = 12
@@ -594,10 +594,10 @@ class BasicG1(base.Base):
     @staticmethod
     def valid_puk(puk: str, puk_name: str = "puk") -> str:
         if len(puk) != BasicG1.PUK_LENGTH:
-            raise exceptions.DataValidationException(f"The {puk_name} must have {BasicG1.PUK_LENGTH} letters or number "
-                                                     f"characters")
-        if not puk.isalnum():
-            raise exceptions.DataValidationException(f"The {puk_name} must be letters and/or number characters.")
+            raise exceptions.DataValidationException(f"The {puk_name} must have {BasicG1.PUK_LENGTH} "
+                                                     f"ASCII characters")
+        if not all(ord(c) < 128 for c in puk):
+            raise exceptions.DataValidationException(f"The {puk_name} must contain only ASCII characters.")
 
         return puk
 
