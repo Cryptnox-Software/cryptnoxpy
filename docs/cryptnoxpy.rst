@@ -138,6 +138,6 @@ The ``cryptnoxpy`` package is a library for communicating with Cryptnox cards. I
 
 .. py:data:: __version__
    :type: str
-   :value: "2.5.5"
+   :value: "2.5.6"
 
    Current version of the cryptnoxpy library.
