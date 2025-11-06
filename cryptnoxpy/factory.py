@@ -11,7 +11,6 @@ from .card import (
     Base
 )
 # Import card classes to register them with Base class for _all_subclasses()
-from .card import BasicG0  # noqa: F401
 from .card import BasicG1  # noqa: F401
 from .card import Nft  # noqa: F401
 

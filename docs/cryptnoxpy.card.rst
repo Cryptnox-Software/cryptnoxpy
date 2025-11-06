@@ -20,14 +20,6 @@ cryptnoxpy.card.base module
    :undoc-members:
    :show-inheritance:
 
-cryptnoxpy.card.basic\_g0 module
---------------------------------
-
-.. automodule:: cryptnoxpy.card.basic_g0
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 cryptnoxpy.card.basic\_g1 module
 --------------------------------
 
@@ -76,11 +68,6 @@ The ``cryptnoxpy.card`` package contains classes for various Cryptnox card types
    :no-index:
 
    Base card interface class. See :class:`cryptnoxpy.card.base.Base` for details.
-
-.. py:class:: BasicG0
-   :no-index:
-
-   Basic Generation 0 card implementation. See :class:`cryptnoxpy.card.basic_g0.BasicG0` for details.
 
 .. py:class:: BasicG1
    :no-index:
