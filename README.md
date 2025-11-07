@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://avatars.githubusercontent.com/u/78643856?s=200&amp;v=4" alt="cryptnox-icon" height="100" width="100" />
+  <img src="https://github.com/user-attachments/assets/7613b715-90f3-4855-890e-9bba08add646" height="200" width="200" />
 </p>
 
 <h3 align="center">CryptnoxPy - Python SDK for managing smart card wallets</h3>
