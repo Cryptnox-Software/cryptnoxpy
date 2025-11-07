@@ -2,7 +2,7 @@
   <img src="https://github.com/user-attachments/assets/7613b715-90f3-4855-890e-9bba08add646" height="200" width="200" />
 </p>
 
-<h3 align="center">CryptnoxPy - Python SDK for managing smart card wallets</h3>
+<h3 align="center">CryptnoxPy - Python SDK for managing smartcard wallets</h3>
 
 <br/>
  
@@ -63,7 +63,7 @@ sudo systemctl enable pcscd
 
 ---
 
-## Quick Usage Examples
+## Quick usage examples
 
 ### 1. Connect to a Cryptnox Card
 
