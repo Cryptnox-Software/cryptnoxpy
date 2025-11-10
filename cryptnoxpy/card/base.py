@@ -156,10 +156,7 @@ class Base(metaclass=abc.ABCMeta):
                                          or the provided new pin is not valid
         """
         new_pin = self.valid_pin(new_pin, pin_name="new pin")
-        try:
-            self._change_secret(0, new_pin)
-        except exceptions.DataValidationException as error:
-            raise exceptions.DataValidationException("The current pin is not matching the one on the card") from error
+        self._change_secret(0, new_pin)
         if not self.open:
             self.auth_type = AuthType.PIN
 
