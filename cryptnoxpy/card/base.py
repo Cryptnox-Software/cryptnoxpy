@@ -151,9 +151,6 @@ class Base(metaclass=abc.ABCMeta):
 
         :param str new_pin: The desired PIN code to be set for the card
                             (4-9 digits).
-
-        :raises DataValidationException: The current pin is not matching the one on the card
-                                         or the provided new pin is not valid
         """
         new_pin = self.valid_pin(new_pin, pin_name="new pin")
         self._change_secret(0, new_pin)
