@@ -56,6 +56,7 @@ jobs:
           cd docs-repo
           git config --local user.email "yann@oinsm.ch"
           git config --local user.name "YanNaingWinn"
+          git remote set-url origin https://${{ secrets.DOCS_DEPLOY_TOKEN }}@github.com/cryptnox-software/cryptnox-software.github.io.git
           git add .
           git commit -m "Update cryptnox-sdk-py documentation from cryptnox-sdk-py@${{ github.sha }}" || exit 0
           git push
