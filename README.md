@@ -2,16 +2,16 @@
   <img src="https://github.com/user-attachments/assets/7613b715-90f3-4855-890e-9bba08add646" height="200" width="200" />
 </p>
 
-<h3 align="center">CryptnoxPy - Python SDK for managing smartcard wallets</h3>
+<h3 align="center">Cryptnox SDK Python - Python SDK for managing smartcard wallets</h3>
 
 <br/>
  
-[![PyPI version](https://img.shields.io/pypi/v/cryptnoxpy)](https://pypi.org/project/cryptnoxpy)
-[![Python versions](https://img.shields.io/pypi/pyversions/cryptnoxpy.svg)](https://pypi.org/project/cryptnoxpy/)
-[![Documentation status](https://img.shields.io/badge/docs-latest-blue)](https://cryptnox-software.github.io/cryptnoxpy)
-![License](https://img.shields.io/pypi/l/cryptnoxpy)
+[![PyPI version](https://img.shields.io/pypi/v/cryptnox-sdk-py)](https://pypi.org/project/cryptnox-sdk-py)
+[![Python versions](https://img.shields.io/pypi/pyversions/cryptnox-sdk-py.svg)](https://pypi.org/project/cryptnox-sdk-py/)
+[![Documentation status](https://img.shields.io/badge/docs-latest-blue)](https://cryptnox-software.github.io/cryptnox-sdk-py)
+![License](https://img.shields.io/pypi/l/cryptnox-sdk-py)
 
-`cryptnoxpy` is a Python 3 library used to communicate with the **Cryptnox Smartcard Applet**.
+`cryptnox-sdk-py` is a Python 3 library used to communicate with the **Cryptnox Smartcard Applet**.
 It provides a high-level API to manage Cryptnox Hardware Wallet Cards, including initialization,
 secure channel setup, seed management, and cryptographic signing.
 
@@ -40,13 +40,13 @@ Get your card and readers here: [shop.cryptnox.com](https://shop.cryptnox.com)
 ## Installation
 
 ```bash
-pip install cryptnoxpy
+pip install cryptnox-sdk-py
 ```
 
 Or from source:
 
 ```bash
-git clone https://github.com/Cryptnox-Software/cryptnoxpy.git
+git clone https://github.com/Cryptnox-Software/cryptnox-sdk-py.git
 pip install .
 ```
 
@@ -68,14 +68,14 @@ sudo systemctl enable pcscd
 ### 1. Connect to a Cryptnox Card
 
 ```python
-import cryptnoxpy
+import cryptnox-sdk-py
 
 try:
-    connection = cryptnoxpy.Connection(0)
-    card = cryptnoxpy.factory.get_card(connection)
-except cryptnoxpy.ReaderException:
+    connection = cryptnox-sdk-py.Connection(0)
+    card = cryptnox-sdk-py.factory.get_card(connection)
+except cryptnox-sdk-py.ReaderException:
     print("Reader not found at index")
-except cryptnoxpy.CryptnoxException as error:
+except cryptnox-sdk-py.CryptnoxException as error:
     # Issue loading the card
     print(error)
 else:
@@ -89,26 +89,26 @@ else:
 In the PIN verification example below the card must be initialized before calling verify_pin.
 
 ```python
-import cryptnoxpy
+import cryptnox-sdk-py
 
 # Connect to the Cryptnox card first
 try:
-    connection = cryptnoxpy.Connection(0)  # Connect to card at index 0
-    card = cryptnoxpy.factory.get_card(connection)
-except cryptnoxpy.ReaderException:
+    connection = cryptnox-sdk-py.Connection(0)  # Connect to card at index 0
+    card = cryptnox-sdk-py.factory.get_card(connection)
+except cryptnox-sdk-py.ReaderException:
     print("Reader not found at index")
-except cryptnoxpy.CryptnoxException as error:
+except cryptnox-sdk-py.CryptnoxException as error:
     print(f"Error loading card: {error}")
 else:
     # Once connected, you can verify the PIN
     pin_to_test = "1234"  # Example PIN
     try:
         card.verify_pin(pin_to_test)
-    except cryptnoxpy.PinException:
+    except cryptnox-sdk-py.PinException:
         print("Invalid PIN code.")
-    except cryptnoxpy.DataValidationException:
+    except cryptnox-sdk-py.DataValidationException:
         print("Invalid PIN length or PIN authentication disabled.")
-    except cryptnoxpy.SoftLock:
+    except cryptnox-sdk-py.SoftLock:
         print("Card is locked. Please power cycle the card.")
     else:
         print("PIN verified successfully. Card is ready for operations.")
@@ -120,26 +120,26 @@ In the example below the card must be init before generating a seed.
 
 ```python
 import binascii
-import cryptnoxpy
+import cryptnox-sdk-py
 
 PIN = "1234"  # or "" if the card was opened via challenge-response
 
 def main():
     try:
-        connection = cryptnoxpy.Connection(0)
-        card = cryptnoxpy.factory.get_card(connection)
-    except cryptnoxpy.ReaderException:
+        connection = cryptnox-sdk-py.Connection(0)
+        card = cryptnox-sdk-py.factory.get_card(connection)
+    except cryptnox-sdk-py.ReaderException:
         print("Reader not found at index")
         return
-    except cryptnoxpy.CryptnoxException as err:
+    except cryptnox-sdk-py.CryptnoxException as err:
         print(f"Error loading card: {err}")
         return
 
     try:
         seed_uid = card.generate_seed(PIN)
-    except cryptnoxpy.KeyAlreadyGenerated:
+    except cryptnox-sdk-py.KeyAlreadyGenerated:
         print("A seed is already generated on this card.")
-    except cryptnoxpy.KeyGenerationException as err:
+    except cryptnox-sdk-py.KeyGenerationException as err:
         print(f"Failed to generate seed: {err}")
     else:
         # seed_uid is of type bytes: display in hex for readability
@@ -153,7 +153,7 @@ if __name__ == "__main__":
 
 ## Documentation
 
-📚 Full API reference: https://cryptnox-software.github.io/cryptnoxpro
+📚 Full API reference: https://cryptnox-software.github.io/cryptnox-sdk-py
 
 ---
 

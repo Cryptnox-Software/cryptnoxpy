@@ -1,5 +1,5 @@
 """
-Configuration for setting up CryptnoxPy as external library
+Configuration for setting up Cryptnox SDK Python as external library
 """
 import pathlib
 import sys

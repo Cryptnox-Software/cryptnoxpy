@@ -1,7 +1,7 @@
-Cryptnoxpy Documentation
-========================
+Cryptnox SDK Python Documentation
+==================================
 
-Bienvenue dans la documentation technique de Cryptnoxpy.
+Bienvenue dans la documentation technique de Cryptnox SDK Python.
 
 .. toctree::
    :maxdepth: 2
