@@ -33,6 +33,7 @@ class BasicG1(base.Base):
 
     _ALGORITHM = ec.SECP256R1
     PUK_LENGTH = 12
+    MAX_ASCII_LENGTH = 128
 
     _INITIALIZATION_FLAG = int("01000000", 2)
     _SEED_FLAG = int("00100000", 2)
@@ -596,7 +597,7 @@ class BasicG1(base.Base):
         if len(puk) != BasicG1.PUK_LENGTH:
             raise exceptions.DataValidationException(f"The {puk_name} must have {BasicG1.PUK_LENGTH} "
                                                      f"ASCII characters")
-        if not all(ord(c) < 128 for c in puk):
+        if not all(ord(c) < BasicG1.MAX_ASCII_LENGTH for c in puk):
             raise exceptions.DataValidationException(f"The {puk_name} must contain only ASCII characters.")
 
         return puk
