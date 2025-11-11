@@ -39,7 +39,6 @@ jobs:
           repository: cryptnox-software/cryptnox-software.github.io
           token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
           path: docs-repo
-          persist-credentials: false
 
       - name: Update documentation
         run: |
@@ -53,16 +52,11 @@ jobs:
           echo "Last updated: $(date)" > docs-repo/cryptnox-sdk-py/last-updated.txt
 
       - name: Commit and push changes
-        env:
-          GITHUB_TOKEN: ${{ secrets.DOCS_DEPLOY_TOKEN }}
         run: |
           cd docs-repo
-          # Clear any cached credentials
-          git config --local --unset credential.helper || true
           git config --local user.email "yann@oinsm.ch"
           git config --local user.name "YanNaingWinn"
-          # Set remote URL with token authentication
-          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/cryptnox-software/cryptnox-software.github.io.git
+          git remote set-url origin https://${{ secrets.DOCS_DEPLOY_TOKEN }}@github.com/cryptnox-software/cryptnox-software.github.io.git
           git add .
           git commit -m "Update cryptnox-sdk-py documentation from cryptnox-sdk-py@${{ github.sha }}" || exit 0
           git push
