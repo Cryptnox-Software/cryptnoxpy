@@ -151,13 +151,9 @@ class Base(metaclass=abc.ABCMeta):
 
         :param str new_pin: The desired PIN code to be set for the card
                             (4-9 digits).
-        :raises PinException: The current pin is not matching the one on the card
         """
         new_pin = self.valid_pin(new_pin, pin_name="new pin")
-        try:
-            self._change_secret(0, new_pin)
-        except exceptions.PinException as error:
-            raise exceptions.PinException("The current pin is not matching the one on the card") from error
+        self._change_secret(0, new_pin)
         if not self.open:
             self.auth_type = AuthType.PIN
 
@@ -170,15 +166,10 @@ class Base(metaclass=abc.ABCMeta):
 
         :param str current_puk: The current PUK code of the card
         :param str new_puk: The desired PUK code to be set for the card
-
-        :raises PukException: The current puk is not matching the one on the card
         """
         current_puk = self.valid_puk(current_puk, "current puk")
         new_puk = self.valid_puk(new_puk, "new puk")
-        try:
-            self._change_secret(1, new_puk + current_puk)
-        except exceptions.PukException as error:
-            raise exceptions.PukException("The current puk is not matching the one on the card") from error
+        self._change_secret(1, new_puk + current_puk)
         if not self.open:
             self.auth_type = AuthType.PIN
 
