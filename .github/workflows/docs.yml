@@ -13,10 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      - name: Checkout cryptnoxpy repository
+      - name: Checkout cryptnox-sdk-py repository
         uses: actions/checkout@v4
         with:
-          path: cryptnoxpy
+          path: cryptnox-sdk-py
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -25,12 +25,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd cryptnoxpy
+          cd cryptnox-sdk-py
           pip install sphinx sphinx-rtd-theme
 
       - name: Build Sphinx documentation
         run: |
-          cd cryptnoxpy
+          cd cryptnox-sdk-py
           sphinx-build -b html docs docs/_build/html
 
       - name: Checkout documentation repository
@@ -42,14 +42,14 @@ jobs:
 
       - name: Update documentation
         run: |
-          # Remove old cryptnoxpy folder if it exists
-          rm -rf docs-repo/cryptnoxpy
+          # Remove old cryptnox-sdk-py folder if it exists
+          rm -rf docs-repo/cryptnox-sdk-py
           
           # Copy new documentation
-          cp -r cryptnoxpy/docs/_build/html docs-repo/cryptnoxpy
+          cp -r cryptnox-sdk-py/docs/_build/html docs-repo/cryptnox-sdk-py
           
           # Add a timestamp file for tracking
-          echo "Last updated: $(date)" > docs-repo/cryptnoxpy/last-updated.txt
+          echo "Last updated: $(date)" > docs-repo/cryptnox-sdk-py/last-updated.txt
 
       - name: Commit and push changes
         run: |
@@ -57,5 +57,5 @@ jobs:
           git config --local user.email "yannw.dev@gmail.com"
           git config --local user.name "YanNaingWinDev"
           git add .
-          git commit -m "Update cryptnoxpy documentation from cryptnoxpy@${{ github.sha }}" || exit 0
+          git commit -m "Update cryptnox-sdk-py documentation from cryptnox-sdk-py@${{ github.sha }}" || exit 0
           git push

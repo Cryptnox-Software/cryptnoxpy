@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Module containing all exceptions that CryptnoxPy module can raise.
+Module containing all exceptions that Cryptnox SDK Python module can raise.
 """
 
 
