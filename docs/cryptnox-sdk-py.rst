@@ -1,4 +1,4 @@
-cryptnoxpy package
+cryptnox-sdk-py package
 ==================
 
 Subpackages
@@ -7,64 +7,64 @@ Subpackages
 .. toctree::
    :maxdepth: 4
 
-   cryptnoxpy.card
-   cryptnoxpy.cryptos
+   cryptnox-sdk-py.card
+   cryptnox-sdk-py.cryptos
 
 Submodules
 ----------
 
-cryptnoxpy.binary\_utils module
+cryptnox-sdk-py.binary\_utils module
 -------------------------------
 
-.. automodule:: cryptnoxpy.binary_utils
+.. automodule:: cryptnox-sdk-py.binary_utils
    :members:
    :undoc-members:
    :show-inheritance:
 
-cryptnoxpy.connection module
+cryptnox-sdk-py.connection module
 ----------------------------
 
-.. automodule:: cryptnoxpy.connection
+.. automodule:: cryptnox-sdk-py.connection
    :members:
    :undoc-members:
    :show-inheritance:
 
-cryptnoxpy.crypto\_utils module
+cryptnox-sdk-py.crypto\_utils module
 -------------------------------
 
-.. automodule:: cryptnoxpy.crypto_utils
+.. automodule:: cryptnox-sdk-py.crypto_utils
    :members:
    :undoc-members:
    :show-inheritance:
 
-cryptnoxpy.enums module
+cryptnox-sdk-py.enums module
 -----------------------
 
-.. automodule:: cryptnoxpy.enums
+.. automodule:: cryptnox-sdk-py.enums
    :members:
    :undoc-members:
    :show-inheritance:
 
-cryptnoxpy.exceptions module
+cryptnox-sdk-py.exceptions module
 ----------------------------
 
-.. automodule:: cryptnoxpy.exceptions
+.. automodule:: cryptnox-sdk-py.exceptions
    :members:
    :undoc-members:
    :show-inheritance:
 
-cryptnoxpy.factory module
+cryptnox-sdk-py.factory module
 -------------------------
 
-.. automodule:: cryptnoxpy.factory
+.. automodule:: cryptnox-sdk-py.factory
    :members:
    :undoc-members:
    :show-inheritance:
 
-cryptnoxpy.reader module
+cryptnox-sdk-py.reader module
 ------------------------
 
-.. automodule:: cryptnoxpy.reader
+.. automodule:: cryptnox-sdk-py.reader
    :members:
    :undoc-members:
    :show-inheritance:
@@ -72,72 +72,72 @@ cryptnoxpy.reader module
 Module contents
 ---------------
 
-.. automodule:: cryptnoxpy
+.. automodule:: cryptnox-sdk-py
    :members:
    :undoc-members:
    :show-inheritance:
 
-The ``cryptnoxpy`` package is a library for communicating with Cryptnox cards. It exports:
+The ``cryptnox-sdk-py`` package is a library for communicating with Cryptnox cards. It exports:
 
-.. py:currentmodule:: cryptnoxpy
+.. py:currentmodule:: cryptnox-sdk-py
 
 .. py:class:: Card
    :no-index:
 
-   Main card interface class. Alias for :class:`cryptnoxpy.card.base.Base`.
+   Main card interface class. Alias for :class:`cryptnox-sdk-py.card.base.Base`.
 
 .. py:class:: Connection
    :no-index:
 
-   Connection handler for card communication. See :class:`cryptnoxpy.connection.Connection` for details.
+   Connection handler for card communication. See :class:`cryptnox-sdk-py.connection.Connection` for details.
 
 .. py:module:: factory
    :no-index:
 
-   Factory module for creating card instances. See :mod:`cryptnoxpy.factory` for details.
+   Factory module for creating card instances. See :mod:`cryptnox-sdk-py.factory` for details.
 
 .. py:module:: enums
    :no-index:
 
-   Enumeration types module. See :mod:`cryptnoxpy.enums` for details.
+   Enumeration types module. See :mod:`cryptnox-sdk-py.enums` for details.
 
 .. py:module:: exceptions
    :no-index:
 
-   Exception classes module. See :mod:`cryptnoxpy.exceptions` for details.
+   Exception classes module. See :mod:`cryptnox-sdk-py.exceptions` for details.
 
 .. py:class:: SlotIndex
    :no-index:
 
-   Card slot index enumeration. See :class:`cryptnoxpy.enums.SlotIndex` for details.
+   Card slot index enumeration. See :class:`cryptnox-sdk-py.enums.SlotIndex` for details.
 
 .. py:class:: Derivation
    :no-index:
 
-   Key derivation method enumeration. See :class:`cryptnoxpy.enums.Derivation` for details.
+   Key derivation method enumeration. See :class:`cryptnox-sdk-py.enums.Derivation` for details.
 
 .. py:class:: KeyType
    :no-index:
 
-   Cryptographic key type enumeration. See :class:`cryptnoxpy.enums.KeyType` for details.
+   Cryptographic key type enumeration. See :class:`cryptnox-sdk-py.enums.KeyType` for details.
 
 .. py:class:: AuthType
    :no-index:
 
-   Authentication type enumeration. See :class:`cryptnoxpy.enums.AuthType` for details.
+   Authentication type enumeration. See :class:`cryptnox-sdk-py.enums.AuthType` for details.
 
 .. py:class:: SeedSource
    :no-index:
 
-   Seed source enumeration. See :class:`cryptnoxpy.enums.SeedSource` for details.
+   Seed source enumeration. See :class:`cryptnox-sdk-py.enums.SeedSource` for details.
 
 .. py:class:: Origin
    :no-index:
 
-   Origin enumeration. See :class:`cryptnoxpy.enums.Origin` for details.
+   Origin enumeration. See :class:`cryptnox-sdk-py.enums.Origin` for details.
 
 .. py:data:: __version__
    :type: str
    :value: "2.5.6"
 
-   Current version of the cryptnoxpy library.
+   Current version of the cryptnox-sdk-py library.

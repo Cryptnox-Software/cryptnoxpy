@@ -754,7 +754,7 @@ class Base(metaclass=abc.ABCMeta):
 
         Take nonce value from the card. Sign it with a third party application, like TPM.
         Send the signature back into the card using
-        :func:`~cryptnoxpy.card.base.Base.user_key_challenge_response_open`
+        :func:`~cryptnox-sdk-py.card.base.Base.user_key_challenge_response_open`
 
         :return: 32 bytes random value used as nonce
         :rtype: bytes
