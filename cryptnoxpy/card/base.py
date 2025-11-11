@@ -169,11 +169,7 @@ class Base(metaclass=abc.ABCMeta):
         """
         current_puk = self.valid_puk(current_puk, "current puk")
         new_puk = self.valid_puk(new_puk, "new puk")
-        try:
-            self._change_secret(1, new_puk + current_puk)
-        except exceptions.DataValidationException as error:
-            raise exceptions.DataValidationException("The current puk is not matching "
-                                                     "the one on the card") from error
+        self._change_secret(1, new_puk + current_puk)
         if not self.open:
             self.auth_type = AuthType.PIN
 
