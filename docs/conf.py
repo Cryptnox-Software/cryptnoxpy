@@ -10,7 +10,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(".."))
 
-project = 'cryptnox-sdk-py'
+project = 'cryptnox_sdk_py'
 copyright = '2025, Cryptnox'
 author = 'Cryptnox'
 release = '1.0'
