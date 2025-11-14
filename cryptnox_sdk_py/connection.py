@@ -87,6 +87,20 @@ class Connection(ContextDecorator):
         if self._reader:
             del self._reader
 
+    def disconnect(self) -> None:
+        """
+        Disconnect from the card reader and clean up the connection.
+        
+        This method properly closes the connection to the card reader without
+        deleting the Connection object itself.
+        """
+        if self._reader and self._reader._connection:
+            try:
+                self._reader._connection.disconnect()
+            except Exception:
+                pass
+            self._reader._connection = None
+
     def send_apdu(self, apdu: List[int]) -> Tuple[List[int], int, int]:
         """
         Send data to the card in plain format

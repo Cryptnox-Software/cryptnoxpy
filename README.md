@@ -2,7 +2,7 @@
   <img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a"/>
 </p>
 
-<h3 align="center">Cryptnox SDK Python - Python SDK for managing smartcard wallets</h3>
+<h3 align="center">Python SDK for managing Cryptnox smart card wallets.</h3>
 
 <br/>
  
@@ -19,17 +19,17 @@ secure channel setup, seed management, and cryptographic signing.
 
 ## Supported hardware
 
-- **Cryptnox Smartcards** 💳
-- **Standard PC/SC Smartcard Readers**: either USB NFC reader or a USB smartcard reader
+- **Cryptnox smart cards** 💳
+- **Standard PC/SC smart card readers**: either USB NFC reader or a USB smart card reader
   → Readers are also available in the Cryptnox shop.
 
-Get your card and readers here: [shop.cryptnox.com](https://shop.cryptnox.com)
+Get your cards and readers here: [shop.cryptnox.com](https://shop.cryptnox.com)
 
 ---
 
 ## Features
 
-- Establish communication with Cryptnox smartcards
+- Establish communication with Cryptnox smart cards
 - Initialize and manage card lifecycle
 - Secure channel authentication and pairing
 - Seed generation and restoration (BIP32 / BIP39 compatibility)
@@ -52,7 +52,7 @@ pip install .
 
 Requires:
 - Python 3.11–3.13
-- PC/SC smartcard service (`pcscd`) on Linux
+- PC/SC Smart Card service (`pcscd`) on Linux
 
 On Linux, ensure the PC/SC service is running:
 
@@ -70,17 +70,21 @@ sudo systemctl enable pcscd
 ```python
 import cryptnox_sdk_py
 
+connection = None
 try:
     connection = cryptnox_sdk_py.Connection(0)
     card = cryptnox_sdk_py.factory.get_card(connection)
+    # Card is loaded and can be used
+    print(f"Card serial number: {card.serial_number}")
 except cryptnox_sdk_py.ReaderException:
     print("Reader not found at index")
 except cryptnox_sdk_py.CryptnoxException as error:
     # Issue loading the card
     print(error)
-else:
-    # Card is loaded and can be used
-    print(f"Card serial number: {card.serial_number}")
+finally:
+    # Always close the connection when done
+    if connection:
+        connection.disconnect()
 
 ```
 
@@ -91,27 +95,30 @@ In the PIN verification example below the card must be initialized before callin
 ```python
 import cryptnox_sdk_py
 
-# Connect to the Cryptnox card first
+connection = None
 try:
+    # Connect to the Cryptnox card first
     connection = cryptnox_sdk_py.Connection(0)  # Connect to card at index 0
     card = cryptnox_sdk_py.factory.get_card(connection)
+    
+    # Once connected, verify the PIN
+    pin_to_test = "1234"  # Example PIN
+    card.verify_pin(pin_to_test)
+    print("PIN verified successfully. Card is ready for operations.")
 except cryptnox_sdk_py.ReaderException:
     print("Reader not found at index")
 except cryptnox_sdk_py.CryptnoxException as error:
     print(f"Error loading card: {error}")
-else:
-    # Once connected, you can verify the PIN
-    pin_to_test = "1234"  # Example PIN
-    try:
-        card.verify_pin(pin_to_test)
-    except cryptnox_sdk_py.PinException:
-        print("Invalid PIN code.")
-    except cryptnox_sdk_py.DataValidationException:
-        print("Invalid PIN length or PIN authentication disabled.")
-    except cryptnox_sdk_py.SoftLock:
-        print("Card is locked. Please power cycle the card.")
-    else:
-        print("PIN verified successfully. Card is ready for operations.")
+except cryptnox_sdk_py.PinException:
+    print("Invalid PIN code.")
+except cryptnox_sdk_py.DataValidationException:
+    print("Invalid PIN length or PIN authentication disabled.")
+except cryptnox_sdk_py.SoftLock:
+    print("Card is locked. Please power cycle the card.")
+finally:
+    # Always close the connection when done
+    if connection:
+        connection.disconnect()
 ```
 
 ### 3. Generate a new seed
@@ -125,25 +132,26 @@ import cryptnox_sdk_py
 PIN = "1234"  # or "" if the card was opened via challenge-response
 
 def main():
+    connection = None
     try:
         connection = cryptnox_sdk_py.Connection(0)
         card = cryptnox_sdk_py.factory.get_card(connection)
+        
+        seed_uid = card.generate_seed(PIN)
+        # seed_uid is of type bytes: display in hex for readability
+        print("Seed (primary node m) UID:", binascii.hexlify(seed_uid).decode())
     except cryptnox_sdk_py.ReaderException:
         print("Reader not found at index")
-        return
     except cryptnox_sdk_py.CryptnoxException as err:
         print(f"Error loading card: {err}")
-        return
-
-    try:
-        seed_uid = card.generate_seed(PIN)
     except cryptnox_sdk_py.KeyAlreadyGenerated:
         print("A seed is already generated on this card.")
     except cryptnox_sdk_py.KeyGenerationException as err:
         print(f"Failed to generate seed: {err}")
-    else:
-        # seed_uid is of type bytes: display in hex for readability
-        print("Seed (primary node m) UID:", binascii.hexlify(seed_uid).decode())
+    finally:
+        # Always close the connection when done
+        if connection:
+            connection.disconnect()
 
 if __name__ == "__main__":
     main()
