@@ -69,6 +69,7 @@ sudo systemctl enable pcscd
 
 ```python
 import cryptnox_sdk_py
+from cryptnox_sdk_py import exceptions
 
 connection = None
 try:
@@ -76,9 +77,9 @@ try:
     card = cryptnox_sdk_py.factory.get_card(connection)
     # Card is loaded and can be used
     print(f"Card serial number: {card.serial_number}")
-except cryptnox_sdk_py.ReaderException:
+except exceptions.ReaderException:
     print("Reader not found at index")
-except cryptnox_sdk_py.CryptnoxException as error:
+except exceptions.CryptnoxException as error:
     # Issue loading the card
     print(error)
 finally:
@@ -94,6 +95,7 @@ In the PIN verification example below the card must be initialized before callin
 
 ```python
 import cryptnox_sdk_py
+from cryptnox_sdk_py import exceptions
 
 connection = None
 try:
@@ -105,15 +107,15 @@ try:
     pin_to_test = "1234"  # Example PIN
     card.verify_pin(pin_to_test)
     print("PIN verified successfully. Card is ready for operations.")
-except cryptnox_sdk_py.ReaderException:
+except exceptions.ReaderException:
     print("Reader not found at index")
-except cryptnox_sdk_py.CryptnoxException as error:
+except exceptions.CryptnoxException as error:
     print(f"Error loading card: {error}")
-except cryptnox_sdk_py.PinException:
+except exceptions.PinException:
     print("Invalid PIN code.")
-except cryptnox_sdk_py.DataValidationException:
+except exceptions.DataValidationException:
     print("Invalid PIN length or PIN authentication disabled.")
-except cryptnox_sdk_py.SoftLock:
+except exceptions.SoftLock:
     print("Card is locked. Please power cycle the card.")
 finally:
     # Always close the connection when done
@@ -128,6 +130,7 @@ In the example below the card must be init before generating a seed.
 ```python
 import binascii
 import cryptnox_sdk_py
+from cryptnox_sdk_py import exceptions
 
 PIN = "1234"  # or "" if the card was opened via challenge-response
 
@@ -140,13 +143,13 @@ def main():
         seed_uid = card.generate_seed(PIN)
         # seed_uid is of type bytes: display in hex for readability
         print("Seed (primary node m) UID:", binascii.hexlify(seed_uid).decode())
-    except cryptnox_sdk_py.ReaderException:
+    except exceptions.ReaderException:
         print("Reader not found at index")
-    except cryptnox_sdk_py.CryptnoxException as err:
+    except exceptions.CryptnoxException as err:
         print(f"Error loading card: {err}")
-    except cryptnox_sdk_py.KeyAlreadyGenerated:
+    except exceptions.KeyAlreadyGenerated:
         print("A seed is already generated on this card.")
-    except cryptnox_sdk_py.KeyGenerationException as err:
+    except exceptions.KeyGenerationException as err:
         print(f"Failed to generate seed: {err}")
     finally:
         # Always close the connection when done
