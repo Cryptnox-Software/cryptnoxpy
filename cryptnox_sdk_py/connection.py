@@ -90,7 +90,7 @@ class Connection(ContextDecorator):
     def disconnect(self) -> None:
         """
         Disconnect from the card reader and clean up the connection.
-        
+
         This method properly closes the connection to the card reader without
         deleting the Connection object itself.
         """
