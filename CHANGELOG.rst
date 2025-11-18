@@ -36,16 +36,3 @@ Removed
 
 - Removed basic G0 cards references (no longer supported)
 - Removed factory hashlib codes
-
-`2.5.5 <https://github.com/Cryptnox-Software/cryptnox-sdk-py/releases/tag/v2.5.5>`_ - 2025-09-29
-------------------------------------------------------------------------------------------------
-
-Changed
-^^^^^^^
-
-- Handled get public key clear with different public key formats
-
-Fixed
-^^^^^^^
-
-- Resolved card detection by implementing x509 parsing
