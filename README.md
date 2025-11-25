@@ -51,7 +51,7 @@ pip install .
 ```
 
 Requires:
-- Python 3.11–3.13.7
+- Python 3.11 – 3.13.7
 - PC/SC Smart Card service (`pcscd`) on Linux
 
 On Linux, ensure the PC/SC service is running:
