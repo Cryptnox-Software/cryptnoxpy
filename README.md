@@ -9,7 +9,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/cryptnox_sdk_py)](https://pypi.org/project/cryptnox_sdk_py)
 [![Python versions](https://img.shields.io/pypi/pyversions/cryptnox_sdk_py.svg)](https://pypi.org/project/cryptnox_sdk_py/)
 [![Documentation status](https://img.shields.io/badge/docs-latest-blue)](https://cryptnox-software.github.io/cryptnox_sdk_py)
-[![License: GPLv3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[![License: LGPLv3](https://img.shields.io/badge/License-LGPLv3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
 
 `cryptnox_sdk_py` is a Python 3 library used to communicate with the **Cryptnox Smartcard Applet**.
 It provides a high-level API to manage Cryptnox Hardware Wallet Cards, including initialization,
@@ -170,6 +170,5 @@ if __name__ == "__main__":
 
 ## License
 
-cryptnox-sdk-py is dual-licensed:
-- GPLv3 for open-source GPL projects 
-- Commercial license for proprietary or non-GPL usage, contact: info@cryptnox.com
+This library is available under LGPL-3.0.
+For commercial licensing options, contact: info@cryptnox.ch
