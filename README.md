@@ -2,8 +2,10 @@
   <img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a"/>
 </p>
 
-<h3 align="center">Python SDK for managing Cryptnox smart card wallets.</h3>
+<h3 align="center">cryptnox-sdk-py</h3>
+<p align="center">Python SDK for managing Cryptnox smart card wallets</p>
 
+<br/>
 <br/>
  
 [![PyPI version](https://img.shields.io/pypi/v/cryptnox_sdk_py)](https://pypi.org/project/cryptnox_sdk_py)
@@ -170,5 +172,9 @@ if __name__ == "__main__":
 
 ## License
 
-This library is available under LGPL-3.0.
-For commercial licensing options, contact: info@cryptnox.ch
+cryptnox-sdk-py is dual-licensed:
+
+- **LGPL-3.0** for open-source projects and proprietary projects that comply with LGPL requirements  
+- **Commercial license** for projects that require a proprietary license without LGPL obligations (see COMMERCIAL.md for details)
+
+For commercial inquiries, contact: contact@cryptnox.com
