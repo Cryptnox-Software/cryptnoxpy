@@ -2,14 +2,16 @@
   <img src="https://github.com/user-attachments/assets/6ce54a27-8fb6-48e6-9d1f-da144f43425a"/>
 </p>
 
-<h3 align="center">Python SDK for managing Cryptnox smart card wallets.</h3>
+<h3 align="center">cryptnox-sdk-py</h3>
+<p align="center">Python SDK for managing Cryptnox smart card wallets</p>
 
+<br/>
 <br/>
  
 [![PyPI version](https://img.shields.io/pypi/v/cryptnox_sdk_py)](https://pypi.org/project/cryptnox_sdk_py)
 [![Python versions](https://img.shields.io/pypi/pyversions/cryptnox_sdk_py.svg)](https://pypi.org/project/cryptnox_sdk_py/)
-[![Documentation status](https://img.shields.io/badge/docs-latest-blue)](https://cryptnox-software.github.io/cryptnox_sdk_py)
-![License](https://img.shields.io/pypi/l/cryptnox_sdk_py)
+[![License: LGPLv3](https://img.shields.io/badge/License-LGPLv3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![Documentation status](https://img.shields.io/badge/docs-latest-blue)](https://cryptnox.github.io/cryptnox-sdk-py/)
 
 `cryptnox_sdk_py` is a Python 3 library used to communicate with the **Cryptnox Smartcard Applet**.
 It provides a high-level API to manage Cryptnox Hardware Wallet Cards, including initialization,
@@ -46,8 +48,8 @@ pip install cryptnox_sdk_py
 Or from source:
 
 ```bash
-git clone https://github.com/Cryptnox-Software/cryptnox_sdk_py.git
 pip install .
+git clone https://github.com/cryptnox/cryptnox-sdk-py.git
 ```
 
 Requires:
@@ -164,11 +166,15 @@ if __name__ == "__main__":
 
 ## Documentation
 
-📚 Full API reference: https://cryptnox-software.github.io/cryptnox_sdk_py
+📚 Full API reference: https://cryptnox.github.io/cryptnox-sdk-py/
 
 ---
 
 ## License
 
-- This library is available under **LGPL-3.0+**.  
-- For commercial licensing options, contact: **info@cryptnox.ch**
+cryptnox-sdk-py is dual-licensed:
+
+- **LGPL-3.0** for open-source projects and proprietary projects that comply with LGPL requirements  
+- **Commercial license** for projects that require a proprietary license without LGPL obligations (see COMMERCIAL.md for details)
+
+For commercial inquiries, contact: contact@cryptnox.com
