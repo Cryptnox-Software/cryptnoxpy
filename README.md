@@ -48,8 +48,9 @@ pip install cryptnox_sdk_py
 Or from source:
 
 ```bash
-pip install .
 git clone https://github.com/cryptnox/cryptnox-sdk-py.git
+cd cryptnox-sdk-py
+pip install .
 ```
 
 Requires:
