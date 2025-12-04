@@ -29,20 +29,38 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
+      - name: Install OSV-Scanner
+        run: |
+          curl -LO https://github.com/google/osv-scanner/releases/latest/download/osv-scanner_linux_amd64
+          chmod +x osv-scanner_linux_amd64
+          sudo mv osv-scanner_linux_amd64 /usr/local/bin/osv-scanner
+      
       - name: Run OSV-Scanner
         id: osv-scanner
         continue-on-error: true
-        uses: google/osv-scanner-action@v2
-        with:
-          scan-args: |-
-            --format sarif
-            --output osv-results.sarif
-            --call-analysis=all
-            requirements.txt
-            dev-requirements.txt
+        run: |
+          echo "Running OSV-Scanner dependency vulnerability check..."
+          echo "=================================================="
+          echo ""
+          
+          # Run OSV-Scanner with SARIF output
+          osv-scanner \
+            --format sarif \
+            --output osv-results.sarif \
+            --call-analysis=all \
+            --lockfile requirements.txt \
+            --lockfile dev-requirements.txt || true
+          
+          # Verify SARIF file was created
+          if [ -f osv-results.sarif ]; then
+            echo "✓ SARIF file created successfully"
+            ls -lh osv-results.sarif
+          else
+            echo "⚠️  Warning: SARIF file not created"
+          fi
       
       - name: Upload OSV-Scanner SARIF to GitHub Security
-        if: always()
+        if: always() && hashFiles('osv-results.sarif') != ''
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: osv-results.sarif

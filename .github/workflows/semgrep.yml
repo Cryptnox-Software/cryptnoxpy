@@ -29,6 +29,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
+      - name: Fix Git ownership in container
+        run: |
+          git config --global --add safe.directory /__w/cryptnox-sdk-py/cryptnox-sdk-py || true
+          git config --global --add safe.directory "$GITHUB_WORKSPACE" || true
+      
       - name: Run Semgrep Security Scan
         id: semgrep
         continue-on-error: true
@@ -50,11 +55,19 @@ jobs:
             --json-output=semgrep.json \
             --verbose \
             --metrics=off
+          
+          # Verify SARIF file was created
+          if [ -f semgrep.sarif ]; then
+            echo "✓ SARIF file created successfully"
+            ls -lh semgrep.sarif
+          else
+            echo "⚠️  Warning: SARIF file not created"
+          fi
         env:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
       
       - name: Upload Semgrep SARIF to GitHub Security
-        if: always()
+        if: always() && hashFiles('semgrep.sarif') != ''
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: semgrep.sarif
