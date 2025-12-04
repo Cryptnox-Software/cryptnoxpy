@@ -28,10 +28,19 @@ jobs:
           python-version: ${{ matrix.python-version }}
           cache: 'pip'
 
-      - name: Install dependencies
+      - name: Install system dependencies for pyscard
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y swig libpcsclite-dev pcscd
+
+      - name: Install Python dependencies
+        continue-on-error: true
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Install Pylint and SARIF tools
+        run: |
           pip install pylint pylint-sarif sarif-tools
 
       - name: Run Pylint analysis
