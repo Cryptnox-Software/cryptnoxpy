@@ -34,16 +34,44 @@ jobs:
           pip install -r requirements.txt
           pip install pylint pylint-sarif sarif-tools
 
-      - name: Run Pylint with JSON output
+      - name: Run Pylint analysis
         id: pylint
         continue-on-error: true
         run: |
           echo "Running Pylint analysis..."
+          
+          # Run pylint and save output to JSON (always create the file)
+          set +e  # Don't exit on error
           pylint cryptnox_sdk_py \
-            --output-format=json:pylint-report.json,colorized \
+            --output-format=json \
             --fail-under=7.0 \
-            --fail-on=error,fatal
-          echo "pylint_exit_code=$?" >> $GITHUB_OUTPUT
+            --fail-on=error,fatal > pylint-report.json
+          PYLINT_EXIT=$?
+          set -e  # Re-enable exit on error
+          
+          echo "Pylint exit code: $PYLINT_EXIT"
+          
+          # Display results in console (colorized) for visibility
+          echo ""
+          echo "=== Pylint Results (Console) ==="
+          pylint cryptnox_sdk_py \
+            --output-format=colorized \
+            --fail-under=7.0 \
+            --fail-on=error,fatal || true
+          
+          # Verify JSON file was created
+          if [ -f pylint-report.json ] && [ -s pylint-report.json ]; then
+            echo ""
+            echo "✓ JSON report generated successfully"
+            ls -lh pylint-report.json
+          else
+            echo ""
+            echo "✗ Failed to generate JSON report or file is empty"
+            exit 1
+          fi
+          
+          # Exit with pylint's exit code (but continue-on-error will handle it)
+          exit $PYLINT_EXIT
 
       - name: Convert Pylint report to SARIF
         if: always()
@@ -51,15 +79,16 @@ jobs:
           if [ -f pylint-report.json ]; then
             echo "Converting Pylint JSON to SARIF format..."
             pylint-sarif -o pylint.sarif pylint-report.json
-            echo "SARIF file created successfully"
+            echo "✓ SARIF file created successfully"
+            ls -lh pylint.sarif
           else
-            echo "Warning: pylint-report.json not found"
+            echo "✗ Error: pylint-report.json not found"
             exit 1
           fi
 
       - name: Upload Pylint SARIF to GitHub Security
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('pylint.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: pylint.sarif
           category: pylint-${{ matrix.python-version }}
@@ -72,11 +101,19 @@ jobs:
           path: |
             pylint-report.json
             pylint.sarif
+          if-no-files-found: warn
 
       - name: Check Pylint results
-        if: steps.pylint.outputs.pylint_exit_code != '0'
+        if: steps.pylint.outcome == 'failure'
         run: |
-          echo "❌ Pylint found issues with exit code: ${{ steps.pylint.outputs.pylint_exit_code }}"
-          echo "Please review the findings in GitHub Security -> Code scanning alerts"
-          echo "Or check the uploaded artifacts for detailed reports"
+          echo "❌ Pylint analysis failed"
+          echo "This means either:"
+          echo "  - Code quality score is below 7.0, or"
+          echo "  - Error or Fatal level issues were found"
+          echo ""
+          echo "📋 Next steps:"
+          echo "  1. Review the Pylint output above"
+          echo "  2. Check GitHub Security -> Code scanning for detailed findings"
+          echo "  3. Download artifacts for full reports"
+          echo "  4. Run locally: ./run-pylint-local.sh (or .ps1 on Windows)"
           exit 1
