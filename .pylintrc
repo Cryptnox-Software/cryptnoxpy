@@ -20,7 +20,6 @@ ignore=CVS,.git,__pycache__,build,dist,*.egg-info,venv,.venv,docs
 [MESSAGES CONTROL]
 # Disable specific warnings/errors that are not critical or conflict with project style
 disable=
-    # Formatting (let black/autopep8 handle it)
     C0103,  # invalid-name (allow short variable names in crypto/math contexts)
     C0114,  # missing-module-docstring
     C0115,  # missing-class-docstring
@@ -29,16 +28,11 @@ disable=
     C0411,  # wrong-import-order (let isort handle it)
     C0413,  # wrong-import-position
     # Design patterns
-    R0801,  # duplicate-code (too strict for similar patterns)
     R0902,  # too-many-instance-attributes
     R0903,  # too-few-public-methods
-    R0911,  # too-many-return-statements
-    R0912,  # too-many-branches
     R0913,  # too-many-arguments
     R0914,  # too-many-locals
-    R0915,  # too-many-statements
     # Other
-    W0212,  # protected-access (needed for testing/internal APIs)
     W0511,  # fixme (TODOs are ok)
     W1203,  # logging-fstring-interpolation
 

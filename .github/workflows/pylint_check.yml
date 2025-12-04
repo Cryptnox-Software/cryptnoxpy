@@ -1,4 +1,4 @@
-name: Pylint
+name: Pylint Code Quality
 
 on:
   push:
@@ -6,25 +6,77 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+  security-events: write  # Required for SARIF upload
+  pull-requests: write    # Optional: for PR comments
+
 jobs:
-  build:
+  pylint:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: ["3.11", "3.13.7"]
+    
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
+          cache: 'pip'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pylint
+          pip install -r requirements.txt
+          pip install pylint pylint-sarif sarif-tools
 
-      - name: Analysing the code with Pylint
+      - name: Run Pylint with JSON output
+        id: pylint
+        continue-on-error: true
         run: |
-          pylint cryptnox_sdk_py --exit-zero
+          echo "Running Pylint analysis..."
+          pylint cryptnox_sdk_py \
+            --output-format=json:pylint-report.json,colorized \
+            --fail-under=7.0 \
+            --fail-on=error,fatal
+          echo "pylint_exit_code=$?" >> $GITHUB_OUTPUT
+
+      - name: Convert Pylint report to SARIF
+        if: always()
+        run: |
+          if [ -f pylint-report.json ]; then
+            echo "Converting Pylint JSON to SARIF format..."
+            pylint-sarif -o pylint.sarif pylint-report.json
+            echo "SARIF file created successfully"
+          else
+            echo "Warning: pylint-report.json not found"
+            exit 1
+          fi
+
+      - name: Upload Pylint SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: pylint.sarif
+          category: pylint-${{ matrix.python-version }}
+
+      - name: Upload Pylint reports as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pylint-reports-py${{ matrix.python-version }}
+          path: |
+            pylint-report.json
+            pylint.sarif
+
+      - name: Check Pylint results
+        if: steps.pylint.outputs.pylint_exit_code != '0'
+        run: |
+          echo "❌ Pylint found issues with exit code: ${{ steps.pylint.outputs.pylint_exit_code }}"
+          echo "Please review the findings in GitHub Security -> Code scanning alerts"
+          echo "Or check the uploaded artifacts for detailed reports"
+          exit 1
