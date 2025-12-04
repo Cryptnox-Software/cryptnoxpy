@@ -1,0 +1,74 @@
+name: OSV Dependency Scan
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'requirements.txt'
+      - 'dev-requirements.txt'
+      - '.github/workflows/osv-scanner.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'requirements.txt'
+      - 'dev-requirements.txt'
+  schedule:
+    # Run weekly on Monday at 00:00 UTC to catch new CVEs
+    - cron: '0 0 * * 1'
+
+permissions:
+  contents: read
+  security-events: write  # Required for SARIF upload
+  pull-requests: write    # For PR comments
+
+jobs:
+  osv-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run OSV-Scanner
+        id: osv-scanner
+        continue-on-error: true
+        uses: google/osv-scanner-action@v2
+        with:
+          scan-args: |-
+            --format sarif
+            --output osv-results.sarif
+            --call-analysis=all
+            requirements.txt
+            dev-requirements.txt
+      
+      - name: Upload OSV-Scanner SARIF to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: osv-results.sarif
+          category: osv-scanner
+      
+      - name: Upload OSV-Scanner results as artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: osv-scanner-results
+          path: osv-results.sarif
+          if-no-files-found: warn
+      
+      - name: Check OSV-Scanner results
+        if: steps.osv-scanner.outcome == 'failure'
+        run: |
+          echo "⚠️  OSV-Scanner found vulnerabilities in dependencies"
+          echo ""
+          echo "Review the findings:"
+          echo "  1. Check Security -> Code scanning -> OSV-Scanner category"
+          echo "  2. Download artifacts for detailed reports"
+          echo "  3. Update vulnerable packages in requirements.txt"
+          echo ""
+          echo "To fix:"
+          echo "  - Check for available updates: pip list --outdated"
+          echo "  - Update package versions in requirements files"
+          echo "  - Test thoroughly after updates"
+          exit 1
+
