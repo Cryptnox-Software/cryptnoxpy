@@ -6,14 +6,12 @@ on:
     paths:
       - 'requirements.txt'
       - 'dev-requirements.txt'
-      - '.osv-scanner.toml'
       - '.github/workflows/osv-scanner.yml'
   pull_request:
     branches: [main]
     paths:
       - 'requirements.txt'
       - 'dev-requirements.txt'
-      - '.osv-scanner.toml'
   schedule:
     # Run weekly on Monday at 00:00 UTC to catch new CVEs
     - cron: '0 0 * * 1'
@@ -45,22 +43,38 @@ jobs:
           echo "=================================================="
           echo ""
           
-          # Run OSV-Scanner with SARIF output and config file
+          # Run OSV-Scanner with SARIF output
+          # Using --lockfile to scan only Python dependencies (not the entire repo)
+          # This avoids needing the java/archive plugin
+          set +e
           osv-scanner \
-            --config .osv-scanner.toml \
             --format sarif \
             --output osv-results.sarif \
             --call-analysis=all \
+            --skip-git \
             --lockfile requirements.txt \
-            --lockfile dev-requirements.txt || true
+            --lockfile dev-requirements.txt
+          
+          OSV_EXIT_CODE=$?
+          set -e
           
           # Verify SARIF file was created
           if [ -f osv-results.sarif ]; then
             echo "✓ SARIF file created successfully"
             ls -lh osv-results.sarif
+            
+            # Also create human-readable output
+            echo ""
+            echo "Running scan for human-readable output..."
+            osv-scanner \
+              --skip-git \
+              --lockfile requirements.txt \
+              --lockfile dev-requirements.txt || true
           else
             echo "⚠️  Warning: SARIF file not created"
           fi
+          
+          exit $OSV_EXIT_CODE
       
       - name: Upload OSV-Scanner SARIF to GitHub Security
         if: always() && hashFiles('osv-results.sarif') != ''
@@ -77,19 +91,40 @@ jobs:
           path: osv-results.sarif
           if-no-files-found: warn
       
+      - name: Success - No vulnerabilities found
+        if: steps.osv-scanner.outcome == 'success'
+        run: |
+          echo "=========================================="
+          echo "✅ No Vulnerabilities Found"
+          echo "=========================================="
+          echo ""
+          echo "All Python dependencies are free of known vulnerabilities."
+          echo "OSV-Scanner completed successfully with no issues detected."
+          echo ""
+      
       - name: Check OSV-Scanner results
         if: steps.osv-scanner.outcome == 'failure'
         run: |
-          echo "⚠️  OSV-Scanner found vulnerabilities in dependencies"
+          echo "=========================================="
+          echo "⚠️  Vulnerabilities Found in Dependencies"
+          echo "=========================================="
+          echo ""
+          echo "OSV-Scanner has detected security vulnerabilities in your Python dependencies."
           echo ""
           echo "Review the findings:"
-          echo "  1. Check Security -> Code scanning -> OSV-Scanner category"
-          echo "  2. Download artifacts for detailed reports"
-          echo "  3. Update vulnerable packages in requirements.txt"
+          echo "  1. Check the workflow output above for details"
+          echo "  2. Go to: Security tab -> Code scanning -> OSV-Scanner category"
+          echo "  3. Download the 'osv-scanner-results' artifact for detailed SARIF report"
           echo ""
-          echo "To fix:"
-          echo "  - Check for available updates: pip list --outdated"
-          echo "  - Update package versions in requirements files"
-          echo "  - Test thoroughly after updates"
+          echo "How to fix:"
+          echo "  • Review each vulnerability and assess its impact"
+          echo "  • Update affected packages in requirements.txt and dev-requirements.txt"
+          echo "  • Check for updates: pip list --outdated"
+          echo "  • Test thoroughly after updating dependencies"
+          echo ""
+          echo "Resources:"
+          echo "  • OSV Database: https://osv.dev/"
+          echo "  • Package Security: https://pypi.org/project/[package-name]/#history"
+          echo ""
           exit 1
 
