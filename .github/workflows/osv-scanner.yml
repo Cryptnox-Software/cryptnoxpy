@@ -29,13 +29,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Merge requirements files for scanning
+      - name: Prepare requirements for scanning
         run: |
           # Create a combined requirements file for OSV-Scanner
-          # Remove the -i index line and merge both files
-          grep -v '^-i ' requirements.txt > combined-requirements.txt || true
-          grep -v '^-i ' dev-requirements.txt >> combined-requirements.txt || true
-          echo "Combined requirements file created with $(wc -l < combined-requirements.txt) packages"
+          # OSV-Scanner needs clean package specifications without environment markers
+          
+          # Process requirements.txt: remove -i, comments, empty lines, and simplify markers
+          cat requirements.txt dev-requirements.txt | \
+            grep -v '^-i' | \
+            grep -v '^--' | \
+            grep -v '^$' | \
+            grep -v '^#' | \
+            sed 's/;.*//' | \
+            sed 's/[[:space:]]*$//' | \
+            grep -v '^$' | \
+            sort -u > combined-requirements.txt
+          
+          echo "Combined requirements file created:"
+          echo "  Total packages: $(wc -l < combined-requirements.txt)"
+          echo ""
+          echo "Package list (first 10):"
+          head -10 combined-requirements.txt
+          echo ""
       
       - name: Install OSV-Scanner
         run: |
@@ -51,15 +66,36 @@ jobs:
           echo "=================================================="
           echo ""
           
+          # Check if combined file has content
+          if [ ! -s combined-requirements.txt ]; then
+            echo "Error: combined-requirements.txt is empty!"
+            echo "Falling back to scanning requirements.txt only..."
+            LOCKFILE="requirements.txt"
+          else
+            LOCKFILE="combined-requirements.txt"
+          fi
+          
+          echo "Scanning: $LOCKFILE"
+          echo ""
+          
           # Run scan and capture exit code
           set +e
-          osv-scanner --lockfile=combined-requirements.txt
+          osv-scanner --lockfile="$LOCKFILE"
           SCAN_EXIT_CODE=$?
           set -e
           
+          # Exit code 128 means no packages found, which should not happen
+          if [ $SCAN_EXIT_CODE -eq 128 ]; then
+            echo ""
+            echo "OSV-Scanner found no packages to scan"
+            echo "Debug: Contents of $LOCKFILE:"
+            cat "$LOCKFILE"
+            exit 1
+          fi
+          
           echo ""
           echo "Generating SARIF report..."
-          osv-scanner --lockfile=combined-requirements.txt --format=sarif --output=results.sarif 2>&1 || {
+          osv-scanner --lockfile="$LOCKFILE" --format=sarif --output=results.sarif 2>&1 || {
             echo "⚠️  SARIF generation encountered issues (possibly plugin warning)"
             echo "    Scan results are still valid - see output above"
           }
