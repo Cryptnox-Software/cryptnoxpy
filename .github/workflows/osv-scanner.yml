@@ -19,7 +19,7 @@ on:
 permissions:
   contents: read
   security-events: write  # Required for SARIF upload
-  pull-requests: write    # For PR comments
+  actions: read           # Required for OSV-Scanner action
 
 jobs:
   osv-scan:
@@ -29,68 +29,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Install OSV-Scanner
-        run: |
-          curl -LO https://github.com/google/osv-scanner/releases/latest/download/osv-scanner_linux_amd64
-          chmod +x osv-scanner_linux_amd64
-          sudo mv osv-scanner_linux_amd64 /usr/local/bin/osv-scanner
-      
       - name: Run OSV-Scanner
-        id: osv-scanner
+        uses: google/osv-scanner-action/osv-scanner-action@v1.8.5
         continue-on-error: true
-        run: |
-          echo "Running OSV-Scanner dependency vulnerability check..."
-          echo "=================================================="
-          echo ""
-          
-          # Run OSV-Scanner with SARIF output
-          # Using --lockfile to scan only Python dependencies (not the entire repo)
-          # This avoids needing the java/archive plugin
-          set +e
-          osv-scanner \
-            --format sarif \
-            --output osv-results.sarif \
-            --call-analysis=all \
-            --lockfile requirements.txt \
-            --lockfile dev-requirements.txt
-          
-          OSV_EXIT_CODE=$?
-          set -e
-          
-          # Verify SARIF file was created
-          if [ -f osv-results.sarif ]; then
-            echo "✓ SARIF file created successfully"
-            ls -lh osv-results.sarif
-            
-            # Also create human-readable output
-            echo ""
-            echo "Running scan for human-readable output..."
-            osv-scanner \
-              --lockfile requirements.txt \
-              --lockfile dev-requirements.txt || true
-          else
-            echo "⚠️  Warning: SARIF file not created"
-          fi
-          
-          exit $OSV_EXIT_CODE
-      
-      - name: Upload OSV-Scanner SARIF to GitHub Security
-        if: always() && hashFiles('osv-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@v4
+        id: osv-scanner
         with:
-          sarif_file: osv-results.sarif
+          # Scan only Python lockfiles to avoid java/archive plugin issues
+          scan-args: |-
+            --lockfile=requirements.txt
+            --lockfile=dev-requirements.txt
+      
+      - name: Upload SARIF results to GitHub Security
+        if: always()
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
           category: osv-scanner
       
-      - name: Upload OSV-Scanner results as artifacts
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: osv-scanner-results
-          path: osv-results.sarif
-          if-no-files-found: warn
-      
       - name: Success - No vulnerabilities found
-        if: steps.osv-scanner.outcome == 'success'
+        if: success()
         run: |
           echo "=========================================="
           echo "✅ No Vulnerabilities Found"
@@ -101,7 +58,7 @@ jobs:
           echo ""
       
       - name: Check OSV-Scanner results
-        if: steps.osv-scanner.outcome == 'failure'
+        if: failure()
         run: |
           echo "=========================================="
           echo "⚠️  Vulnerabilities Found in Dependencies"
@@ -111,8 +68,8 @@ jobs:
           echo ""
           echo "Review the findings:"
           echo "  1. Check the workflow output above for details"
-          echo "  2. Go to: Security tab -> Code scanning -> OSV-Scanner category"
-          echo "  3. Download the 'osv-scanner-results' artifact for detailed SARIF report"
+          echo "  2. Go to: Security tab -> Code scanning alerts"
+          echo "  3. Filter by 'osv-scanner' category to see all vulnerabilities"
           echo ""
           echo "How to fix:"
           echo "  • Review each vulnerability and assess its impact"
@@ -124,5 +81,4 @@ jobs:
           echo "  • OSV Database: https://osv.dev/"
           echo "  • Package Security: https://pypi.org/project/[package-name]/#history"
           echo ""
-          exit 1
 
