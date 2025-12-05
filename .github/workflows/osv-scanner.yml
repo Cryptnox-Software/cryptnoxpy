@@ -29,56 +29,90 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
+      - name: Merge requirements files for scanning
+        run: |
+          # Create a combined requirements file for OSV-Scanner
+          # Remove the -i index line and merge both files
+          grep -v '^-i ' requirements.txt > combined-requirements.txt || true
+          grep -v '^-i ' dev-requirements.txt >> combined-requirements.txt || true
+          echo "Combined requirements file created with $(wc -l < combined-requirements.txt) packages"
+      
+      - name: Install OSV-Scanner
+        run: |
+          curl -LO https://github.com/google/osv-scanner/releases/latest/download/osv-scanner_linux_amd64
+          chmod +x osv-scanner_linux_amd64
+          sudo mv osv-scanner_linux_amd64 /usr/local/bin/osv-scanner
+      
       - name: Run OSV-Scanner
-        uses: google/osv-scanner-action/osv-scanner-action@v1.8.5
-        continue-on-error: true
         id: osv-scanner
-        with:
-          # Scan only Python lockfiles to avoid java/archive plugin issues
-          scan-args: |-
-            --lockfile=requirements.txt
-            --lockfile=dev-requirements.txt
+        continue-on-error: true
+        run: |
+          echo "Running OSV-Scanner dependency vulnerability check..."
+          echo "=================================================="
+          echo ""
+          
+          # Run scan and capture exit code
+          set +e
+          osv-scanner --lockfile=combined-requirements.txt
+          SCAN_EXIT_CODE=$?
+          set -e
+          
+          echo ""
+          echo "Generating SARIF report..."
+          osv-scanner --lockfile=combined-requirements.txt --format=sarif --output=results.sarif 2>&1 || {
+            echo "⚠️  SARIF generation encountered issues (possibly plugin warning)"
+            echo "    Scan results are still valid - see output above"
+          }
+          
+          if [ -f results.sarif ] && [ -s results.sarif ]; then
+            echo "✓ SARIF file created successfully"
+            ls -lh results.sarif
+          fi
+          
+          # Return the original scan exit code
+          exit $SCAN_EXIT_CODE
       
       - name: Upload SARIF results to GitHub Security
-        if: always()
-        uses: github/codeql-action/upload-sarif@v3
+        if: always() && hashFiles('results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: results.sarif
           category: osv-scanner
       
       - name: Success - No vulnerabilities found
-        if: success()
+        if: steps.osv-scanner.outcome == 'success'
         run: |
           echo "=========================================="
           echo "✅ No Vulnerabilities Found"
           echo "=========================================="
           echo ""
-          echo "All Python dependencies are free of known vulnerabilities."
-          echo "OSV-Scanner completed successfully with no issues detected."
+          echo "All Python dependencies (requirements.txt + dev-requirements.txt)"
+          echo "are free of known vulnerabilities."
           echo ""
       
       - name: Check OSV-Scanner results
-        if: failure()
+        if: steps.osv-scanner.outcome == 'failure'
         run: |
           echo "=========================================="
           echo "⚠️  Vulnerabilities Found in Dependencies"
           echo "=========================================="
           echo ""
-          echo "OSV-Scanner has detected security vulnerabilities in your Python dependencies."
+          echo "OSV-Scanner detected security vulnerabilities in your Python dependencies"
+          echo "(requirements.txt + dev-requirements.txt)."
           echo ""
           echo "Review the findings:"
-          echo "  1. Check the workflow output above for details"
+          echo "  1. Check the workflow output above for detailed vulnerability list"
           echo "  2. Go to: Security tab -> Code scanning alerts"
           echo "  3. Filter by 'osv-scanner' category to see all vulnerabilities"
           echo ""
           echo "How to fix:"
-          echo "  • Review each vulnerability and assess its impact"
-          echo "  • Update affected packages in requirements.txt and dev-requirements.txt"
-          echo "  • Check for updates: pip list --outdated"
+          echo "  • Review each vulnerability and assess its impact on your project"
+          echo "  • Update affected packages in requirements.txt and/or dev-requirements.txt"
+          echo "  • Check for available updates: pip list --outdated"
           echo "  • Test thoroughly after updating dependencies"
           echo ""
           echo "Resources:"
           echo "  • OSV Database: https://osv.dev/"
-          echo "  • Package Security: https://pypi.org/project/[package-name]/#history"
+          echo "  • Package info: https://pypi.org/project/[package-name]/"
           echo ""
-
+          exit 1
