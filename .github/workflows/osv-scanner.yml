@@ -31,25 +31,47 @@ jobs:
       
       - name: Prepare requirements for scanning
         run: |
-          # Create a combined requirements file for OSV-Scanner
-          # OSV-Scanner needs clean package specifications without environment markers
+          # Use Python to safely read files with correct encoding (handling BOMs automatically)
+          python3 -c "
+          import sys
           
-          # Process requirements.txt: remove -i, comments, empty lines, and simplify markers
-          cat requirements.txt dev-requirements.txt | \
-            grep -v '^-i' | \
-            grep -v '^--' | \
-            grep -v '^$' | \
-            grep -v '^#' | \
-            sed 's/;.*//' | \
-            sed 's/[[:space:]]*$//' | \
-            grep -v '^$' | \
-            sort -u > combined-requirements.txt
+          def process_file(filename):
+              try:
+                  # Open with utf-8-sig to handle UTF-8 BOM, errors='replace' to handle binary/UTF-16 confusion
+                  # Ideally we would detect encoding, but requirements files should be text
+                  with open(filename, 'r', encoding='utf-8', errors='replace') as f:
+                      content = f.read()
+                      # If it looks like UTF-16 (null bytes), try re-reading
+                      if '\x00' in content:
+                          with open(filename, 'r', encoding='utf-16') as f2:
+                              content = f2.read()
+                  
+                  for line in content.splitlines():
+                      line = line.strip()
+                      if not line or line.startswith(('#', '-i', '--')):
+                          continue
+                      # Remove markers
+                      line = line.split(';')[0].strip()
+                      if line:
+                          print(line)
+              except Exception as e:
+                  print(f'Error processing {filename}: {e}', file=sys.stderr)
+          
+          process_file('requirements.txt')
+          process_file('dev-requirements.txt')
+          " | sort -u > combined-requirements.txt
           
           echo "Combined requirements file created:"
-          echo "  Total packages: $(wc -l < combined-requirements.txt)"
-          echo ""
-          echo "Package list (first 10):"
-          head -10 combined-requirements.txt
+          if [ -s combined-requirements.txt ]; then
+            echo "  Total packages: $(wc -l < combined-requirements.txt)"
+            echo ""
+            echo "Package list (first 10):"
+            head -10 combined-requirements.txt
+          else
+             echo "Error: combined-requirements.txt is empty!"
+             echo "Debug: File listing:"
+             ls -l requirements.txt dev-requirements.txt
+          fi
           echo ""
       
       - name: Install OSV-Scanner
