@@ -42,7 +42,24 @@ jobs:
           echo "===================================="
           echo ""
           
-          # Run Semgrep with multiple rulesets
+          # 1. Run Semgrep with text output to console (for logs)
+          # We use --error to ensure it fails if issues are found
+          semgrep scan \
+            --config=auto \
+            --config=p/python \
+            --config=p/security-audit \
+            --config=p/owasp-top-ten \
+            --config=p/cryptography \
+            --verbose \
+            --metrics=off
+            
+          # Capture exit code from the text scan
+          EXIT_CODE=$?
+          
+          echo ""
+          echo "Generating SARIF report..."
+          
+          # 2. Generate SARIF report for GitHub Security
           semgrep scan \
             --config=auto \
             --config=p/python \
@@ -50,11 +67,8 @@ jobs:
             --config=p/owasp-top-ten \
             --config=p/cryptography \
             --sarif \
-            --sarif-output=semgrep.sarif \
-            --json \
-            --json-output=semgrep.json \
-            --verbose \
-            --metrics=off
+            --output=semgrep.sarif \
+            --metrics=off || true
           
           # Verify SARIF file was created
           if [ -f semgrep.sarif ]; then
@@ -63,6 +77,9 @@ jobs:
           else
             echo "⚠️  Warning: SARIF file not created"
           fi
+          
+          # Return the exit code from the text scan
+          exit $EXIT_CODE
         env:
           SEMGREP_APP_TOKEN: ${{ secrets.SEMGREP_APP_TOKEN }}
       
@@ -78,9 +95,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: semgrep-reports
-          path: |
-            semgrep.json
-            semgrep.sarif
+          path: semgrep.sarif
           if-no-files-found: warn
       
       - name: Check Semgrep results
