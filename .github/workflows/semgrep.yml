@@ -45,7 +45,6 @@ jobs:
           # 1. Run Semgrep with text output to console (for logs)
           # We use --error to ensure it fails if issues are found
           semgrep scan \
-            --config=auto \
             --config=p/python \
             --config=p/security-audit \
             --config=p/owasp-top-ten \
@@ -61,7 +60,6 @@ jobs:
           
           # 2. Generate SARIF report for GitHub Security
           semgrep scan \
-            --config=auto \
             --config=p/python \
             --config=p/security-audit \
             --config=p/owasp-top-ten \
