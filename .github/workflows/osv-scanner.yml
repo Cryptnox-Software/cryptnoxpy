@@ -51,7 +51,6 @@ jobs:
             --format sarif \
             --output osv-results.sarif \
             --call-analysis=all \
-            --skip-git \
             --lockfile requirements.txt \
             --lockfile dev-requirements.txt
           
@@ -67,7 +66,6 @@ jobs:
             echo ""
             echo "Running scan for human-readable output..."
             osv-scanner \
-              --skip-git \
               --lockfile requirements.txt \
               --lockfile dev-requirements.txt || true
           else
