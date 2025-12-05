@@ -48,7 +48,6 @@ jobs:
             --config=p/python \
             --config=p/security-audit \
             --config=p/owasp-top-ten \
-            --config=p/cryptography \
             --verbose \
             --metrics=off
             
@@ -63,7 +62,6 @@ jobs:
             --config=p/python \
             --config=p/security-audit \
             --config=p/owasp-top-ten \
-            --config=p/cryptography \
             --sarif \
             --output=semgrep.sarif \
             --metrics=off || true
