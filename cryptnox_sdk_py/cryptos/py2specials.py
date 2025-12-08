@@ -115,7 +115,7 @@ if sys.version_info.major == 2:
         return os.urandom(x)
 
 else:
-    # Python 3 implementation
+
     int_types = (int, float)
     string_types = (str,)
 
@@ -125,7 +125,7 @@ else:
         16: '0123456789abcdef',
         32: 'abcdefghijklmnopqrstuvwxyz234567',
         58: '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz',
-        256: bytes(range(256))  # Use bytes for base 256
+        256: bytes(range(256))
     }
 
     def bin_dbl_sha256(s):
@@ -156,14 +156,14 @@ else:
         base, minlen = int(base), int(minlen)
         code_string = get_code_string(base)
 
-        # Check if we are working with bytes (base 256)
+
         is_bytes = isinstance(code_string, bytes)
         result = b"" if is_bytes else ""
 
         while val > 0:
             digit = code_string[val % base]
 
-            # In Py3, iterating/indexing bytes gives int. Convert back to single byte if needed.
+
             if is_bytes:
                 digit_char = bytes([digit])
             else:
@@ -190,7 +190,7 @@ else:
         if base == 16:
             string = string.lower()
 
-        # Optimizations for common bases
+
         if base == 256 and isinstance(string, bytes):
             return int.from_bytes(string, 'big')
 
