@@ -1,4 +1,4 @@
-name: Flake8
+﻿name: Flake8
 
 on: [push]
 
