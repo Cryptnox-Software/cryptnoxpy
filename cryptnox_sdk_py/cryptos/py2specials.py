@@ -156,13 +156,11 @@ else:
         base, minlen = int(base), int(minlen)
         code_string = get_code_string(base)
 
-
         is_bytes = isinstance(code_string, bytes)
         result = b"" if is_bytes else ""
 
         while val > 0:
             digit = code_string[val % base]
-
 
             if is_bytes:
                 digit_char = bytes([digit])
@@ -189,7 +187,6 @@ else:
 
         if base == 16:
             string = string.lower()
-
 
         if base == 256 and isinstance(string, bytes):
             return int.from_bytes(string, 'big')
