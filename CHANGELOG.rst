@@ -2,6 +2,32 @@
 Changelog
 =========
 
+Version 1.0.2 - 2025-12-08
+------------------------------------------------------------------------------------------------
+
+Changes
+^^^^^^^
+
+- Updated dependencies to resolve security vulnerabilities
+- Improved Python 3 compatibility in cryptographic utilities
+
+Added
+^^^^^^^
+
+- Implemented Python code quality scanning CI/CD pipeline using flake8
+- Implemented security vulnerability scanning CI/CD pipeline using OSV-Scanner
+- Added automated dependency security checks in GitHub Actions workflows
+
+Fixed
+^^^^^^^
+
+- Fixed ``AttributeError: module 'cryptnox_sdk_py.cryptos.py2specials' has no attribute 'is_python2'`` error
+- Fixed ``TypeError: can't concat str to bytes`` error in ``encode_pubkey()`` function
+- Resolved info command issue that prevented retrieving card information
+- Fixed Python 3.12 compatibility issues in ``py2specials.py`` module
+  - Added proper Python 3 implementation for base 256 encoding/decoding
+  - Fixed bytes/string handling in cryptographic operations
+
 Version 1.0.1 - 2025-11-18
 ------------------------------------------------------------------------------------------------
 
