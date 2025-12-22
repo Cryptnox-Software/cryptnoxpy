@@ -14,6 +14,7 @@ import hashlib
 import re
 import base64
 import hmac
+import builtins
 from . import ripemd
 
 # Elliptic curve parameters (secp256k1)
@@ -78,11 +79,8 @@ def count(obj):
     return len(obj)
 
 
-_sum = sum
-
-
 def sum(obj):
-    return _sum(obj)
+    return builtins.sum(obj)
 
 
 def isinf(p):

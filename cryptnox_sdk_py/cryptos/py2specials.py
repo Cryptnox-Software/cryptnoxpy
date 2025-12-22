@@ -272,3 +272,10 @@ else:
 
     def random_string(x):
         return os.urandom(x)
+
+    def from_jacobian(p):
+        """Convert Jacobian coordinates to affine coordinates."""
+        # Import P from main to avoid circular dependency
+        from . import main
+        z = main.inv(p[2], main.P)
+        return ((p[0] * z**2) % main.P, (p[1] * z**3) % main.P)
