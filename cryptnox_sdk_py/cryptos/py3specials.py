@@ -138,3 +138,107 @@ if sys.version_info.major == 3:
         from . import main
         z = main.inv(p[2], main.P)
         return ((p[0] * z**2) % main.P, (p[1] * z**3) % main.P)
+
+    def multiply(pubkey, privkey):
+        """Multiply a public key by a scalar (private key)."""
+        from . import main
+        if isinstance(privkey, int):
+            privkey_int = privkey
+        else:
+            privkey_int = main.decode_privkey(privkey)
+        
+        # Decode public key to get the point
+        if isinstance(pubkey, tuple):
+            point = pubkey
+        else:
+            point = main.decode_pubkey(pubkey)
+        
+        # Fast multiplication using double-and-add algorithm
+        if privkey_int == 0:
+            return (0, 0)
+        if privkey_int == 1:
+            return point
+        
+        # Convert to Jacobian coordinates for faster computation
+        result = (0, 0, 1)  # Point at infinity in Jacobian
+        addend = main.to_jacobian(point)
+        
+        while privkey_int:
+            if privkey_int & 1:
+                result = main.jacobian_add(result, addend)
+            addend = main.jacobian_double(addend)
+            privkey_int >>= 1
+        
+        # Convert back to affine coordinates
+        return from_jacobian(result)
+
+    def ecdsa_raw_verify(msghash, sig, pub):
+        """Verify ECDSA signature."""
+        from . import main
+        from . import py2specials
+        
+        if isinstance(msghash, bytes):
+            msghash = py2specials.decode(msghash, 256)
+        
+        v, r, s = sig
+        
+        # Decode public key
+        if not isinstance(pub, tuple):
+            pub = main.decode_pubkey(pub)
+        
+        w = main.inv(s, main.N)
+        z = msghash
+        
+        u1 = (z * w) % main.N
+        u2 = (r * w) % main.N
+        
+        # Calculate point: u1*G + u2*pub
+        point1 = multiply(main.G, u1)
+        point2 = multiply(pub, u2)
+        point = main.fast_add(point1, point2)
+        
+        return point[0] == r
+
+    def ecdsa_recover(msg, sig):
+        """Recover public key from ECDSA signature."""
+        from . import main
+        from . import py2specials
+        
+        if isinstance(msg, str):
+            msg = msg.encode('utf-8')
+        
+        msghash = main.electrum_sig_hash(msg)
+        
+        if isinstance(sig, str):
+            v, r, s = main.decode_sig(sig)
+        else:
+            v, r, s = sig
+        
+        # Recovery parameter
+        x = r
+        
+        # Calculate y from x
+        beta = pow(int(x * x * x + main.A * x + main.B), int((main.P + 1) // 4), int(main.P))
+        y = beta if (v - 27) % 2 == beta % 2 else (main.P - beta)
+        
+        # Recovered point R
+        R = (x, y)
+        
+        # Calculate public key: (r*R - z*G) / r
+        e = py2specials.decode(msghash, 256)
+        
+        # Calculate -e*G
+        minus_e = main.N - e
+        eG = multiply(main.G, minus_e)
+        
+        # Calculate r*R
+        rR = multiply(R, r)
+        
+        # Add the points
+        numerator = main.fast_add(rR, eG)
+        
+        # Divide by r (multiply by r^-1)
+        r_inv = main.inv(r, main.N)
+        pubkey = multiply(numerator, r_inv)
+        
+        return pubkey
