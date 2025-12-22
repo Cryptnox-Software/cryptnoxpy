@@ -203,7 +203,7 @@ if sys.version_info.major == 3:
         """Recover public key from ECDSA signature."""
         from . import main
         from . import py2specials
-        
+
         if isinstance(msg, str):
             msg = msg.encode('utf-8')
 
