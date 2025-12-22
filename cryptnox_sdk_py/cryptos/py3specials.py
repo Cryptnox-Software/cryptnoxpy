@@ -240,5 +240,5 @@ if sys.version_info.major == 3:
         # Divide by r (multiply by r^-1)
         r_inv = main.inv(r, main.N)
         pubkey = multiply(numerator, r_inv)
-
+        
         return pubkey
