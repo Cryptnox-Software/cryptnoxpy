@@ -121,19 +121,22 @@ class BasicG1(base.Base):
 
         return result
 
-    def get_manufacturer_certificate(self):
+    def get_manufacturer_certificate(self, hexed: bool = True):
         idx_page = 0
-        mnft_cert_resp = self.connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
-        certlen = (mnft_cert_resp[0] << 8) + mnft_cert_resp[1]
-        while len(mnft_cert_resp) < (certlen + 2):
+        response = self.connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
+        if not response or len(response) < 2:
+            return "" if hexed else b""
+
+        cert_len = (response[0] << 8) + response[1]
+        while len(response) < (cert_len + 2):
             idx_page += 1
-            mnft_cert_resp = (
-                mnft_cert_resp
-                + self.connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
-            )
-        assert len(mnft_cert_resp) == (certlen + 2)
-        cert = mnft_cert_resp[2:]
-        return "".join(["%0.2x" % x for x in cert])
+            next_page = self.connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
+            if not next_page:
+                break
+            response = response + next_page
+
+        cert_bytes = bytes(response[2:cert_len + 2])
+        return cert_bytes.hex() if hexed else cert_bytes
 
     def get_public_key(self, derivation: Derivation, key_type: KeyType = KeyType.K1, path: str = "",
                        compressed: bool = True, hexed: bool = True) -> str:

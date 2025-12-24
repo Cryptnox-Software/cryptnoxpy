@@ -906,5 +906,16 @@ class Base(metaclass=abc.ABCMeta):
 
         return NotImplemented
 
+    @abc.abstractmethod
+    def get_manufacturer_certificate(self, hexed: bool = True) -> Any:
+        """
+        Get the manufacturer certificate from the card.
+
+        :param bool hexed: Return the certificate in hexadecimal string format
+        :return: Manufacturer certificate in hexadecimal string or bytes format
+        :rtype: Any
+        """
+        pass
+
     def __repr__(self):
         return f'{{"serial": {self.serial_number}, "version": {self.applet_version}}}'

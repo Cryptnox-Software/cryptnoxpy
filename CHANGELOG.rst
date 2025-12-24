@@ -2,6 +2,20 @@
 Changelog
 =========
 
+Version 1.0.3 - 2025-12-24
+------------------------------------------------------------------------------------------------
+
+Added
+^^^^^^^
+
+- Added ``get_manufacturer_certificate()`` method to Base card class with ``hexed`` parameter for flexible certificate retrieval
+
+Changed
+^^^^^^^
+
+- Updated ``get_manufacturer_certificate()`` in BasicG1 with multi-page APDU support for full certificate retrieval
+- Updated ``manufacturer_certificate()`` function in authenticity module to use the new card-specific method
+
 Version 1.0.2 - 2025-12-08
 ------------------------------------------------------------------------------------------------
 
