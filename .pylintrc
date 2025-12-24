@@ -40,9 +40,6 @@ disable=
 # Set the output format
 output-format=text
 
-# Include message's id in output
-include-ids=yes
-
 # Activate the evaluation score
 score=yes
 
