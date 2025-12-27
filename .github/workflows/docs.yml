@@ -33,26 +33,23 @@ jobs:
           echo "Graphviz installed:"
           dot -V
 
-      # 4. Install PC/SC Lite development libraries (required for pyscard)
-      - name: Install PC/SC Lite development libraries
-        run: |
-          sudo apt-get install -y libpcsclite-dev pcscd
-          echo "PC/SC Lite libraries installed"
-
-      # 5. Install Sphinx and all dependencies
+      # 4. Install Sphinx and dependencies (excluding pyscard which needs compilation)
       - name: Install Sphinx and dependencies
         run: |
           pip install --upgrade pip
-          pip install -r dev-requirements.txt
+          # Install all dependencies except pyscard (mocked in conf.py)
+          grep -v "pyscard" dev-requirements.txt > /tmp/docs-requirements.txt
+          pip install -r /tmp/docs-requirements.txt
+          echo "Dependencies installed (pyscard excluded - mocked in Sphinx)"
 
-      # 6. Verify diagram setup
+      # 5. Verify diagram setup
       - name: Verify diagram setup
         run: |
           python -c "import sphinx; print('Sphinx version:', sphinx.__version__)"
           python -c "import graphviz; print('Graphviz Python bindings: OK')"
           dot -V
 
-      # 7. Build Sphinx documentation with diagrams
+      # 6. Build Sphinx documentation with diagrams
       - name: Generate Sphinx docs with class diagrams
         run: |
           cd docs
@@ -61,7 +58,7 @@ jobs:
           echo "Generated diagram files:"
           ls -la _build/html/_images/*.svg || echo "No SVG files found"
 
-      # 8. Deploy HTML documentation to GitHub Pages
+      # 7. Deploy HTML documentation to GitHub Pages
       - name: Deploy to GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
