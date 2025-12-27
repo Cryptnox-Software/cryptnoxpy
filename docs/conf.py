@@ -49,7 +49,6 @@ autodoc_mock_imports = [
     'aiohttp',
     'aiosignal',
     'attrs',
-    'peewee',
 ]
 
 # Autodoc configuration
