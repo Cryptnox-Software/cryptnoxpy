@@ -1,6 +1,6 @@
 name: Build and deploy documentation
 permissions:
-  contents: read
+  contents: write
 
 on:
   push:
@@ -25,16 +25,32 @@ jobs:
         with:
           python-version: '3.12'
 
-      # 3. Install Sphinx and dependencies
+      # 3. Install Graphviz for diagram generation
+      - name: Install Graphviz
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+          echo "Graphviz installed:"
+          dot -V
+
+      # 4. Install Sphinx and all dependencies
       - name: Install Sphinx and dependencies
-        run: pip install sphinx sphinx-rtd-theme
+        run: |
+          pip install --upgrade pip
+          pip install -r dev-requirements.txt
 
-      # 4. Build Sphinx documentation
-      - name: Generate Sphinx docs
-        run: sphinx-build -b html docs docs/_build/html
+      # 5. Build Sphinx documentation with diagrams
+      - name: Generate Sphinx docs with class diagrams
+        run: |
+          cd docs
+          sphinx-build -b html . _build/html
+          echo "Documentation built successfully!"
+          echo "Generated diagram files:"
+          ls -la _build/html/_images/*.svg || echo "No SVG files found"
 
-      # 5. Deploy HTML documentation to GitHub Pages
+      # 6. Deploy HTML documentation to GitHub Pages
       - name: Deploy to GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.DOCS_DEPLOY_TOKEN }}
