@@ -167,7 +167,29 @@ if __name__ == "__main__":
 
 ## Documentation
 
-📚 Full API reference: https://cryptnox.github.io/cryptnox-sdk-py/
+📚 **Full API reference:** https://cryptnox.github.io/cryptnox-sdk-py/
+
+### Building Documentation with Class Diagrams
+
+The project includes automatically generated class diagrams in the documentation.
+
+**Quick Start:**
+```bash
+# Install dependencies
+pip install -r dev-requirements.txt
+
+# Install Graphviz (required for diagrams)
+# Windows: Download from https://graphviz.org/download/
+# macOS: brew install graphviz
+# Linux: sudo apt-get install graphviz
+
+# Build documentation
+cd docs
+sphinx-build -b html . _build/html
+```
+
+**Documentation Guides:**
+- **Developer Guide:** [docs/DEVELOPER_GUIDE_DIAGRAMS.md](docs/DEVELOPER_GUIDE_DIAGRAMS.md)
 
 ---
 
