@@ -80,18 +80,20 @@ suppress_warnings = [
 # Graphviz output format (svg provides high quality, scalable diagrams)
 graphviz_output_format = 'svg'
 
-# Global Graphviz options
+# Global Graphviz options - black and white style
 graphviz_dot_args = [
     '-Gbgcolor=transparent',
     '-Nshape=box',
-    '-Nstyle=rounded,filled',
-    '-Nfillcolor=lightblue',
+    '-Nstyle=rounded',
+    '-Ncolor=black',
+    '-Nfontcolor=black',
     '-Nfontname=Arial',
     '-Nfontsize=10',
+    '-Ecolor=black',
     '-Efontsize=9',
 ]
 
-# Inheritance diagram configuration
+# Inheritance diagram configuration - black and white style
 inheritance_graph_attrs = {
     'rankdir': 'TB',  # Top to Bottom layout
     'size': '"8.0, 12.0"',
@@ -100,14 +102,16 @@ inheritance_graph_attrs = {
 
 inheritance_node_attrs = {
     'shape': 'box',
-    'style': '"rounded,filled"',
-    'fillcolor': 'lightblue',
+    'style': 'rounded',
+    'color': 'black',
+    'fontcolor': 'black',
     'fontname': 'Arial',
     'fontsize': '10',
 }
 
 inheritance_edge_attrs = {
     'arrowsize': '0.8',
+    'color': 'black',
 }
 
 # -- Options for HTML output -------------------------------------------------
