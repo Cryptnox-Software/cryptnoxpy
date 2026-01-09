@@ -10,8 +10,8 @@ from cryptography import x509
 from .card import (
     authenticity,
     Base,
-    BasicG1,  # Required: registers with Base for _all_subclasses()
-    Nft,  # Required: registers with Base for _all_subclasses()
+    BasicG1,  # noqa: F401 - Required to register with Base for _all_subclasses()
+    Nft,  # noqa: F401 - Required to register with Base for _all_subclasses()
 )
 # pylint: enable=unused-import
 
