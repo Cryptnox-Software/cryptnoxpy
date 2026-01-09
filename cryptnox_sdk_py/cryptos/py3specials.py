@@ -14,7 +14,7 @@ import hashlib
 
 
 if sys.version_info.major == 3:
-    string_types = (str)
+    string_types = (str,)
     string_or_bytes_types = (str, bytes)
     int_types = (int, float)
     # Base switching
@@ -39,8 +39,7 @@ if sys.version_info.major == 3:
     def get_code_string(base):
         if base in code_strings:
             return code_strings[base]
-        else:
-            raise ValueError("Invalid base!")
+        raise ValueError("Invalid base!")
 
     def changebase(string, frm, to, minlen=0):
         if frm == to:
@@ -67,7 +66,7 @@ if sys.version_info.major == 3:
         if isinstance(b, str):
             return b
 
-        return ''.join('{:02x}'.format(y) for y in b)
+        return ''.join(f'{y:02x}' for y in b)
 
     def safe_from_hex(s):
         return bytes.fromhex(s)
@@ -100,7 +99,7 @@ if sys.version_info.major == 3:
 
         padding_element = b'\x00' if base == 256 else b'1' \
             if base == 58 else b'0'
-        if (pad_size > 0):
+        if pad_size > 0:
             result_bytes = padding_element*pad_size + result_bytes
 
         result_string = ''.join([chr(y) for y in result_bytes])
@@ -115,7 +114,7 @@ if sys.version_info.major == 3:
         code_string = get_code_string(base)
         result = 0
         if base == 256:
-            def extract(d, cs):
+            def extract(d, _cs):
                 return d
         else:
             def extract(d, cs):
@@ -180,7 +179,7 @@ if sys.version_info.major == 3:
         if isinstance(msghash, bytes):
             msghash = py2specials.decode(msghash, 256)
 
-        v, r, s = sig
+        _, r, s = sig
 
         # Decode public key
         if not isinstance(pub, tuple):
@@ -210,9 +209,9 @@ if sys.version_info.major == 3:
         msghash = main.electrum_sig_hash(msg)
 
         if isinstance(sig, str):
-            v, r, s = main.decode_sig(sig)
+            v, r, _s = main.decode_sig(sig)
         else:
-            v, r, s = sig
+            v, r, _s = sig
 
         # Recovery parameter
         x = r

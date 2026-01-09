@@ -10,9 +10,6 @@ from .card import (
     authenticity,
     Base
 )
-# Import card classes to register them with Base class for _all_subclasses()
-from .card import BasicG1  # noqa: F401
-from .card import Nft  # noqa: F401
 
 
 from .connection import Connection
@@ -84,10 +81,10 @@ def _serial_number(connection: Connection, debug: bool = False):
         cert = x509.load_der_x509_certificate(cert_der)
         serial_int = cert.serial_number
         return int(serial_int), certificate
-    except Exception:
+    except (ValueError, TypeError) as exc:
         certificate_parts = certificate.split("0302010202")
         if len(certificate_parts) <= 1:
-            raise CertificateException("No card certificate found")
+            raise CertificateException("No card certificate found") from exc
 
         try:
             if certificate_parts[1][1] == "8":
@@ -95,8 +92,8 @@ def _serial_number(connection: Connection, debug: bool = False):
             elif certificate_parts[1][1] == "9":
                 data = certificate_parts[1][4:20]
             else:
-                raise CertificateException("Bad certificate format")
-        except Exception as error:
+                raise CertificateException("Bad certificate format") from exc
+        except (IndexError, KeyError) as error:
             raise CertificateException("Bad card certificate format") from error
 
         return int(data, 16), certificate

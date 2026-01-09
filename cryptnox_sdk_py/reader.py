@@ -82,6 +82,15 @@ class Reader(metaclass=abc.ABCMeta):
         """
         return self._connection is not None
 
+    def disconnect(self) -> None:
+        """
+        Disconnect from the card.
+
+        :return: None
+        """
+        if self._connection:
+            self._connection = None
+
     @classmethod
     def __subclasshook__(cls, c):
         if cls is Reader:
@@ -166,6 +175,14 @@ class SmartCard(Reader):
             return self._connection.transmit(apdu)
         except smartcard.Exceptions.CardConnectionException as error:
             raise ConnectionException("Connection issue") from error
+
+    def disconnect(self) -> None:
+        if self._connection:
+            try:
+                self._connection.disconnect()
+            except smartcard.Exceptions.CardConnectionException:
+                pass
+            self._connection = None
 
 
 def get(index: int = 0) -> Reader:

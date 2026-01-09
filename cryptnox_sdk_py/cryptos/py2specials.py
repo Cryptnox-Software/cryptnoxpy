@@ -48,8 +48,7 @@ if sys.version_info.major == 2:
     def get_code_string(base):
         if base in code_strings:
             return code_strings[base]
-        else:
-            raise ValueError("Invalid base!")
+        raise ValueError("Invalid base!")
 
     def changebase(string, frm, to, minlen=0):
         if frm == to:
@@ -136,8 +135,7 @@ else:
     def get_code_string(base):
         if base in code_strings:
             return code_strings[base]
-        else:
-            raise ValueError("Invalid base!")
+        raise ValueError("Invalid base!")
 
     def lpad(msg, symbol, length):
         if len(msg) >= length:
