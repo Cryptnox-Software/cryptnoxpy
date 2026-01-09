@@ -181,8 +181,10 @@ class SmartCard(Reader):
             try:
                 self._connection.disconnect()
             except smartcard.Exceptions.CardConnectionException:
-                pass
-            self._connection = None
+                # Ignore disconnect errors: connection is being torn down anyway.
+                self._connection = None
+            else:
+                self._connection = None
 
 
 def get(index: int = 0) -> Reader:
