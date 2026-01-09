@@ -14,7 +14,6 @@ import hashlib
 
 
 if sys.version_info.major == 3:
-    string_types = (str,)
     string_or_bytes_types = (str, bytes)
     int_types = (int, float)
     # Base switching
