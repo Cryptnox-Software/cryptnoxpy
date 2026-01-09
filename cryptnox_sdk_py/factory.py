@@ -7,11 +7,11 @@ from typing import Tuple, Any
 from cryptography import x509
 
 # pylint: disable=unused-import
-from .card import (
+from .card import (  # noqa: F401
     authenticity,
     Base,
-    BasicG1,  # noqa: F401 - Required to register with Base for _all_subclasses()
-    Nft,  # noqa: F401 - Required to register with Base for _all_subclasses()
+    BasicG1,  # Required to register with Base for _all_subclasses()
+    Nft,  # Required to register with Base for _all_subclasses()
 )
 # pylint: enable=unused-import
 
