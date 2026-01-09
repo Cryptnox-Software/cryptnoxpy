@@ -15,6 +15,7 @@ from typing import (
     Tuple,
     Union
 )
+import logging
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -98,7 +99,8 @@ class Connection(ContextDecorator):
             try:
                 self._reader.disconnect()
             except (AttributeError, reader.ConnectionException):
-                pass
+                # Ignore disconnect errors: disconnect is best-effort and should not raise.
+                logging.debug("Failed to disconnect from reader", exc_info=True)
 
     def send_apdu(self, apdu: List[int]) -> Tuple[List[int], int, int]:
         """
