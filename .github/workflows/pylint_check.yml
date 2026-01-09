@@ -48,5 +48,5 @@ jobs:
           echo ""
           pylint cryptnox_sdk_py \
             --output-format=colorized \
-            --fail-under=7.0 \
+            --fail-under=10.0 \
             --fail-on=error,fatal

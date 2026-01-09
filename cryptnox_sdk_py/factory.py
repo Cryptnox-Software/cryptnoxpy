@@ -6,11 +6,14 @@ connection
 from typing import Tuple, Any
 from cryptography import x509
 
+# pylint: disable=unused-import
 from .card import (
     authenticity,
-    Base
+    Base,
+    BasicG1,  # Required: registers with Base for _all_subclasses()
+    Nft,  # Required: registers with Base for _all_subclasses()
 )
-
+# pylint: enable=unused-import
 
 from .connection import Connection
 from .exceptions import (
