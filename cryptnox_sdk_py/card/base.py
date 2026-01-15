@@ -910,7 +910,6 @@ class Base(metaclass=abc.ABCMeta):
         :return: Manufacturer certificate in hexadecimal string or bytes format
         :rtype: Any
         """
-        pass
 
     def __repr__(self):
         return f'{{"serial": {self.serial_number}, "version": {self.applet_version}}}'
