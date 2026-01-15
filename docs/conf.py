@@ -23,6 +23,8 @@ extensions = [
     "sphinx.ext.autosummary",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
+    "sphinx.ext.graphviz",
+    "sphinx.ext.inheritance_diagram",
 ]
 
 # Disable autosummary generation to prevent hangs
@@ -71,6 +73,48 @@ suppress_warnings = [
     'ref.python',
     'toc.not_included',
 ]
+
+# -- Graphviz configuration --------------------------------------------------
+# Configuration for automatic class diagram generation
+
+# Graphviz output format (svg provides high quality, scalable diagrams)
+graphviz_output_format = 'svg'
+
+# Global Graphviz options - gray color style
+graphviz_dot_args = [
+    '-Gbgcolor=transparent',
+    '-Nshape=box',
+    '-Nstyle=rounded,filled',
+    '-Nfillcolor=lightgray',
+    '-Ncolor=black',
+    '-Nfontcolor=black',
+    '-Nfontname=Arial',
+    '-Nfontsize=10',
+    '-Ecolor=black',
+    '-Efontsize=9',
+]
+
+# Inheritance diagram configuration - gray color style
+inheritance_graph_attrs = {
+    'rankdir': 'TB',  # Top to Bottom layout
+    'size': '"8.0, 12.0"',
+    'bgcolor': 'transparent',
+}
+
+inheritance_node_attrs = {
+    'shape': 'box',
+    'style': '"rounded,filled"',
+    'fillcolor': 'lightgray',
+    'color': 'black',
+    'fontcolor': 'black',
+    'fontname': 'Arial',
+    'fontsize': '10',
+}
+
+inheritance_edge_attrs = {
+    'arrowsize': '0.8',
+    'color': 'black',
+}
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output

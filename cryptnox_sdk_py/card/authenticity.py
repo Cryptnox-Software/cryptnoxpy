@@ -99,20 +99,23 @@ def manufacturer_certificate(connection: Connection, debug: bool = False) -> str
     :param Connection connection: Connection to use for operation
     :param bool debug: Prints information about communication
 
-    :return: Manufacturer certificate read from the card
+    :return: Manufacturer certificate read from the card in hexadecimal format
     :rtype: str
     """
-    apdu = [0x80, 0xF7, 0x00, 0x00, 0x00]
-    response = connection.send_apdu(apdu)[0]
-
-    if not response:
+    idx_page = 0
+    response = connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
+    if not response or len(response) < 2:
         return ""
 
-    apdu = [0x80, 0xF7, 0x00, 0x01, 0x00]
-    response = response + connection.send_apdu(apdu)[0]
-    length = (response[0] << 8) + response[1]
-    assert len(response) == (length + 2)
-    certificate = list_to_hexadecimal(response[2:])
+    cert_len = (response[0] << 8) + response[1]
+    while len(response) < (cert_len + 2):
+        idx_page += 1
+        next_page = connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
+        if not next_page:
+            break
+        response = response + next_page
+
+    certificate = list_to_hexadecimal(response[2:cert_len + 2])
     if debug:
         print(f"Manufacturer certificate: {certificate}")
 

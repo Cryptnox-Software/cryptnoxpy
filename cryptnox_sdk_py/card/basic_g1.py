@@ -123,11 +123,14 @@ class BasicG1(base.Base):
 
         return result
 
-    def get_manufacturer_certificate(self):
+    def get_manufacturer_certificate(self, hexed: bool = True):
         idx_page = 0
-        mnft_cert_resp = self.connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
-        certlen = (mnft_cert_resp[0] << 8) + mnft_cert_resp[1]
-        while len(mnft_cert_resp) < (certlen + 2):
+        response = self.connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
+        if not response or len(response) < 2:
+            return "" if hexed else b""
+
+        cert_len = (response[0] << 8) + response[1]
+        while len(response) < (cert_len + 2):
             idx_page += 1
             mnft_cert_resp = (
                 mnft_cert_resp
