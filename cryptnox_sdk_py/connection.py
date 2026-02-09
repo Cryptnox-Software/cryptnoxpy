@@ -6,7 +6,7 @@ Sending and receiving information from the card through the reader.
 """
 
 import hashlib
-import pickle
+import json
 import secrets
 from contextlib import ContextDecorator
 from time import time, sleep
@@ -288,7 +288,7 @@ class Connection(ContextDecorator):
         if not self.conn:
             raise ConnectionError('Calling remote read without connection')
 
-        message = pickle.dumps(apdu)
+        message = json.dumps(apdu).encode('utf-8')
         msg_length = len(message)
         send_length = str(msg_length).encode('utf-8')
         send_length += (" " * (64 - len(send_length))).encode('utf-8')
@@ -309,8 +309,8 @@ class Connection(ContextDecorator):
                 continue
 
             try:
-                response = pickle.loads(received_message)
-            except pickle.UnpicklingError as error:
+                response = json.loads(received_message)
+            except (json.JSONDecodeError, UnicodeDecodeError) as error:
                 raise ConnectionError('Error in remote connection') from error
 
             data, status1, status2 = response
