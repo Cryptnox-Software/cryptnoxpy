@@ -722,27 +722,25 @@ def run_xrp_transaction_example(
             print(f"    DER signature: {der_signature.hex()}")
 
         # =====================================================================
-        # Step 7: Normalize Signature (Low-S canonical form, DER encoded)
+        # Step 7: Convert DER signature to hex
         # =====================================================================
-        print("\n[Step 7] Normalizing signature (canonical low-S, DER format)...")
+        # The Cryptnox card already returns canonical low-S DER signatures
+        # (SIGN command P2=0x00), so no additional normalization is needed.
+        print("\n[Step 7] Converting DER signature to hex...")
 
-        signature_hex = normalize_and_der_encode(der_signature)
-        print(f"  ✓ Normalized DER signature ({len(signature_hex) // 2} bytes)")
+        signature_hex = der_signature.hex().upper()
+        print(f"  ✓ DER signature ({len(signature_hex) // 2} bytes)")
 
         if debug:
             r, s = der_to_rs(der_signature)
             print(f"    R: {r:064X}")
             print(f"    S: {s:064X}")
-            _, s_norm = normalize_s(r, s)
-            if s != s_norm:
-                print(f"    S was high -> normalized to: {s_norm:064X}")
-            else:
-                print("    S is already in low-S form")
+            print(f"    S <= N/2: {s <= SECP256K1_HALF_ORDER} (guaranteed by card)")
 
         # =====================================================================
         # Step 8: Insert Signature into Transaction
         # =====================================================================
-        print("\n[Step 8] Inserting signature into transaction...")
+        print("\n[Step 8] Inserting signature into transaction (DER hex)...")
 
         signed_tx = insert_signature(tx_dict, signature_hex, public_key_hex)
         print(f"  ✓ TxnSignature (DER): {signed_tx['TxnSignature'][:32]}...")
@@ -761,9 +759,9 @@ def run_xrp_transaction_example(
         print(f"  ✓ Transaction ID: {tx_id}")
 
         # =====================================================================
-        # Step 10: Verify Against xrpl-py Reference Library
+        # Step 9: Verify Against xrpl-py Reference Library
         # =====================================================================
-        print("\n[Step 10] Comparing signature with xrpl-py reference...")
+        print("\n[Step 9] Comparing signature with xrpl-py reference...")
 
         is_valid = verify_signature_with_xrpl(tx_dict, signature_hex, public_key_hex)
         if is_valid:

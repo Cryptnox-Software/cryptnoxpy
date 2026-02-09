@@ -36,13 +36,11 @@ python xrp_transaction.py --pin 000000000 --destination rXXX... --amount 10.5
          |
  6. Hash                 SHA-512 first 32 bytes
          |
- 7. Sign with Card       ECDSA secp256k1, returns DER signature
+ 7. Sign with Card       ECDSA secp256k1, returns canonical low-S DER signature
          |
- 8. Normalize Signature  Canonical low-S form, re-encode as DER
+ 8. Insert into TX       TxnSignature + SigningPubKey -> encode -> tx_blob
          |
- 9. Insert into TX       TxnSignature + SigningPubKey -> encode -> tx_blob
-         |
-10. Verify vs xrpl-py    Compare with official reference library
+ 9. Verify vs xrpl-py    Compare with official reference library
 ```
 
 ### Key Implementation Details
@@ -51,7 +49,7 @@ python xrp_transaction.py --pin 000000000 --destination rXXX... --amount 10.5
 
 **SigningPubKey must be in the signing data.** The XRP Ledger includes `SigningPubKey` in the serialized data before hashing. The transaction is encoded with `SigningPubKey` set, then hashed, then signed. This matches how `xrpl-py`'s `sign()` works internally.
 
-**Signatures must be canonical DER.** The card returns DER-encoded signatures. The code normalizes S to low-S form (S <= curve_order / 2) per BIP-62, then re-encodes as DER.
+**Signatures are canonical DER.** The Cryptnox card's SIGN command (P2=0x00) returns DER-encoded signatures with canonical low-S form (S ≤ curve_order / 2) per BIP-62. No additional normalization is needed.
 
 **Sequence is auto-fetched.** When `--sequence` is 0 (default), the script queries the XRP Testnet to get the correct sequence number for the account.
 
@@ -113,13 +111,13 @@ tx_hash = hashlib.sha512(signing_bytes).digest()[:32]
 signature = card.sign(data=tx_hash, derivation=Derivation.CURRENT_KEY, key_type=KeyType.K1)
 ```
 
-### 5. Normalize and finalize
+### 5. Finalize
 
 ```python
-from examples.xrp_transaction import normalize_and_der_encode, insert_signature
+from examples.xrp_transaction import insert_signature
 
-# Canonical low-S DER signature
-sig_hex = normalize_and_der_encode(signature)
+# The card already returns canonical low-S DER (SIGN P2=0x00)
+sig_hex = signature.hex().upper()
 
 # Insert into transaction and generate tx_blob
 signed_tx = insert_signature(tx, sig_hex, public_key)
@@ -155,7 +153,7 @@ response = client.request(SubmitOnly(tx_blob=tx_blob))
 
 ## Verification
 
-Step 10 of the example compares the Cryptnox-generated signature against xrpl-py's reference ECDSA implementation:
+Step 9 of the example compares the Cryptnox-generated signature against xrpl-py's reference ECDSA implementation:
 
 1. Reconstructs the signing data (`encode_for_signing` with `SigningPubKey`)
 2. Computes `sha512_first_half` (same as xrpl-py internally)
