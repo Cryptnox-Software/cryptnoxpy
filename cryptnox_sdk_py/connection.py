@@ -17,8 +17,6 @@ from typing import (
     Union
 )
 
-logger = logging.getLogger(__name__)
-
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
 
@@ -31,6 +29,8 @@ from .binary_utils import (
     remove_padding
 )
 from .crypto_utils import aes_decrypt, aes_encrypt
+
+logger = logging.getLogger(__name__)
 
 
 class Connection(ContextDecorator):

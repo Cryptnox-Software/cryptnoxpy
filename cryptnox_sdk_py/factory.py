@@ -7,8 +7,6 @@ import logging
 from typing import Tuple, Any
 from cryptography import x509
 
-logger = logging.getLogger(__name__)
-
 # pylint: disable=unused-import
 from .card import (  # noqa: F401
     authenticity,
@@ -26,6 +24,8 @@ from .exceptions import (
     DataException,
     FirmwareException
 )
+
+logger = logging.getLogger(__name__)
 
 
 def get_card(connection: Connection, debug: bool = False) -> Base:
