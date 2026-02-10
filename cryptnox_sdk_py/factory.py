@@ -3,8 +3,11 @@
 Module for getting Cryptnox cards information and getting instance of card from
 connection
 """
+import logging
 from typing import Tuple, Any
 from cryptography import x509
+
+logger = logging.getLogger(__name__)
 
 # pylint: disable=unused-import
 from .card import (  # noqa: F401
@@ -70,8 +73,7 @@ def _select(connection, apdu, card_type, debug: bool = False) -> Tuple[Any, Any]
     data = data_selected[4:36]
 
     if debug:
-        print("Applet Version")
-        print(applet_version)
+        logger.debug("Applet Version: %s", applet_version)
 
     return applet_version, data
 

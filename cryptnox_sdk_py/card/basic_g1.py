@@ -136,7 +136,10 @@ class BasicG1(base.Base):
                 mnft_cert_resp
                 + self.connection.send_apdu([0x80, 0xF7, 0x00, idx_page, 0x00])[0]
             )
-        assert len(mnft_cert_resp) == (cert_len + 2)
+        if len(mnft_cert_resp) != (cert_len + 2):
+            raise exceptions.DataException(
+                f"Certificate length mismatch: expected {cert_len + 2}, got {len(mnft_cert_resp)}"
+            )
         cert = mnft_cert_resp[2:]
         return "".join([f"{x:02x}" for x in cert])
 
@@ -222,7 +225,6 @@ class BasicG1(base.Base):
         if len(pubkey) == 32:
             # Card returned only X-coordinate (32 bytes)
             # This is common for clear channel public key reading
-            print(f"Received 32-byte public key (x-coordinate): {pubkey.hex()}")
             return pubkey
 
         if len(pubkey) == 33 and pubkey[0] in [0x02, 0x03]:
@@ -399,6 +401,22 @@ class BasicG1(base.Base):
         self._data[1] |= BasicG1._PIN_AUTH_FLAG
 
     def set_pinless_path(self, path: str, puk: str) -> None:
+        """
+        Define a BIP-32 derivation path whose key can sign without PIN entry.
+
+        This is a deliberate design feature for payment/NFC tap-to-pay use
+        cases where user interaction is not possible.  The operation is
+        PUK-protected: only the card owner who knows the PUK can enable or
+        change the pinless path, limiting the attack surface to that single
+        derivation path.
+
+        :param str path: BIP-32 path to allow pinless signing (empty to clear)
+        :param str puk:  PUK code authorising the change
+
+        :raises SeedException: No seed loaded on the card
+        :raises PukException: PUK is invalid
+        :raises DataValidationException: Path format is invalid
+        """
         if self.seed_source == SeedSource.NO_SEED:
             raise exceptions.SeedException("There is no seed on the card")
 

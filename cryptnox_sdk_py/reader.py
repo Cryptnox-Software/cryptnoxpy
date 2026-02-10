@@ -4,8 +4,11 @@ Module that handles different card reader types and their drivers.
 """
 
 import abc
+import logging
 
 from typing import List, Tuple
+
+logger = logging.getLogger(__name__)
 
 NFC_AVAILABLE = True
 SMARTCARD_AVAILABLE = True
@@ -131,7 +134,7 @@ class NfcReader(Reader):
                                              len(message_ba), 256, 0)
 
         if ret[0] < 0:
-            print("ERROR RFID", ret[0])
+            logger.error("RFID transceive error: %s", ret[0])
             return [], 0x99, 0x99
 
         length = ret[0]

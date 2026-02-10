@@ -36,6 +36,11 @@ from ..exceptions import InitializationException
 User = collections.namedtuple("User", ["name", "email"])
 SignatureCheckResult = collections.namedtuple("SignatureCheckResult", ["message", "signature"])
 
+# Default pairing secret shared by all Basic cards out of the box.
+# This is a well-known value by design: it bootstraps the secure channel so the
+# host can communicate with a brand-new card before any personalisation.
+# For production deployments, call change_pairing_key() with a unique secret
+# after card initialisation.
 BASIC_PAIRING_SECRET = b'Cryptnox Basic CommonPairingData'
 
 

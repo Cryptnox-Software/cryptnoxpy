@@ -49,7 +49,8 @@ def path_to_bytes(path_str: str) -> bytes:
             out = int(path)
         return out.to_bytes(4, byteorder='big')
 
-    assert path_str[:2] == "m/"
+    if not path_str.startswith("m/"):
+        raise ValueError(f"BIP-32 path must start with 'm/', got: {path_str!r}")
 
     return b''.join(map(read_path_unit, path_str.split("/")[1:]))
 
