@@ -114,6 +114,11 @@
 <span class="n">User</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;User&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;email&quot;</span><span class="p">])</span>
 <span class="n">SignatureCheckResult</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;SignatureCheckResult&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;message&quot;</span><span class="p">,</span> <span class="s2">&quot;signature&quot;</span><span class="p">])</span>
 
+<span class="c1"># Default pairing secret shared by all Basic cards out of the box.</span>
+<span class="c1"># This is a well-known value by design: it bootstraps the secure channel so the</span>
+<span class="c1"># host can communicate with a brand-new card before any personalisation.</span>
+<span class="c1"># For production deployments, call change_pairing_key() with a unique secret</span>
+<span class="c1"># after card initialisation.</span>
 <span class="n">BASIC_PAIRING_SECRET</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;Cryptnox Basic CommonPairingData&#39;</span>
 
 

@@ -1734,18 +1734,24 @@ challenge-response validation</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnox_sdk_py.card.basic_g1.BasicG1.set_pinless_path">
 <span class="sig-name descname"><span class="pre">set_pinless_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cryptnox_sdk_py/card/basic_g1.html#BasicG1.set_pinless_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cryptnox_sdk_py.card.basic_g1.BasicG1.set_pinless_path" title="Link to this definition"></a></dt>
-<dd><p>Enable working with the card without a PIN on path.</p>
+<dd><p>Define a BIP-32 derivation path whose key can sign without PIN entry.</p>
+<p>This is a deliberate design feature for payment/NFC tap-to-pay use
+cases where user interaction is not possible.  The operation is
+PUK-protected: only the card owner who knows the PUK can enable or
+change the pinless path, limiting the attack surface to that single
+derivation path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – Path to be available without a PIN code</p></li>
-<li><p><strong>puk</strong> (<em>str</em>) – PUK code of the card</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – BIP-32 path to allow pinless signing (empty to clear)</p></li>
+<li><p><strong>puk</strong> (<em>str</em>) – PUK code authorising the change</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.DataValidationException" title="cryptnox_sdk_py.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
-<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.PukException" title="cryptnox_sdk_py.exceptions.PukException"><strong>PukException</strong></a> – PUK code is not valid</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.SeedException" title="cryptnox_sdk_py.exceptions.SeedException"><strong>SeedException</strong></a> – No seed loaded on the card</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.PukException" title="cryptnox_sdk_py.exceptions.PukException"><strong>PukException</strong></a> – PUK is invalid</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.DataValidationException" title="cryptnox_sdk_py.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Path format is invalid</p></li>
 </ul>
 </dd>
 </dl>
@@ -2283,18 +2289,24 @@ challenge-response validation</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnox_sdk_py.card.nft.Nft.set_pinless_path">
 <span class="sig-name descname"><span class="pre">set_pinless_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cryptnox_sdk_py/card/nft.html#Nft.set_pinless_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cryptnox_sdk_py.card.nft.Nft.set_pinless_path" title="Link to this definition"></a></dt>
-<dd><p>Enable working with the card without a PIN on path.</p>
+<dd><p>Define a BIP-32 derivation path whose key can sign without PIN entry.</p>
+<p>This is a deliberate design feature for payment/NFC tap-to-pay use
+cases where user interaction is not possible.  The operation is
+PUK-protected: only the card owner who knows the PUK can enable or
+change the pinless path, limiting the attack surface to that single
+derivation path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – Path to be available without a PIN code</p></li>
-<li><p><strong>puk</strong> (<em>str</em>) – PUK code of the card</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – BIP-32 path to allow pinless signing (empty to clear)</p></li>
+<li><p><strong>puk</strong> (<em>str</em>) – PUK code authorising the change</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.DataValidationException" title="cryptnox_sdk_py.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
-<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.PukException" title="cryptnox_sdk_py.exceptions.PukException"><strong>PukException</strong></a> – PUK code is not valid</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.SeedException" title="cryptnox_sdk_py.exceptions.SeedException"><strong>SeedException</strong></a> – No seed loaded on the card</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.PukException" title="cryptnox_sdk_py.exceptions.PukException"><strong>PukException</strong></a> – PUK is invalid</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.DataValidationException" title="cryptnox_sdk_py.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Path format is invalid</p></li>
 </ul>
 </dd>
 </dl>
@@ -4010,18 +4022,24 @@ challenge-response validation</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnox_sdk_py.card.BasicG1.set_pinless_path">
 <span class="sig-name descname"><span class="pre">set_pinless_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cryptnox_sdk_py/card/basic_g1.html#BasicG1.set_pinless_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cryptnox_sdk_py.card.BasicG1.set_pinless_path" title="Link to this definition"></a></dt>
-<dd><p>Enable working with the card without a PIN on path.</p>
+<dd><p>Define a BIP-32 derivation path whose key can sign without PIN entry.</p>
+<p>This is a deliberate design feature for payment/NFC tap-to-pay use
+cases where user interaction is not possible.  The operation is
+PUK-protected: only the card owner who knows the PUK can enable or
+change the pinless path, limiting the attack surface to that single
+derivation path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – Path to be available without a PIN code</p></li>
-<li><p><strong>puk</strong> (<em>str</em>) – PUK code of the card</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – BIP-32 path to allow pinless signing (empty to clear)</p></li>
+<li><p><strong>puk</strong> (<em>str</em>) – PUK code authorising the change</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.DataValidationException" title="cryptnox_sdk_py.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
-<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.PukException" title="cryptnox_sdk_py.exceptions.PukException"><strong>PukException</strong></a> – PUK code is not valid</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.SeedException" title="cryptnox_sdk_py.exceptions.SeedException"><strong>SeedException</strong></a> – No seed loaded on the card</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.PukException" title="cryptnox_sdk_py.exceptions.PukException"><strong>PukException</strong></a> – PUK is invalid</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.DataValidationException" title="cryptnox_sdk_py.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Path format is invalid</p></li>
 </ul>
 </dd>
 </dl>
@@ -4532,18 +4550,24 @@ challenge-response validation</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="cryptnox_sdk_py.card.Nft.set_pinless_path">
 <span class="sig-name descname"><span class="pre">set_pinless_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">puk</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/cryptnox_sdk_py/card/nft.html#Nft.set_pinless_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cryptnox_sdk_py.card.Nft.set_pinless_path" title="Link to this definition"></a></dt>
-<dd><p>Enable working with the card without a PIN on path.</p>
+<dd><p>Define a BIP-32 derivation path whose key can sign without PIN entry.</p>
+<p>This is a deliberate design feature for payment/NFC tap-to-pay use
+cases where user interaction is not possible.  The operation is
+PUK-protected: only the card owner who knows the PUK can enable or
+change the pinless path, limiting the attack surface to that single
+derivation path.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>path</strong> (<em>str</em>) – Path to be available without a PIN code</p></li>
-<li><p><strong>puk</strong> (<em>str</em>) – PUK code of the card</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – BIP-32 path to allow pinless signing (empty to clear)</p></li>
+<li><p><strong>puk</strong> (<em>str</em>) – PUK code authorising the change</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><ul class="simple">
-<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.DataValidationException" title="cryptnox_sdk_py.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – input data is not valid</p></li>
-<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.PukException" title="cryptnox_sdk_py.exceptions.PukException"><strong>PukException</strong></a> – PUK code is not valid</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.SeedException" title="cryptnox_sdk_py.exceptions.SeedException"><strong>SeedException</strong></a> – No seed loaded on the card</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.PukException" title="cryptnox_sdk_py.exceptions.PukException"><strong>PukException</strong></a> – PUK is invalid</p></li>
+<li><p><a class="reference internal" href="cryptnox_sdk_py.html#cryptnox_sdk_py.exceptions.DataValidationException" title="cryptnox_sdk_py.exceptions.DataValidationException"><strong>DataValidationException</strong></a> – Path format is invalid</p></li>
 </ul>
 </dd>
 </dl>

@@ -81,8 +81,11 @@
 <span class="sd">Module for getting Cryptnox cards information and getting instance of card from</span>
 <span class="sd">connection</span>
 <span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Any</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography</span><span class="w"> </span><span class="kn">import</span> <span class="n">x509</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 <span class="c1"># pylint: disable=unused-import</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.card</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>  <span class="c1"># noqa: F401</span>
@@ -151,8 +154,7 @@
     <span class="n">data</span> <span class="o">=</span> <span class="n">data_selected</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">36</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Applet Version&quot;</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">applet_version</span><span class="p">)</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Applet Version: </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">applet_version</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="n">applet_version</span><span class="p">,</span> <span class="n">data</span>
 
