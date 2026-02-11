@@ -3,10 +3,12 @@
 Module containing check for verification of genuineness of a card
 """
 import asyncio
+import logging
 import re
 import secrets
 import sys
 from typing import List
+from urllib.parse import urljoin, urlparse
 
 import aiohttp
 from cryptography import x509
@@ -18,6 +20,8 @@ from ..binary_utils import list_to_hexadecimal, hexadecimal_to_list
 from ..connection import Connection
 from ..exceptions import GenuineCheckException
 from ..enums import Origin
+
+logger = logging.getLogger(__name__)
 
 _ECDSA_SHA256 = "06082a8648ce3d040302" + "03"
 _MANUFACTURER_CERTIFICATE_URL = "https://verify.cryptnox.tech/certificates/"
@@ -79,10 +83,8 @@ def session_public_key(connection: Connection, debug: bool = False) -> str:
     card_cert_sig_hex = card_cert_hex[148:]
 
     if debug:
-        print("Card msg")
-        print(card_cert_msg.hex())
-        print("Card sig")
-        print(card_cert_sig_hex)
+        logger.debug("Card msg: %s", card_cert_msg.hex())
+        logger.debug("Card sig: %s", card_cert_sig_hex)
 
     public_key = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(),
                                                               _public_key(connection))
@@ -117,9 +119,14 @@ def manufacturer_certificate(connection: Connection, debug: bool = False) -> str
 
     certificate = list_to_hexadecimal(response[2:cert_len + 2])
     if debug:
-        print(f"Manufacturer certificate: {certificate}")
+        logger.debug("Manufacturer certificate: %s", certificate)
 
     return certificate
+
+
+_ALLOWED_CERT_HOST = urlparse(_MANUFACTURER_CERTIFICATE_URL).hostname
+_REQUEST_TIMEOUT = aiohttp.ClientTimeout(total=15)
+_CERT_FILENAME_PATTERN = re.compile(r'^[\w.\-]+\.crt$')
 
 
 def _manufacturer_public_keys():
@@ -128,21 +135,29 @@ def _manufacturer_public_keys():
             certificate = await response.read()
             return x509.load_pem_x509_certificate(certificate).public_key()
 
-    async def fetch_all(session, certificates):
-        tasks = [asyncio.create_task(fetch(session, _MANUFACTURER_CERTIFICATE_URL + certificate))
-                 for certificate in certificates]
+    async def fetch_all(session, cert_names):
+        urls = []
+        for name in cert_names:
+            # Only accept simple filenames that stay on the expected host.
+            if not _CERT_FILENAME_PATTERN.match(name):
+                logger.warning("Skipping suspicious certificate name: %s", name)
+                continue
+            url = urljoin(_MANUFACTURER_CERTIFICATE_URL, name)
+            if urlparse(url).hostname != _ALLOWED_CERT_HOST:
+                logger.warning("Skipping off-host certificate URL: %s", url)
+                continue
+            urls.append(url)
 
-        results = await asyncio.gather(*tasks)
-
-        return results
+        tasks = [asyncio.create_task(fetch(session, url)) for url in urls]
+        return await asyncio.gather(*tasks)
 
     async def fetch_certificates():
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(timeout=_REQUEST_TIMEOUT) as session:
             async with session.get(_MANUFACTURER_CERTIFICATE_URL) as response:
                 data = await response.read()
                 certificates = re.findall('href="(.+?crt)"', data.decode("UTF8"))
 
-        async with aiohttp.ClientSession() as session:
+        async with aiohttp.ClientSession(timeout=_REQUEST_TIMEOUT) as session:
             return await fetch_all(session, certificates)
 
     if sys.platform.startswith("win"):
@@ -174,8 +189,7 @@ def _public_key(connection: Connection, debug: bool = False) -> bytes:
     public_key = _certificate_parts(connection)[1][:130]
 
     if debug:
-        print("card public key hex")
-        print(public_key)
+        logger.debug("Card public key hex: %s", public_key)
 
     return bytes.fromhex(public_key)
 
@@ -185,8 +199,7 @@ def _manufacturer_certificate_data(connection: Connection, debug: bool = False) 
     result = bytes.fromhex(_certificate_parts(connection, debug)[0][8:] +
                            _PUBLIC_K1_OID) + _public_key(connection)
     if debug:
-        print("Manufacturer data")
-        print(result.hex())
+        logger.debug("Manufacturer data: %s", result.hex())
 
     return result
 
@@ -198,15 +211,14 @@ def _get_card_certificate(connection: Connection, debug: bool = False) -> str:
 
     card_cert_hex = list_to_hexadecimal(certificate)
     if debug:
-        print("Card cert")
-        print(card_cert_hex)
+        logger.debug("Card cert: %s", card_cert_hex)
     # C ?
     if card_cert_hex[:2] != "43":
-        print("Bad card certificate header")
+        logger.warning("Bad card certificate header")
         return ""
     # Nonce?
     if int(card_cert_hex[2:18], 16) != nonce:
-        print("Card certificate nonce is not the one provided")
+        logger.warning("Card certificate nonce is not the one provided")
         return ""
 
     return card_cert_hex
@@ -222,13 +234,15 @@ def _manufacturer_signature(connection: Connection, debug: bool = False) -> str:
     signature_length = int(certificate_parts[1][0:2], 16)
     signature = certificate_parts[1][2:]
 
-    assert len(signature) == 2 * signature_length
+    if len(signature) != 2 * signature_length:
+        raise GenuineCheckException(
+            f"Signature length mismatch: expected {2 * signature_length}, got {len(signature)}"
+        )
 
     if certificate_parts[1][2:4] == "00":
         signature = certificate_parts[1][4:]
 
     if debug:
-        print("mft cert sig hex")
-        print(signature)
+        logger.debug("Manufacturer cert sig hex: %s", signature)
 
     return signature

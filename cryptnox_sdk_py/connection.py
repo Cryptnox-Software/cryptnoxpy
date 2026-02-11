@@ -6,7 +6,8 @@ Sending and receiving information from the card through the reader.
 """
 
 import hashlib
-import pickle
+import json
+import logging
 import secrets
 from contextlib import ContextDecorator
 from time import time, sleep
@@ -15,7 +16,6 @@ from typing import (
     Tuple,
     Union
 )
-import logging
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -29,6 +29,8 @@ from .binary_utils import (
     remove_padding
 )
 from .crypto_utils import aes_decrypt, aes_encrypt
+
+logger = logging.getLogger(__name__)
 
 
 class Connection(ContextDecorator):
@@ -85,6 +87,7 @@ class Connection(ContextDecorator):
                 sleep(0.2)
 
     def __del__(self):
+        self._clear_session_keys()
         if self._reader:
             del self._reader
 
@@ -95,12 +98,24 @@ class Connection(ContextDecorator):
         This method properly closes the connection to the card reader without
         deleting the Connection object itself.
         """
+        self._clear_session_keys()
         if self._reader:
             try:
                 self._reader.disconnect()
             except (AttributeError, reader.ConnectionException):
                 # Ignore disconnect errors: disconnect is best-effort and should not raise.
-                logging.debug("Failed to disconnect from reader", exc_info=True)
+                logger.debug("Failed to disconnect from reader", exc_info=True)
+
+    def _clear_session_keys(self) -> None:
+        """Overwrite session keys with zeros to reduce exposure in memory."""
+        key_len = len(self._aes_key) if self._aes_key else 32
+        mac_len = len(self._mac_key) if self._mac_key else 32
+        self._aes_key = b"\x00" * key_len
+        self._mac_key = b"\x00" * mac_len
+        self._iv = b"\x00" * 16
+        self._mac_iv = b"\x00" * 16
+        # Mark session as closed so _open_secure_channel will re-negotiate.
+        self._aes_key = b""
 
     def send_apdu(self, apdu: List[int]) -> Tuple[List[int], int, int]:
         """
@@ -114,8 +129,12 @@ class Connection(ContextDecorator):
         """
         t_env = 0
         if self.debug:
-            print(f"--> sending : {len(apdu) - 5} bytes data ")
-            print(list_to_hexadecimal(apdu))
+            payload_len = max(len(apdu) - 5, 0)
+            header_hex = list_to_hexadecimal(apdu[:4]) if len(apdu) >= 4 else list_to_hexadecimal(apdu)
+            # Only log the APDU header (CLA INS P1 P2); payload is encrypted or
+            # may contain sensitive material in rare plaintext commands.
+            logger.debug("--> sending : %d bytes data  header: %s  payload: [%d bytes]",
+                         payload_len, header_hex, payload_len)
             t_env = time()
 
         if self.remote:
@@ -128,8 +147,8 @@ class Connection(ContextDecorator):
 
         if self.debug:
             t_ans = int((time() - t_env) * 10000) / 10.0
-            print(f"<-- received : {status1:02x}{status2:02x} : {len(data)} bytes data  --  time : {t_ans:.1f} ms")
-            print(list_to_hexadecimal(data))
+            logger.debug("<-- received : %02x%02x : %d bytes data  --  time : %.1f ms",
+                         status1, status2, len(data), t_ans)
 
         self._check_response_code(status1, status2)
 
@@ -151,13 +170,11 @@ class Connection(ContextDecorator):
         self._open_secure_channel()
 
         if self.debug:
-            data_length = len(data)
-            print(f"--> sending (SCP) : {len(data)} bytes data ")
-            if receive_long or data_length >= 256:
-                send_data = [0, data_length >> 8, data_length & 255]
-            else:
-                send_data = [data_length]
-            print(list_to_hexadecimal(apdu + send_data + binary_to_list(data)))
+            # Log APDU header and data length only — the cleartext payload can
+            # contain PINs, PUKs, seeds or pairing keys and must not be printed.
+            header_hex = list_to_hexadecimal(apdu[:4]) if len(apdu) >= 4 else list_to_hexadecimal(apdu)
+            logger.debug("--> sending (SCP) : %d bytes data  header: %s  payload: [%d bytes]",
+                         len(data), header_hex, len(data))
 
         rep_list, mac_value = self._encrypt(apdu, data, receive_long)
 
@@ -169,8 +186,7 @@ class Connection(ContextDecorator):
         received = data_decoded[:-2]
         self._iv = rep[:16]
         if self.debug:
-            print(f"<-- received (SCP) : {status.hex()} : {len(received)} bytes data ")
-            print(received.hex())
+            logger.debug("<-- received (SCP) : %s : %d bytes data", status.hex(), len(received))
 
         self._check_response_code(status[0], status[1])
         if status[0] != 0x90 or status[1] != 0x00:
@@ -219,7 +235,7 @@ class Connection(ContextDecorator):
         try:
             data_decoded = remove_padding(aes_decrypt(self._aes_key,
                                                       mac_value, rep_data))
-        except Exception as error:
+        except (ValueError, KeyError) as error:
             raise exceptions.CryptnoxException("Error (SCP) : Error during decryption (bad padding,"
                                                " wrong key)") from error
 
@@ -263,57 +279,73 @@ class Connection(ContextDecorator):
         if len(rep) != 32:
             raise exceptions.CryptnoxException("Bad data during secure channel opening")
 
-        # compute session keys
-        sess_salt = bytes(rep[:32])
-        self._iv = bytes([1] * 16)
+        # Derive session keys — if anything fails, wipe partial state so the
+        # next call to _open_secure_channel will start fresh.
+        try:
+            sess_salt = bytes(rep[:32])
+            self._iv = bytes([1] * 16)
 
-        public_key = ec.EllipticCurvePublicKey.from_encoded_point(
-            self.algorithm(), bytes.fromhex(self.session_public_key))
-        dh_secret = session_private_key.exchange(ec.ECDH(), public_key)
+            public_key = ec.EllipticCurvePublicKey.from_encoded_point(
+                self.algorithm(), bytes.fromhex(self.session_public_key))
+            dh_secret = session_private_key.exchange(ec.ECDH(), public_key)
 
-        secret = dh_secret + pairing_secret + sess_salt
-        session_secrets = hashlib.sha512(secret).digest()
-        self._aes_key = session_secrets[:32]
-        self._mac_key = session_secrets[32:]
-        self._mac_iv = bytes([0] * 16)
+            secret = dh_secret + pairing_secret + sess_salt
+            session_secrets = hashlib.sha512(secret).digest()
+            self._aes_key = session_secrets[:32]
+            self._mac_key = session_secrets[32:]
+            self._mac_iv = bytes([0] * 16)
 
-        data = secrets.token_bytes(nbytes=32)
-        cmd = [0x80, 0x11, 0, 0]
-        resp = self.send_encrypted(cmd, data)
+            data = secrets.token_bytes(nbytes=32)
+            cmd = [0x80, 0x11, 0, 0]
+            resp = self.send_encrypted(cmd, data)
 
-        if len(resp) != 32:
-            raise exceptions.CryptnoxException("Bad data during secure channel testing")
+            if len(resp) != 32:
+                raise exceptions.CryptnoxException("Bad data during secure channel testing")
+        except Exception:
+            # Key derivation or channel test failed — clear partial keys so
+            # the session is not left in a half-open state.
+            self._clear_session_keys()
+            raise
+
+    # Default timeout (seconds) for remote socket operations.
+    _REMOTE_TIMEOUT = 30
 
     def remote_read(self, apdu: List[int]) -> Tuple[List[int], int, int]:
         if not self.conn:
             raise ConnectionError('Calling remote read without connection')
 
-        message = pickle.dumps(apdu)
+        # Apply a socket-level timeout so we never hang indefinitely.
+        previous_timeout = self.conn.gettimeout()
+        self.conn.settimeout(self._REMOTE_TIMEOUT)
+        try:
+            return self._remote_read_inner(apdu)
+        finally:
+            self.conn.settimeout(previous_timeout)
+
+    def _remote_read_inner(self, apdu: List[int]) -> Tuple[List[int], int, int]:
+        message = json.dumps(apdu).encode('utf-8')
         msg_length = len(message)
         send_length = str(msg_length).encode('utf-8')
         send_length += (" " * (64 - len(send_length))).encode('utf-8')
         self.conn.send(send_length + message)
 
-        while True:
-            message = self.conn.recv(64)
-            if not message:
-                continue
+        message = self.conn.recv(64)
+        if not message:
+            raise ConnectionError('Remote connection closed unexpectedly')
 
-            try:
-                message_length = int(message.decode('utf-8'))
-            except ValueError as error:
-                raise ConnectionError('Error in remote connection') from error
+        try:
+            message_length = int(message.decode('utf-8'))
+        except ValueError as error:
+            raise ConnectionError('Error in remote connection') from error
 
-            received_message = self.conn.recv(message_length)
-            if not received_message:
-                continue
+        received_message = self.conn.recv(message_length)
+        if not received_message:
+            raise ConnectionError('Remote connection closed unexpectedly')
 
-            try:
-                response = pickle.loads(received_message)
-            except pickle.UnpicklingError as error:
-                raise ConnectionError('Error in remote connection') from error
+        try:
+            response = json.loads(received_message)
+        except (json.JSONDecodeError, UnicodeDecodeError) as error:
+            raise ConnectionError('Error in remote connection') from error
 
-            data, status1, status2 = response
-            break
-
+        data, status1, status2 = response
         return data, status1, status2
