@@ -84,7 +84,8 @@
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">hashlib</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">secrets</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">ContextDecorator</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span><span class="p">,</span> <span class="n">sleep</span>
@@ -93,7 +94,6 @@
     <span class="n">Tuple</span><span class="p">,</span>
     <span class="n">Union</span>
 <span class="p">)</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">serialization</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.asymmetric</span><span class="w"> </span><span class="kn">import</span> <span class="n">ec</span>
@@ -107,6 +107,8 @@
     <span class="n">remove_padding</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.crypto_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">aes_decrypt</span><span class="p">,</span> <span class="n">aes_encrypt</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Connection">
@@ -168,6 +170,7 @@
                 <span class="n">sleep</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_session_keys</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reader</span><span class="p">:</span>
             <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reader</span>
 
@@ -180,13 +183,25 @@
 <span class="sd">        This method properly closes the connection to the card reader without</span>
 <span class="sd">        deleting the Connection object itself.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_clear_session_keys</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reader</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_reader</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
             <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="n">reader</span><span class="o">.</span><span class="n">ConnectionException</span><span class="p">):</span>
                 <span class="c1"># Ignore disconnect errors: disconnect is best-effort and should not raise.</span>
-                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Failed to disconnect from reader&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+                <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Failed to disconnect from reader&quot;</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
 
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clear_session_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Overwrite session keys with zeros to reduce exposure in memory.&quot;&quot;&quot;</span>
+        <span class="n">key_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aes_key</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_aes_key</span> <span class="k">else</span> <span class="mi">32</span>
+        <span class="n">mac_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_mac_key</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mac_key</span> <span class="k">else</span> <span class="mi">32</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_aes_key</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="n">key_len</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_key</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="n">mac_len</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_iv</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">16</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_iv</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span> <span class="o">*</span> <span class="mi">16</span>
+        <span class="c1"># Mark session as closed so _open_secure_channel will re-negotiate.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_aes_key</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span>
 
 <div class="viewcode-block" id="Connection.send_apdu">
 <a class="viewcode-back" href="../../cryptnox_sdk_py.html#cryptnox_sdk_py.connection.Connection.send_apdu">[docs]</a>
@@ -202,8 +217,12 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">t_env</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; sending : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">5</span><span class="si">}</span><span class="s2"> bytes data &quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">list_to_hexadecimal</span><span class="p">(</span><span class="n">apdu</span><span class="p">))</span>
+            <span class="n">payload_len</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">header_hex</span> <span class="o">=</span> <span class="n">list_to_hexadecimal</span><span class="p">(</span><span class="n">apdu</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="k">else</span> <span class="n">list_to_hexadecimal</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span>
+            <span class="c1"># Only log the APDU header (CLA INS P1 P2); payload is encrypted or</span>
+            <span class="c1"># may contain sensitive material in rare plaintext commands.</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;--&gt; sending : </span><span class="si">%d</span><span class="s2"> bytes data  header: </span><span class="si">%s</span><span class="s2">  payload: [</span><span class="si">%d</span><span class="s2"> bytes]&quot;</span><span class="p">,</span>
+                         <span class="n">payload_len</span><span class="p">,</span> <span class="n">header_hex</span><span class="p">,</span> <span class="n">payload_len</span><span class="p">)</span>
             <span class="n">t_env</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">remote</span><span class="p">:</span>
@@ -216,8 +235,8 @@
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
             <span class="n">t_ans</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t_env</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10000</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.0</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;-- received : </span><span class="si">{</span><span class="n">status1</span><span class="si">:</span><span class="s2">02x</span><span class="si">}{</span><span class="n">status2</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes data  --  time : </span><span class="si">{</span><span class="n">t_ans</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> ms&quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">list_to_hexadecimal</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;&lt;-- received : </span><span class="si">%02x%02x</span><span class="s2"> : </span><span class="si">%d</span><span class="s2"> bytes data  --  time : </span><span class="si">%.1f</span><span class="s2"> ms&quot;</span><span class="p">,</span>
+                         <span class="n">status1</span><span class="p">,</span> <span class="n">status2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">t_ans</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_response_code</span><span class="p">(</span><span class="n">status1</span><span class="p">,</span> <span class="n">status2</span><span class="p">)</span>
 
@@ -242,13 +261,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_open_secure_channel</span><span class="p">()</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
-            <span class="n">data_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--&gt; sending (SCP) : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes data &quot;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">receive_long</span> <span class="ow">or</span> <span class="n">data_length</span> <span class="o">&gt;=</span> <span class="mi">256</span><span class="p">:</span>
-                <span class="n">send_data</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">data_length</span> <span class="o">&gt;&gt;</span> <span class="mi">8</span><span class="p">,</span> <span class="n">data_length</span> <span class="o">&amp;</span> <span class="mi">255</span><span class="p">]</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">send_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">data_length</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">list_to_hexadecimal</span><span class="p">(</span><span class="n">apdu</span> <span class="o">+</span> <span class="n">send_data</span> <span class="o">+</span> <span class="n">binary_to_list</span><span class="p">(</span><span class="n">data</span><span class="p">)))</span>
+            <span class="c1"># Log APDU header and data length only — the cleartext payload can</span>
+            <span class="c1"># contain PINs, PUKs, seeds or pairing keys and must not be printed.</span>
+            <span class="n">header_hex</span> <span class="o">=</span> <span class="n">list_to_hexadecimal</span><span class="p">(</span><span class="n">apdu</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span> <span class="k">else</span> <span class="n">list_to_hexadecimal</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;--&gt; sending (SCP) : </span><span class="si">%d</span><span class="s2"> bytes data  header: </span><span class="si">%s</span><span class="s2">  payload: [</span><span class="si">%d</span><span class="s2"> bytes]&quot;</span><span class="p">,</span>
+                         <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">header_hex</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
 
         <span class="n">rep_list</span><span class="p">,</span> <span class="n">mac_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_encrypt</span><span class="p">(</span><span class="n">apdu</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">receive_long</span><span class="p">)</span>
 
@@ -260,8 +277,7 @@
         <span class="n">received</span> <span class="o">=</span> <span class="n">data_decoded</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_iv</span> <span class="o">=</span> <span class="n">rep</span><span class="p">[:</span><span class="mi">16</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&lt;-- received (SCP) : </span><span class="si">{</span><span class="n">status</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2"> : </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">received</span><span class="p">)</span><span class="si">}</span><span class="s2"> bytes data &quot;</span><span class="p">)</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">received</span><span class="o">.</span><span class="n">hex</span><span class="p">())</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;&lt;-- received (SCP) : </span><span class="si">%s</span><span class="s2"> : </span><span class="si">%d</span><span class="s2"> bytes data&quot;</span><span class="p">,</span> <span class="n">status</span><span class="o">.</span><span class="n">hex</span><span class="p">(),</span> <span class="nb">len</span><span class="p">(</span><span class="n">received</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_response_code</span><span class="p">(</span><span class="n">status</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">status</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">status</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mh">0x90</span> <span class="ow">or</span> <span class="n">status</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mh">0x00</span><span class="p">:</span>
@@ -311,7 +327,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">data_decoded</span> <span class="o">=</span> <span class="n">remove_padding</span><span class="p">(</span><span class="n">aes_decrypt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_aes_key</span><span class="p">,</span>
                                                       <span class="n">mac_value</span><span class="p">,</span> <span class="n">rep_data</span><span class="p">))</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">CryptnoxException</span><span class="p">(</span><span class="s2">&quot;Error (SCP) : Error during decryption (bad padding,&quot;</span>
                                                <span class="s2">&quot; wrong key)&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
 
@@ -355,26 +371,36 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rep</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">CryptnoxException</span><span class="p">(</span><span class="s2">&quot;Bad data during secure channel opening&quot;</span><span class="p">)</span>
 
-        <span class="c1"># compute session keys</span>
-        <span class="n">sess_salt</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">rep</span><span class="p">[:</span><span class="mi">32</span><span class="p">])</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_iv</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="c1"># Derive session keys — if anything fails, wipe partial state so the</span>
+        <span class="c1"># next call to _open_secure_channel will start fresh.</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">sess_salt</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">rep</span><span class="p">[:</span><span class="mi">32</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_iv</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span>
 
-        <span class="n">public_key</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">EllipticCurvePublicKey</span><span class="o">.</span><span class="n">from_encoded_point</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(),</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_public_key</span><span class="p">))</span>
-        <span class="n">dh_secret</span> <span class="o">=</span> <span class="n">session_private_key</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">ECDH</span><span class="p">(),</span> <span class="n">public_key</span><span class="p">)</span>
+            <span class="n">public_key</span> <span class="o">=</span> <span class="n">ec</span><span class="o">.</span><span class="n">EllipticCurvePublicKey</span><span class="o">.</span><span class="n">from_encoded_point</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">algorithm</span><span class="p">(),</span> <span class="nb">bytes</span><span class="o">.</span><span class="n">fromhex</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">session_public_key</span><span class="p">))</span>
+            <span class="n">dh_secret</span> <span class="o">=</span> <span class="n">session_private_key</span><span class="o">.</span><span class="n">exchange</span><span class="p">(</span><span class="n">ec</span><span class="o">.</span><span class="n">ECDH</span><span class="p">(),</span> <span class="n">public_key</span><span class="p">)</span>
 
-        <span class="n">secret</span> <span class="o">=</span> <span class="n">dh_secret</span> <span class="o">+</span> <span class="n">pairing_secret</span> <span class="o">+</span> <span class="n">sess_salt</span>
-        <span class="n">session_secrets</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha512</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_aes_key</span> <span class="o">=</span> <span class="n">session_secrets</span><span class="p">[:</span><span class="mi">32</span><span class="p">]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_key</span> <span class="o">=</span> <span class="n">session_secrets</span><span class="p">[</span><span class="mi">32</span><span class="p">:]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_mac_iv</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span>
+            <span class="n">secret</span> <span class="o">=</span> <span class="n">dh_secret</span> <span class="o">+</span> <span class="n">pairing_secret</span> <span class="o">+</span> <span class="n">sess_salt</span>
+            <span class="n">session_secrets</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha512</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span><span class="o">.</span><span class="n">digest</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_aes_key</span> <span class="o">=</span> <span class="n">session_secrets</span><span class="p">[:</span><span class="mi">32</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mac_key</span> <span class="o">=</span> <span class="n">session_secrets</span><span class="p">[</span><span class="mi">32</span><span class="p">:]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_mac_iv</span> <span class="o">=</span> <span class="nb">bytes</span><span class="p">([</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">16</span><span class="p">)</span>
 
-        <span class="n">data</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_bytes</span><span class="p">(</span><span class="n">nbytes</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
-        <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x11</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_encrypted</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_bytes</span><span class="p">(</span><span class="n">nbytes</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+            <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x11</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">resp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">send_encrypted</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">CryptnoxException</span><span class="p">(</span><span class="s2">&quot;Bad data during secure channel testing&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">resp</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">32</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">CryptnoxException</span><span class="p">(</span><span class="s2">&quot;Bad data during secure channel testing&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="c1"># Key derivation or channel test failed — clear partial keys so</span>
+            <span class="c1"># the session is not left in a half-open state.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_clear_session_keys</span><span class="p">()</span>
+            <span class="k">raise</span>
+
+    <span class="c1"># Default timeout (seconds) for remote socket operations.</span>
+    <span class="n">_REMOTE_TIMEOUT</span> <span class="o">=</span> <span class="mi">30</span>
 
 <div class="viewcode-block" id="Connection.remote_read">
 <a class="viewcode-back" href="../../cryptnox_sdk_py.html#cryptnox_sdk_py.connection.Connection.remote_read">[docs]</a>
@@ -382,36 +408,42 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;Calling remote read without connection&#39;</span><span class="p">)</span>
 
-        <span class="n">message</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span>
+        <span class="c1"># Apply a socket-level timeout so we never hang indefinitely.</span>
+        <span class="n">previous_timeout</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">gettimeout</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_REMOTE_TIMEOUT</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_remote_read_inner</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="n">previous_timeout</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_remote_read_inner</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">apdu</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">apdu</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
         <span class="n">msg_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
         <span class="n">send_length</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">msg_length</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
         <span class="n">send_length</span> <span class="o">+=</span> <span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="p">(</span><span class="mi">64</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">send_length</span><span class="p">)))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">send_length</span> <span class="o">+</span> <span class="n">message</span><span class="p">)</span>
 
-        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
-                <span class="k">continue</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;Remote connection closed unexpectedly&#39;</span><span class="p">)</span>
 
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">message_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
-            <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;Error in remote connection&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">message_length</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">message</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;Error in remote connection&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
 
-            <span class="n">received_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">message_length</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">received_message</span><span class="p">:</span>
-                <span class="k">continue</span>
+        <span class="n">received_message</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="n">message_length</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">received_message</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;Remote connection closed unexpectedly&#39;</span><span class="p">)</span>
 
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">response</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">received_message</span><span class="p">)</span>
-            <span class="k">except</span> <span class="n">pickle</span><span class="o">.</span><span class="n">UnpicklingError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;Error in remote connection&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">received_message</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">,</span> <span class="ne">UnicodeDecodeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ConnectionError</span><span class="p">(</span><span class="s1">&#39;Error in remote connection&#39;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
 
-            <span class="n">data</span><span class="p">,</span> <span class="n">status1</span><span class="p">,</span> <span class="n">status2</span> <span class="o">=</span> <span class="n">response</span>
-            <span class="k">break</span>
-
+        <span class="n">data</span><span class="p">,</span> <span class="n">status1</span><span class="p">,</span> <span class="n">status2</span> <span class="o">=</span> <span class="n">response</span>
         <span class="k">return</span> <span class="n">data</span><span class="p">,</span> <span class="n">status1</span><span class="p">,</span> <span class="n">status2</span></div>
-</div>
 
 </pre></div>
 
