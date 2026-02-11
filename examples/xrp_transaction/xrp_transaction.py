@@ -428,25 +428,6 @@ def rs_to_der(r: int, s: int) -> bytes:
     return b'\x30' + bytes([len(r_tlv) + len(s_tlv)]) + r_tlv + s_tlv
 
 
-def normalize_and_der_encode(der_signature: bytes) -> str:
-    """
-    Take a DER signature, normalize S to low-S, and re-encode as DER hex.
-
-    XRP requires:
-    1. DER-encoded signatures (not raw R||S)
-    2. Canonical form (low-S, where S <= curve_order / 2)
-
-    Args:
-        der_signature: DER-encoded signature bytes from the card
-
-    Returns:
-        Normalized DER signature as uppercase hex string
-    """
-    r, s = der_to_rs(der_signature)
-    r, s = normalize_s(r, s)
-    return rs_to_der(r, s).hex().upper()
-
-
 # =============================================================================
 # Transaction Finalization Functions
 # =============================================================================
