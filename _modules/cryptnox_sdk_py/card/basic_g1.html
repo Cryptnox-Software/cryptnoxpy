@@ -239,10 +239,7 @@
                 <span class="n">mnft_cert_resp</span>
                 <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_apdu</span><span class="p">([</span><span class="mh">0x80</span><span class="p">,</span> <span class="mh">0xF7</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="n">idx_page</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
             <span class="p">)</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">mnft_cert_resp</span><span class="p">)</span> <span class="o">!=</span> <span class="p">(</span><span class="n">cert_len</span> <span class="o">+</span> <span class="mi">2</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">DataException</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Certificate length mismatch: expected </span><span class="si">{</span><span class="n">cert_len</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">mnft_cert_resp</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">mnft_cert_resp</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">cert_len</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span>
         <span class="n">cert</span> <span class="o">=</span> <span class="n">mnft_cert_resp</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span>
         <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">02x</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cert</span><span class="p">])</span></div>
 
@@ -337,6 +334,7 @@
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pubkey</span><span class="p">)</span> <span class="o">==</span> <span class="mi">32</span><span class="p">:</span>
             <span class="c1"># Card returned only X-coordinate (32 bytes)</span>
             <span class="c1"># This is common for clear channel public key reading</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Received 32-byte public key (x-coordinate): </span><span class="si">{</span><span class="n">pubkey</span><span class="o">.</span><span class="n">hex</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">pubkey</span>
 
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pubkey</span><span class="p">)</span> <span class="o">==</span> <span class="mi">33</span> <span class="ow">and</span> <span class="n">pubkey</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mh">0x02</span><span class="p">,</span> <span class="mh">0x03</span><span class="p">]:</span>
@@ -534,22 +532,6 @@
 <div class="viewcode-block" id="BasicG1.set_pinless_path">
 <a class="viewcode-back" href="../../../cryptnox_sdk_py.card.html#cryptnox_sdk_py.card.basic_g1.BasicG1.set_pinless_path">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">set_pinless_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">puk</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Define a BIP-32 derivation path whose key can sign without PIN entry.</span>
-
-<span class="sd">        This is a deliberate design feature for payment/NFC tap-to-pay use</span>
-<span class="sd">        cases where user interaction is not possible.  The operation is</span>
-<span class="sd">        PUK-protected: only the card owner who knows the PUK can enable or</span>
-<span class="sd">        change the pinless path, limiting the attack surface to that single</span>
-<span class="sd">        derivation path.</span>
-
-<span class="sd">        :param str path: BIP-32 path to allow pinless signing (empty to clear)</span>
-<span class="sd">        :param str puk:  PUK code authorising the change</span>
-
-<span class="sd">        :raises SeedException: No seed loaded on the card</span>
-<span class="sd">        :raises PukException: PUK is invalid</span>
-<span class="sd">        :raises DataValidationException: Path format is invalid</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">seed_source</span> <span class="o">==</span> <span class="n">SeedSource</span><span class="o">.</span><span class="n">NO_SEED</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">SeedException</span><span class="p">(</span><span class="s2">&quot;There is no seed on the card&quot;</span><span class="p">)</span>
 
