@@ -398,35 +398,6 @@ def normalize_s(r: int, s: int) -> Tuple[int, int]:
     return r, s
 
 
-def rs_to_der(r: int, s: int) -> bytes:
-    """
-    Encode r, s values back into DER format.
-
-    DER format: 0x30 [total-length] 0x02 [r-length] [r] 0x02 [s-length] [s]
-
-    Args:
-        r: r component of signature
-        s: s component of signature
-
-    Returns:
-        DER-encoded signature bytes
-    """
-    # Encode r
-    r_bytes = r.to_bytes((r.bit_length() + 7) // 8, 'big')
-    if r_bytes[0] & 0x80:  # Add leading zero if high bit set
-        r_bytes = b'\x00' + r_bytes
-
-    # Encode s
-    s_bytes = s.to_bytes((s.bit_length() + 7) // 8, 'big')
-    if s_bytes[0] & 0x80:  # Add leading zero if high bit set
-        s_bytes = b'\x00' + s_bytes
-
-    # Build DER structure
-    r_tlv = b'\x02' + bytes([len(r_bytes)]) + r_bytes
-    s_tlv = b'\x02' + bytes([len(s_bytes)]) + s_bytes
-
-    return b'\x30' + bytes([len(r_tlv) + len(s_tlv)]) + r_tlv + s_tlv
-
 
 # =============================================================================
 # Transaction Finalization Functions

@@ -26,7 +26,6 @@ from .xrp_transaction import (
     # Signature processing
     der_to_rs,
     normalize_s,
-    rs_to_der,
     # Transaction finalization
     insert_signature,
     generate_tx_blob,
@@ -49,7 +48,6 @@ __all__ = [
     "sign_with_card",
     "der_to_rs",
     "normalize_s",
-    "rs_to_der",
     "insert_signature",
     "generate_tx_blob",
     "calculate_transaction_hash",
