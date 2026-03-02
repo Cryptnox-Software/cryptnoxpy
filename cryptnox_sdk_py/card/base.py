@@ -9,9 +9,10 @@ from typing import (
     Any,
     Dict,
     NamedTuple,
-    Tuple
+    Optional,
+    Tuple,
+    List,
 )
-from typing import List
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -835,15 +836,17 @@ class Base(metaclass=abc.ABCMeta):
         """
 
     @abc.abstractmethod
-    def verify_pin(self, pin: str) -> None:
+    def verify_pin(self, pin: Optional[str] = None) -> Optional[int]:
         """
-        Check PIN code and open the card for operations that are protected.
+        Verify PIN code, or query remaining retries without decrementing the counter.
 
-        The method is sending the PIN code to the card to open it for other
-        operations. If there is an issue an exception will be raised.
+        If ``pin`` is ``None``, returns the number of PIN attempts remaining (safe read).
+        If ``pin`` is provided, verifies it and opens the card for protected operations.
 
-
-        :param str pin: PIN code to check against the card.
+        :param pin: PIN code, or ``None`` to query remaining retries.
+        :type pin: str or None
+        :return: Retries remaining when ``pin`` is ``None``, otherwise ``None``.
+        :rtype: int or None
 
         :raises PinException: Invalid PIN code
         :raises DataValidationException: Invalid length or PIN code authentication disabled

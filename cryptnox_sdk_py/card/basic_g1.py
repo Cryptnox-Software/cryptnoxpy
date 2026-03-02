@@ -5,6 +5,7 @@ Module containing class for Basic card of 1st generation
 from collections import namedtuple
 from typing import (
     NamedTuple,
+    Optional,
     Tuple
 )
 
@@ -631,7 +632,11 @@ class BasicG1(base.Base):
         """
         raise NotImplementedError("BasicG1 cards do not support signature_check")
 
-    def verify_pin(self, pin: str) -> None:
+    def verify_pin(self, pin: Optional[str] = None) -> Optional[int]:
+        if pin is None:
+            result = self.connection.send_encrypted([0x80, 0x20, 0x00, 0x00], b"")
+            return result[0]
+
         pin = self.valid_pin(pin)
         apdu = [0x80, 0x20, 0x00, 0x00]
 
