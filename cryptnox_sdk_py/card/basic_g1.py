@@ -633,22 +633,22 @@ class BasicG1(base.Base):
         raise NotImplementedError("BasicG1 cards do not support signature_check")
 
     def verify_pin(self, pin: Optional[str] = None) -> Optional[int]:
+        apdu = [0x80, 0x20, 0x00, 0x00]
         if pin is None:
-            result = self.connection.send_encrypted([0x80, 0x20, 0x00, 0x00], b"")
-            return result[0]
+            result = self.connection.send_encrypted(apdu, b"")
+            return result[0] if result else None
 
         pin = self.valid_pin(pin)
-        apdu = [0x80, 0x20, 0x00, 0x00]
 
         try:
-            self.connection.send_encrypted(apdu, bytes(pin, 'ascii'))
+            self.connection.send_encrypted(apdu, pin.encode('ascii'))
         except exceptions.PinException as error:
             if error.number_of_retries != 0:
                 raise
 
             apdu = [0x80, 0x22, 0x00, 0x00]
             try:
-                self.connection.send_encrypted(apdu, bytes("", 'ascii') + bytes("", 'ascii'))
+                self.connection.send_encrypted(apdu, b"")
             except (exceptions.DataValidationException, exceptions.PinException):
                 pass
             except exceptions.SecureChannelException as sc_error:

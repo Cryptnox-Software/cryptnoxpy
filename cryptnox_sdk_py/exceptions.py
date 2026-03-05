@@ -87,6 +87,10 @@ class PinAuthenticationException(CryptnoxException):
     """Error in turning off PIN authentication. There is no user key in the card"""
 
 
+class PinBlockedException(CryptnoxException):
+    """PIN is fully blocked (0 retries remaining). Unblock the card before attempting this operation."""
+
+
 class PinException(CryptnoxException):
     """
     Sent PIN code is not valid.

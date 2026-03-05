@@ -165,14 +165,23 @@ class Base(metaclass=abc.ABCMeta):
 
     def change_puk(self, current_puk: str, new_puk: str) -> None:
         """
-        Change the current pin code of the card to a new pin code.
+        Change the current PUK code of the card to a new PUK code.
 
-        The method will set the given pin code as the pin code of the card.
-        For it to work the card first must be opened with the current pin code.
+        Raises PinBlockedException if the PIN is blocked (0 retries remaining) to
+        prevent silent PUK corruption.
 
         :param str current_puk: The current PUK code of the card
         :param str new_puk: The desired PUK code to be set for the card
+        :raises PinBlockedException: PIN is blocked — changing PUK in this state
+                                     corrupts the PUK permanently.
         """
+        if not self.open:
+            retries = self.verify_pin(None)
+            if retries == 0:
+                raise exceptions.PinBlockedException(
+                    "Cannot change PUK while PIN is blocked: doing so would permanently corrupt "
+                    "the PUK. Use unlock_pin first."
+                )
         current_puk = self.valid_puk(current_puk, "current puk")
         new_puk = self.valid_puk(new_puk, "new puk")
         self._change_secret(1, new_puk + current_puk)
