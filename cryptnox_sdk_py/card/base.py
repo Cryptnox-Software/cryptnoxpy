@@ -167,23 +167,9 @@ class Base(metaclass=abc.ABCMeta):
         """
         Change the current PUK code of the card to a new PUK code.
 
-        Raises PinBlockedException if the PIN is blocked (0 retries remaining).
-        Calling change_puk in LOCKED state causes the firmware to silently corrupt
-        the PUK to an unknown value, permanently bricking the card (FINDING-009).
-
         :param str current_puk: The current PUK code of the card
         :param str new_puk: The desired PUK code to be set for the card
-        :raises PinBlockedException: PIN is locked — changing PUK in this state
-                                     permanently corrupts the PUK (FINDING-009).
         """
-        if not self.open:
-            retries = self.verify_pin(None)
-            if retries == 0:
-                raise exceptions.PinBlockedException(
-                    "Cannot change PUK while PIN is locked: the firmware silently corrupts "
-                    "the PUK in this state, permanently bricking the card (FINDING-009). "
-                    "Use unlock_pin with the current PUK first."
-                )
         current_puk = self.valid_puk(current_puk, "current puk")
         new_puk = self.valid_puk(new_puk, "new puk")
         self._change_secret(1, new_puk + current_puk)
