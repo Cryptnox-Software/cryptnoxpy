@@ -667,6 +667,8 @@ class BasicG1(base.Base):
         if not self.open:
             self.auth_type = base.AuthType.PIN
 
+        return None
+
     @staticmethod
     def _clear_bit(value, bit):
         return value & ~(1 << bit)
