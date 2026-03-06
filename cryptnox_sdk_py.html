@@ -104,6 +104,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#cryptnox_sdk_py.exceptions.SeedException"><code class="docutils literal notranslate"><span class="pre">SeedException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cryptnox_sdk_py.exceptions.KeyGenerationException"><code class="docutils literal notranslate"><span class="pre">KeyGenerationException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cryptnox_sdk_py.exceptions.PinAuthenticationException"><code class="docutils literal notranslate"><span class="pre">PinAuthenticationException</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cryptnox_sdk_py.exceptions.PinBlockedException"><code class="docutils literal notranslate"><span class="pre">PinBlockedException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cryptnox_sdk_py.exceptions.PinException"><code class="docutils literal notranslate"><span class="pre">PinException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cryptnox_sdk_py.exceptions.PukException"><code class="docutils literal notranslate"><span class="pre">PukException</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#cryptnox_sdk_py.exceptions.ReadPublicKeyException"><code class="docutils literal notranslate"><span class="pre">ReadPublicKeyException</span></code></a></li>
@@ -1177,6 +1178,13 @@ deleting the Connection object itself.</p>
 <span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">cryptnox_sdk_py.exceptions.</span></span><span class="sig-name descname"><span class="pre">PinAuthenticationException</span></span><a class="reference internal" href="_modules/cryptnox_sdk_py/exceptions.html#PinAuthenticationException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cryptnox_sdk_py.exceptions.PinAuthenticationException" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#cryptnox_sdk_py.exceptions.CryptnoxException" title="cryptnox_sdk_py.exceptions.CryptnoxException"><code class="xref py py-class docutils literal notranslate"><span class="pre">CryptnoxException</span></code></a></p>
 <p>Error in turning off PIN authentication. There is no user key in the card</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="cryptnox_sdk_py.exceptions.PinBlockedException">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">cryptnox_sdk_py.exceptions.</span></span><span class="sig-name descname"><span class="pre">PinBlockedException</span></span><a class="reference internal" href="_modules/cryptnox_sdk_py/exceptions.html#PinBlockedException"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#cryptnox_sdk_py.exceptions.PinBlockedException" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#cryptnox_sdk_py.exceptions.CryptnoxException" title="cryptnox_sdk_py.exceptions.CryptnoxException"><code class="xref py py-class docutils literal notranslate"><span class="pre">CryptnoxException</span></code></a></p>
+<p>PIN is fully blocked (0 retries remaining). Unblock the card before attempting this operation.</p>
 </dd></dl>
 
 <dl class="py exception">
