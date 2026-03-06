@@ -635,8 +635,11 @@ class BasicG1(base.Base):
     def verify_pin(self, pin: Optional[str] = None) -> Optional[int]:
         apdu = [0x80, 0x20, 0x00, 0x00]
         if pin is None:
-            result = self.connection.send_encrypted(apdu, b"")
-            return result[0] if result else None
+            try:
+                result = self.connection.send_encrypted(apdu, b"")
+                return result[0] if result else None
+            except exceptions.PinException as error:
+                return error.number_of_retries
 
         pin = self.valid_pin(pin)
 
