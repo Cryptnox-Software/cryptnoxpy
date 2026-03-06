@@ -8,7 +8,7 @@ import re
 import secrets
 import sys
 from typing import List
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urljoin, urlparse, unquote
 
 import aiohttp
 from cryptography import x509
@@ -126,7 +126,7 @@ def manufacturer_certificate(connection: Connection, debug: bool = False) -> str
 
 _ALLOWED_CERT_HOST = urlparse(_MANUFACTURER_CERTIFICATE_URL).hostname
 _REQUEST_TIMEOUT = aiohttp.ClientTimeout(total=15)
-_CERT_FILENAME_PATTERN = re.compile(r'^[\w.\-]+\.crt$')
+_CERT_FILENAME_PATTERN = re.compile(r'^[\w.\-#]+\.crt$')
 
 
 def _manufacturer_public_keys():
@@ -139,7 +139,8 @@ def _manufacturer_public_keys():
         urls = []
         for name in cert_names:
             # Only accept simple filenames that stay on the expected host.
-            if not _CERT_FILENAME_PATTERN.match(name):
+            # URL-decode first so that encoded names like CERT_%232.crt are validated correctly.
+            if not _CERT_FILENAME_PATTERN.match(unquote(name)):
                 logger.warning("Skipping suspicious certificate name: %s", name)
                 continue
             url = urljoin(_MANUFACTURER_CERTIFICATE_URL, name)
