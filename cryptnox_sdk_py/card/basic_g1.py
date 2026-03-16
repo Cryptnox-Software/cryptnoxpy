@@ -95,10 +95,10 @@ class BasicG1(base.Base):
     def generate_random_number(self, size: int) -> bytes:
         try:
             size = int(size)
-        except ValueError as error:
-            raise exceptions.DataValidationException("Checksum has to be an integer") from error
-        if 16 > size > 64 or size % 4:
-            raise exceptions.DataValidationException("Checksum value must be between 4 and 8.")
+        except (ValueError, TypeError) as error:
+            raise exceptions.DataValidationException("Size has to be an integer") from error
+        if not (16 <= size <= 64) or size % 4:
+            raise exceptions.DataValidationException("Size must be between 16 and 64 and a multiple of 4.")
 
         return self.connection.send_encrypted([0x80, 0xD3, size, 0x00], b"")
 
