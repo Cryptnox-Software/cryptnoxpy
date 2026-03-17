@@ -110,7 +110,7 @@ def run_entropy_test(pin: str, samples: int = 1_000_000) -> None:
 
     print(f"\nEntropy test results ({total:,} samples, range 0-127):")
     print(f"  Shannon entropy : {entropy:.4f} bits")
-    print(f"  Expected (ideal): 7.0000 bits")
+    print("  Expected (ideal): 7.0000 bits")
     if abs(entropy - 7.0) <= 0.05:
         print("  Result          : PASS — entropy is close to 7.0 bits, TRNG looks healthy.")
     else:
