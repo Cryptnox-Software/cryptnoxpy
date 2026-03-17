@@ -26,7 +26,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 try:
     import cryptnox_sdk_py
-    from cryptnox_sdk_py import exceptions
 except ImportError as e:
     print(f"Error: could not import cryptnox_sdk_py: {e}")
     print("Run from the repository root or install with: pip install cryptnox-sdk-py")
@@ -103,19 +102,19 @@ Size must be between 16 and 64 bytes and a multiple of 4.
 
     try:
         random_bytes = get_trng_random(args.pin, args.size)
-    except exceptions.ReaderException:
+    except cryptnox_sdk_py.exceptions.ReaderException:
         print("Error: Card reader not found.")
         sys.exit(1)
-    except exceptions.CardException as exc:
+    except cryptnox_sdk_py.exceptions.CardException as exc:
         print(f"Error: Card error - {exc}")
         sys.exit(1)
-    except exceptions.PinException:
+    except cryptnox_sdk_py.exceptions.PinException:
         print("Error: Invalid PIN code.")
         sys.exit(1)
-    except exceptions.DataValidationException as exc:
+    except cryptnox_sdk_py.exceptions.DataValidationException as exc:
         print(f"Error: {exc}")
         sys.exit(1)
-    except exceptions.CryptnoxException as exc:
+    except cryptnox_sdk_py.exceptions.CryptnoxException as exc:
         print(f"Error: {exc}")
         sys.exit(1)
 
