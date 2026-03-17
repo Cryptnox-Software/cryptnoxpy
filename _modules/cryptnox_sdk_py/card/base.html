@@ -87,10 +87,9 @@
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Dict</span><span class="p">,</span>
     <span class="n">NamedTuple</span><span class="p">,</span>
-    <span class="n">Optional</span><span class="p">,</span>
-    <span class="n">Tuple</span><span class="p">,</span>
-    <span class="n">List</span><span class="p">,</span>
+    <span class="n">Tuple</span>
 <span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">List</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives</span><span class="w"> </span><span class="kn">import</span> <span class="n">serialization</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">cryptography.hazmat.primitives.asymmetric</span><span class="w"> </span><span class="kn">import</span> <span class="n">ec</span>
@@ -256,7 +255,10 @@
 <a class="viewcode-back" href="../../../cryptnox_sdk_py.card.html#cryptnox_sdk_py.card.base.Base.change_puk">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">change_puk</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_puk</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">new_puk</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Change the current PUK code of the card to a new PUK code.</span>
+<span class="sd">        Change the current pin code of the card to a new pin code.</span>
+
+<span class="sd">        The method will set the given pin code as the pin code of the card.</span>
+<span class="sd">        For it to work the card first must be opened with the current pin code.</span>
 
 <span class="sd">        :param str current_puk: The current PUK code of the card</span>
 <span class="sd">        :param str new_puk: The desired PUK code to be set for the card</span>
@@ -1023,17 +1025,15 @@
 <div class="viewcode-block" id="Base.verify_pin">
 <a class="viewcode-back" href="../../../cryptnox_sdk_py.card.html#cryptnox_sdk_py.card.base.Base.verify_pin">[docs]</a>
     <span class="nd">@abc</span><span class="o">.</span><span class="n">abstractmethod</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">verify_pin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_pin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pin</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Verify PIN code, or query remaining retries without decrementing the counter.</span>
+<span class="sd">        Check PIN code and open the card for operations that are protected.</span>
 
-<span class="sd">        If ``pin`` is ``None``, returns the number of PIN attempts remaining (safe read).</span>
-<span class="sd">        If ``pin`` is provided, verifies it and opens the card for protected operations.</span>
+<span class="sd">        The method is sending the PIN code to the card to open it for other</span>
+<span class="sd">        operations. If there is an issue an exception will be raised.</span>
 
-<span class="sd">        :param pin: PIN code, or ``None`` to query remaining retries.</span>
-<span class="sd">        :type pin: str or None</span>
-<span class="sd">        :return: Retries remaining when ``pin`` is ``None``, otherwise ``None``.</span>
-<span class="sd">        :rtype: int or None</span>
+
+<span class="sd">        :param str pin: PIN code to check against the card.</span>
 
 <span class="sd">        :raises PinException: Invalid PIN code</span>
 <span class="sd">        :raises DataValidationException: Invalid length or PIN code authentication disabled</span>
