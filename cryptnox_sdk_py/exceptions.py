@@ -88,7 +88,7 @@ class PinAuthenticationException(CryptnoxException):
 
 
 class PinBlockedException(CryptnoxException):
-    """PIN is fully blocked (0 retries remaining). Unblock the card before attempting this operation."""
+    """PIN is locked. Use the unlock_pin command to unlock it before attempting this operation."""
 
 
 class PinException(CryptnoxException):
