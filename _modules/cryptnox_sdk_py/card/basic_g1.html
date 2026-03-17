@@ -83,7 +83,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">namedtuple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">NamedTuple</span><span class="p">,</span>
-    <span class="n">Optional</span><span class="p">,</span>
     <span class="n">Tuple</span>
 <span class="p">)</span>
 
@@ -193,10 +192,10 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">generate_random_number</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">size</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">size</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">DataValidationException</span><span class="p">(</span><span class="s2">&quot;Checksum has to be an integer&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
-        <span class="k">if</span> <span class="mi">16</span> <span class="o">&gt;</span> <span class="n">size</span> <span class="o">&gt;</span> <span class="mi">64</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">%</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">DataValidationException</span><span class="p">(</span><span class="s2">&quot;Checksum value must be between 4 and 8.&quot;</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">DataValidationException</span><span class="p">(</span><span class="s2">&quot;Size has to be an integer&quot;</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">16</span> <span class="o">&lt;=</span> <span class="n">size</span> <span class="o">&lt;=</span> <span class="mi">64</span><span class="p">)</span> <span class="ow">or</span> <span class="n">size</span> <span class="o">%</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">DataValidationException</span><span class="p">(</span><span class="s2">&quot;Size must be between 16 and 64 and a multiple of 4.&quot;</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_encrypted</span><span class="p">([</span><span class="mh">0x80</span><span class="p">,</span> <span class="mh">0xD3</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">],</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
@@ -807,26 +806,19 @@
 
 <div class="viewcode-block" id="BasicG1.verify_pin">
 <a class="viewcode-back" href="../../../cryptnox_sdk_py.card.html#cryptnox_sdk_py.card.basic_g1.BasicG1.verify_pin">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">verify_pin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
-        <span class="n">apdu</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">pin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">try</span><span class="p">:</span>
-                <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_encrypted</span><span class="p">(</span><span class="n">apdu</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-                <span class="k">return</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">result</span> <span class="k">else</span> <span class="kc">None</span>
-            <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">PinException</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-                <span class="k">return</span> <span class="n">error</span><span class="o">.</span><span class="n">number_of_retries</span>
-
+    <span class="k">def</span><span class="w"> </span><span class="nf">verify_pin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pin</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">pin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">valid_pin</span><span class="p">(</span><span class="n">pin</span><span class="p">)</span>
+        <span class="n">apdu</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x20</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">]</span>
 
         <span class="k">try</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_encrypted</span><span class="p">(</span><span class="n">apdu</span><span class="p">,</span> <span class="n">pin</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_encrypted</span><span class="p">(</span><span class="n">apdu</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">pin</span><span class="p">,</span> <span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
         <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">PinException</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">error</span><span class="o">.</span><span class="n">number_of_retries</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">raise</span>
 
             <span class="n">apdu</span> <span class="o">=</span> <span class="p">[</span><span class="mh">0x80</span><span class="p">,</span> <span class="mh">0x22</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">,</span> <span class="mh">0x00</span><span class="p">]</span>
             <span class="k">try</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_encrypted</span><span class="p">(</span><span class="n">apdu</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">connection</span><span class="o">.</span><span class="n">send_encrypted</span><span class="p">(</span><span class="n">apdu</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;ascii&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="nb">bytes</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s1">&#39;ascii&#39;</span><span class="p">))</span>
             <span class="k">except</span> <span class="p">(</span><span class="n">exceptions</span><span class="o">.</span><span class="n">DataValidationException</span><span class="p">,</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">PinException</span><span class="p">):</span>
                 <span class="k">pass</span>
             <span class="k">except</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">SecureChannelException</span> <span class="k">as</span> <span class="n">sc_error</span><span class="p">:</span>
@@ -840,9 +832,7 @@
                 <span class="k">raise</span> <span class="n">exceptions</span><span class="o">.</span><span class="n">DataValidationException</span><span class="p">(</span><span class="s2">&quot;PIN authentication disabled&quot;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">AuthType</span><span class="o">.</span><span class="n">PIN</span>
-
-        <span class="k">return</span> <span class="kc">None</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">auth_type</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">AuthType</span><span class="o">.</span><span class="n">PIN</span></div>
 
 
     <span class="nd">@staticmethod</span>
