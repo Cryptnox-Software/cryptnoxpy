@@ -657,7 +657,7 @@ class BasicG1(base.Base):
             except exceptions.SecureChannelException as sc_error:
                 raise exceptions.SoftLock("The card is soft locked. Power cycle required before it can be used "
                                           "again.") from sc_error
-            raise
+            raise exceptions.PinBlockedException() from error
         except exceptions.GenericException as error:
             if error.status == 0x6700:
                 raise exceptions.DataValidationException("Incorrect length")
