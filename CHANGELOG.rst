@@ -2,6 +2,32 @@
 Changelog
 =========
 
+Version 1.0.4 - 2026-04-01
+------------------------------------------------------------------------------------------------
+
+Security
+^^^^^^^^
+
+- Block ``change_puk()`` when PIN is locked (FINDING-009)
+
+Fixed
+^^^^^^^
+
+- Fixed ``verify_pin(None)`` to return 0 when PIN is blocked instead of raising an exception
+- Resolved PIN exception handling in BasicG1 card
+
+Changed
+^^^^^^^
+
+- Updated ``PinBlockedException`` message for clarity
+- Updated ``python_requires`` to ``>=3.11`` (removed upper bound, Python 3.14 now supported)
+- Updated README with supported hardware details
+
+Added
+^^^^^^^
+
+- Added ``examples/README.md`` with overview of available examples and run instructions
+
 Version 1.0.3 - 2025-12-24
 ------------------------------------------------------------------------------------------------
 
