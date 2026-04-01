@@ -10,8 +10,8 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath(".."))
 
-project = 'cryptnox_sdk_py'
-copyright = '2025, Cryptnox'
+project = 'cryptnox-sdk-py'
+copyright = '2026, Cryptnox SA'
 author = 'Cryptnox'
 release = '1.0'
 
@@ -116,6 +116,25 @@ inheritance_edge_attrs = {
     'color': 'black',
 }
 
+# -- SEO meta tags -----------------------------------------------------------
+
+html_baseurl = 'https://cryptnox.github.io/cryptnox-sdk-py/'
+
+html_meta = {
+    'description': (
+        'Cryptnox SDK for Python — Python library for communicating'
+        ' with Cryptnox smartcards. Card management, key derivation,'
+        ' signing, secure channel, and authentication.'
+    ),
+    'keywords': (
+        'Cryptnox, SDK, Python, smartcard, JavaCard, APDU,'
+        ' secure channel, BIP32, ECDSA, key derivation,'
+        ' cryptocurrency, NFC, pyscard, pip'
+    ),
+    'author': 'Cryptnox',
+    'robots': 'index, follow, max-snippet:-1, max-video-preview:-1, max-image-preview:large',
+}
+
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
@@ -124,6 +143,7 @@ html_static_path = ['_static']
 
 # Logo configuration
 html_logo = "_static/cryptnox-logo.png"
+html_favicon = "_static/favicon.png"
 
 # Custom CSS and JS
 html_css_files = [
@@ -136,7 +156,7 @@ html_js_files = [
 
 # Theme options
 html_theme_options = {
-    'analytics_id': '',  # Provided by Google Analytics
+    'analytics_id': 'GT-PJ7HDFB',
     'logo_only': False,
     'prev_next_buttons_location': 'bottom',
     'style_external_links': False,
@@ -149,3 +169,8 @@ html_theme_options = {
     'includehidden': True,
     'titles_only': False
 }
+
+# Sitemap / SEO
+html_show_sourcelink = False
+html_copy_source = False
+html_show_sphinx = False
