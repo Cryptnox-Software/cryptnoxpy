@@ -81,12 +81,19 @@
 <h1>Changelog<a class="headerlink" href="#changelog" title="Link to this heading"></a></h1>
 <section id="id1">
 <h2>Changelog<a class="headerlink" href="#id1" title="Link to this heading"></a></h2>
-<section id="version-1-0-4-2026-04-01">
-<h3>Version 1.0.4 - 2026-04-01<a class="headerlink" href="#version-1-0-4-2026-04-01" title="Link to this heading"></a></h3>
+<section id="version-1-0-4-2026-04-10">
+<h3>Version 1.0.4 - 2026-04-10<a class="headerlink" href="#version-1-0-4-2026-04-10" title="Link to this heading"></a></h3>
 <section id="security">
 <h4>Security<a class="headerlink" href="#security" title="Link to this heading"></a></h4>
 <ul class="simple">
 <li><p>Block <code class="docutils literal notranslate"><span class="pre">change_puk()</span></code> when PIN is locked (FINDING-009)</p></li>
+<li><p>Pinned vulnerable transitive dev dependencies to safe minimum versions:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">protobuf</span> <span class="pre">&gt;=</span> <span class="pre">5.29.6</span></code> (GHSA-7gcm-g887-7qv7, CVSS 8.2)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python-multipart</span> <span class="pre">&gt;=</span> <span class="pre">0.0.22</span></code> (GHSA-59g5-xgcq-4qw3 / GHSA-wp53-j4wj-2cfg, CVSS 8.7/8.6)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zipp</span> <span class="pre">&gt;=</span> <span class="pre">3.19.1</span></code> (GHSA-jfmj-5v4g-7637, CVSS 6.9)</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="fixed">
@@ -102,12 +109,20 @@
 <li><p>Updated <code class="docutils literal notranslate"><span class="pre">PinBlockedException</span></code> message for clarity</p></li>
 <li><p>Updated <code class="docutils literal notranslate"><span class="pre">python_requires</span></code> to <code class="docutils literal notranslate"><span class="pre">&gt;=3.11</span></code> (removed upper bound, Python 3.14 now supported)</p></li>
 <li><p>Updated README with supported hardware details</p></li>
+<li><p>Updated docs configuration with SEO meta tags, favicon, and project details</p></li>
 </ul>
 </section>
 <section id="added">
 <h4>Added<a class="headerlink" href="#added" title="Link to this heading"></a></h4>
 <ul class="simple">
 <li><p>Added <code class="docutils literal notranslate"><span class="pre">examples/README.md</span></code> with overview of available examples and run instructions</p></li>
+</ul>
+</section>
+<section id="ci">
+<h4>CI<a class="headerlink" href="#ci" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p>Fixed OSV-Scanner workflow to scan resolved installed package versions</p></li>
+<li><p>Pinned OSV-Scanner action to <code class="docutils literal notranslate"><span class="pre">v2.3.5</span></code> for reproducible CI builds</p></li>
 </ul>
 </section>
 </section>
