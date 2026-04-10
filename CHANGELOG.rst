@@ -2,13 +2,18 @@
 Changelog
 =========
 
-Version 1.0.4 - 2026-04-01
+Version 1.0.4 - 2026-04-10
 ------------------------------------------------------------------------------------------------
 
 Security
 ^^^^^^^^
 
 - Block ``change_puk()`` when PIN is locked (FINDING-009)
+- Pinned vulnerable transitive dev dependencies to safe minimum versions:
+
+  - ``protobuf >= 5.29.6`` (GHSA-7gcm-g887-7qv7, CVSS 8.2)
+  - ``python-multipart >= 0.0.22`` (GHSA-59g5-xgcq-4qw3 / GHSA-wp53-j4wj-2cfg, CVSS 8.7/8.6)
+  - ``zipp >= 3.19.1`` (GHSA-jfmj-5v4g-7637, CVSS 6.9)
 
 Fixed
 ^^^^^^^
@@ -22,11 +27,18 @@ Changed
 - Updated ``PinBlockedException`` message for clarity
 - Updated ``python_requires`` to ``>=3.11`` (removed upper bound, Python 3.14 now supported)
 - Updated README with supported hardware details
+- Updated docs configuration with SEO meta tags, favicon, and project details
 
 Added
 ^^^^^^^
 
 - Added ``examples/README.md`` with overview of available examples and run instructions
+
+CI
+^^^
+
+- Fixed OSV-Scanner workflow to scan resolved installed package versions
+- Pinned OSV-Scanner action to ``v2.3.5`` for reproducible CI builds
 
 Version 1.0.3 - 2025-12-24
 ------------------------------------------------------------------------------------------------
